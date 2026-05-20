@@ -17,8 +17,8 @@
   planned.
 - `addressing` — `Grain.compute_hash()` could route through MDHG for
   channel-aware bucketing. Currently uses raw SHA256.
-- `crystal` — when a Triad reaches closure, it could be minted as a
-  `Crystal` with the triad's grains as `E8Node`s. Optional integration.
+- `crystal` — `CrystalRegistry.mount_triad` mounts `Triad.grains` as
+  `E8Node`s with receipt `BOND` mint.
 
 ## Static imports
 

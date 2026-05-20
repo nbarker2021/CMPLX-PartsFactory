@@ -18,7 +18,8 @@ from typing import Any
 
 from cmplx.morphon import Morphon, SymbolicReport
 
-from ._functions import run_etp_with_ledger
+from .aggregation import ExecutionMode, TarpitAggregator
+from ._functions import RelativityEnvelope, run_etp_with_ledger
 from ._receipt_bridge import mint_tarpit_operation
 
 
@@ -87,6 +88,11 @@ class TarPitSymbolicProvider:
         self.default_dimension = default_dimension
         self.default_max_steps = default_max_steps
         self.program_length = program_length
+        self.aggregator = TarpitAggregator(
+            dimension=default_dimension,
+            max_steps=default_max_steps,
+            program_length=program_length,
+        )
 
     # ── Core Protocol methods ────────────────────────────────────────
 
@@ -147,6 +153,32 @@ class TarPitSymbolicProvider:
         kwargs.setdefault("dimension", self.default_dimension)
         kwargs.setdefault("max_steps", self.default_max_steps)
         return run_etp_with_ledger(program, **kwargs)
+
+    def execute_aggregated(
+        self,
+        program: str,
+        mode: ExecutionMode = "etp",
+        *,
+        envelope: RelativityEnvelope | None = None,
+    ) -> dict[str, Any]:
+        """Run via ``TarpitAggregator`` (glyphic / unified / evolving modes)."""
+        session = self.aggregator.start_session(program, mode=mode)
+        agg = self.aggregator.execute_session(
+            session.session_id, envelope=envelope
+        )
+        return {"session": session.to_dict(), "result": agg.to_dict()}
+
+    def evolve_program(
+        self,
+        program: str,
+        *,
+        iterations: int = 5,
+        mutation_rate: float = 0.1,
+    ) -> list[dict[str, Any]]:
+        """evolving_tarpit lineage — mutation runs."""
+        return [r.to_dict() for r in self.aggregator.evolve_lineage(
+            program, iterations=iterations, mutation_rate=mutation_rate
+        )]
 
     def encode_to_etp(self, morphon: Morphon) -> str:
         """Canonical morphon → ETP-program-string encoding.
@@ -211,6 +243,12 @@ class TarPitSymbolicProvider:
             "default_max_steps": self.default_max_steps,
             "program_length": self.program_length,
             "alphabet": _ENCODE_ALPHABET,
+            "sessions": len(self.aggregator._sessions),
+            "canonical_forms": [
+                "evolving_tarpit",
+                "glyphic_tarpit",
+                "unified_tarpit",
+            ],
         }
 
     def __repr__(self) -> str:

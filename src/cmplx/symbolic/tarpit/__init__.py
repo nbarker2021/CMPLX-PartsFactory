@@ -24,7 +24,11 @@ from .grain import (
     Ribbon,
 )
 from .jot import CombinatorGrain, JotGrainEncoder, SKCombinator
+from .aggregation import AggregatedRun, ExecutionSession, TarpitAggregator
+from .canonical_forms import CANONICAL_ALIASES, CANONICAL_FORMS, normalize_form_name
+from .glyphic import GLYPH_LEXICON, annotate_grain_tags, glyphs_to_etp_program
 from .provider import TarPitSymbolicProvider
+from ._functions import RelativityEnvelope, run_etp_with_ledger
 from .walls import (
     ErrorClass,
     ErrorWall,
@@ -43,4 +47,8 @@ __all__ = [
     "CombinatorGrain", "JotGrainEncoder", "SKCombinator",
     "ComputationPhase", "ComputationResult", "TarpitEcology",
     "TarPitSymbolicProvider",
+    "TarpitAggregator", "ExecutionSession", "AggregatedRun",
+    "CANONICAL_FORMS", "CANONICAL_ALIASES", "normalize_form_name",
+    "GLYPH_LEXICON", "glyphs_to_etp_program", "annotate_grain_tags",
+    "RelativityEnvelope", "run_etp_with_ledger",
 ]

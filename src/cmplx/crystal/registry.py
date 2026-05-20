@@ -168,6 +168,36 @@ class CrystalRegistry:
             )
         return nodes
 
+    def mount_triad(
+        self,
+        crystal_id: str,
+        triad: Any,
+        *,
+        record_bond: bool = True,
+    ) -> list[E8Node]:
+        """Mount TarPit ``Triad`` grains as crystal nodes (glyphic_tarpit bond path)."""
+        if record_bond:
+            from cmplx.symbolic.tarpit._receipt_bridge import mint_tarpit_operation
+
+            mint_tarpit_operation(
+                "triad",
+                {"triad_id": getattr(triad, "id", ""), "grains": len(getattr(triad, "grains", []))},
+                atom_id=getattr(triad, "id", "triad"),
+            )
+        nodes: list[E8Node] = []
+        for grain in getattr(triad, "grains", ()) or ():
+            content = str(getattr(grain, "id", ""))
+            tags = list(getattr(grain, "tags", []) or [])
+            nodes.append(
+                self.add_node(
+                    crystal_id,
+                    content=content,
+                    content_type="triad_grain",
+                    labels=tags or None,
+                )
+            )
+        return nodes
+
     def get(self, crystal_id: str) -> Optional[Crystal]:
         return self._crystals.get(crystal_id)
 

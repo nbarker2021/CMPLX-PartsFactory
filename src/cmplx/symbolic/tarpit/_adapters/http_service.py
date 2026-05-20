@@ -30,6 +30,15 @@ class RunRequest(BaseModel):
     program: str = Field(..., min_length=1)
     dimension: int = 8
     max_steps: int = 200
+    mode: str = "etp"
+    envelope_enabled: bool = False
+    envelope_max_delta: float = 0.85
+
+
+class EvolveRequest(BaseModel):
+    program: str = Field(..., min_length=1)
+    iterations: int = 5
+    mutation_rate: float = 0.1
 
 
 class DeriveRequest(BaseModel):
@@ -59,6 +68,7 @@ def canonical_forms() -> Dict[str, Any]:
     return {
         "forms": list(CANONICAL_FORMS),
         "aliases": dict(CANONICAL_ALIASES),
+        "lexicon": _provider.aggregator.lexicon_export(),
     }
 
 
@@ -66,12 +76,45 @@ def canonical_forms() -> Dict[str, Any]:
 def run_program(body: RunRequest) -> Dict[str, Any]:
     if not body.program.strip():
         raise HTTPException(status_code=400, detail="program required")
+    from .._functions import RelativityEnvelope
+
+    env = None
+    if body.envelope_enabled:
+        env = RelativityEnvelope(enabled=True, max_delta_component=body.envelope_max_delta)
+    if body.mode in ("glyph", "jot", "evolve", "etp"):
+        return _provider.execute_aggregated(
+            body.program, mode=body.mode, envelope=env  # type: ignore[arg-type]
+        )
     out = _provider.run_program(
         body.program,
         dimension=body.dimension,
         max_steps=body.max_steps,
+        envelope=env,
     )
     return out
+
+
+@app.post("/evolve")
+def evolve_program(body: EvolveRequest) -> Dict[str, Any]:
+    lineage = _provider.evolve_program(
+        body.program,
+        iterations=body.iterations,
+        mutation_rate=body.mutation_rate,
+    )
+    return {"lineage": lineage, "canonical_form": "evolving_tarpit"}
+
+
+@app.get("/sessions")
+def list_sessions() -> Dict[str, Any]:
+    return {"sessions": _provider.aggregator.list_sessions()}
+
+
+@app.post("/ecology/evolve")
+def ecology_evolve(body: EvolveRequest) -> Dict[str, Any]:
+    eco = _provider.aggregator.ecology
+    eco.load_program(body.program)
+    results = eco.evolve(body.iterations, body.mutation_rate)
+    return {"results": [r.to_dict() for r in results]}
 
 
 @app.post("/derive")

@@ -225,6 +225,21 @@ def test_registry_add_node_auto_labels_from_snap(monkeypatch):
     assert any("e8" in lbl.lower() or "structural" in lbl.lower() for lbl in node.snap_labels)
 
 
+def test_registry_mount_triad_from_tarpit(monkeypatch):
+    monkeypatch.setenv("TARPIT_MINT_RECEIPT", "0")
+    from cmplx.symbolic.tarpit import Grain, Triad
+
+    reg = CrystalRegistry()
+    c = reg.create(name="triad_kb")
+    triad = Triad(
+        grains=[Grain(id="a"), Grain(id="b"), Grain(id="m")],
+        closure_score=0.9,
+    )
+    nodes = reg.mount_triad(c.crystal_id, triad)
+    assert len(nodes) == 3
+    assert c.node_count == 3
+
+
 def test_registry_mount_ennead_from_snap(monkeypatch):
     monkeypatch.setenv("SNAP_MINT_RECEIPT", "0")
     from cmplx.snap import SNAPEngine
