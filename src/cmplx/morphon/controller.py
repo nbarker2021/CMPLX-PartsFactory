@@ -367,12 +367,24 @@ class MorphonController:
                 f"port {port!r} already has a registered provider"
             )
         self._providers[port] = provider
+        from ._receipt_bridge import mint_morphon_event
+
+        mint_morphon_event(
+            "register",
+            detail={"port": port, "provider": getattr(provider, "name", type(provider).__name__)},
+        )
 
     def has(self, port: str) -> bool:
         return port in self._providers
 
     def get_provider(self, port: str) -> Any:
         if port not in self._providers:
+            from ._receipt_bridge import mint_morphon_event
+
+            mint_morphon_event(
+                "gate_miss",
+                detail={"port": port, "registered": sorted(self._providers)},
+            )
             raise LookupError(
                 f"no provider registered for port {port!r} "
                 f"(registered: {sorted(self._providers)})"

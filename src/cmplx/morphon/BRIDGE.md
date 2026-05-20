@@ -189,6 +189,15 @@ Smoke tests in `tests/` exercise:
 The pattern these tests establish is the model for every other
 component's bridge tests.
 
+## Receipt spine (slot-01)
+
+`MorphonController.register` mints **ASSIGN** on the `receipt` port when
+enabled. `get_provider` misses mint **GATE** before raising `LookupError`.
+`Morphon.forge` / `transition_to` mint **BIRTH** / **CROSSING** via
+`_receipt_bridge.py` (`MORPHON_MINT_RECEIPT=1` default). Local
+`cmplx.morphon.Receipt` tuples remain on the morphon; spine receipts are
+separate — see `identity_review/TODO_MORPHON_SLOT10_11.md`.
+
 ## Status
 
 This is the first component built under the new "parts-plugged-

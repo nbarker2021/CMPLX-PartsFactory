@@ -142,7 +142,16 @@ class Morphon:
             timestamp=datetime.now(timezone.utc).isoformat(),
             detail=dict(detail),
         )
-        return self.attach_receipt(r)
+        updated = self.attach_receipt(r)
+        if operation in ("forge", "transition", "evolved_from"):
+            from ._receipt_bridge import mint_morphon_event
+
+            mint_morphon_event(
+                operation,
+                morphon_id=updated.id,
+                detail={"state": updated.state.name, **dict(detail)},
+            )
+        return updated
 
     # ------------------------------------------------------------------
     # Payload evolution
