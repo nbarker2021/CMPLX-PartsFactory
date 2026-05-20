@@ -1,7 +1,9 @@
-
 """
 SpeedLight V2 (Plus): Ledgered, Content-Addressed, Persistent Sidecar
-=====================================================================
+
+.. deprecated:: 2026-05-21
+    Prefer ``cmplx.speedlight._persistence.sidecar_ledger``.
+
 Drop-in upgrade for speedlight_sidecar.SpeedLight with:
   • Namespaces (scope), channels (3/6/9), and tags
   • Content-addressed storage (SHA-256) with optional disk persistence

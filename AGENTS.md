@@ -28,6 +28,35 @@ docker compose up -d --build
 docker compose --profile full up -d --build  # + cognitive services
 self-compose logs -f      # In-container helper
 
+### Receipt Chain (slot-01, port 8010)
+
+```powershell
+docker compose -f docker-compose.receipt.yml up -d
+curl http://localhost:8010/health
+```
+
+Env: `RECEIPT_STRICT_TYPES=0` (default permissive), `RECEIPT_STORAGE=memory`, optional `PG_URL`.
+
+### SpeedLight Worldline (slot-04, port 8843)
+
+```powershell
+docker compose -f docker-compose.speedlight.yml up -d
+curl http://localhost:8843/health
+```
+
+Env: `SPEEDLIGHT_MINT_RECEIPT=1` (POST mint on cache miss via receipt port), `SPEEDLIGHT_PORT=8843`.
+
+Windows pytest (if runs hang): `$env:PYTHONPATH='src'; $env:PYTEST_DISABLE_PLUGIN_AUTOLOAD='1'; python -m pytest tests/speedlight/ -q`
+
+### SNAP stratification (slot-17, port 8823)
+
+```powershell
+docker compose -f docker-compose.snap.yml up -d
+curl http://localhost:8823/health
+```
+
+Env: `SNAP_MINT_RECEIPT=1` (POST/GATE/PROCESS on receipt port), `SNAP_PORT=8823`.
+
 ## Repo-Kernel Control Layer
 
 Use `repo-kernel` as the canonical control plane for repo unification work.

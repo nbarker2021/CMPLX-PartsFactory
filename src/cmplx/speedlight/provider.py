@@ -10,6 +10,8 @@ Register on the `cache` port:
 """
 from __future__ import annotations
 
+import os
+from pathlib import Path
 from typing import Any, Callable, Optional
 
 from .cache import SpeedLight
@@ -69,7 +71,75 @@ class SpeedLightProvider:
                     content_hash=receipt.result_hash,
                 )
             self.equivalence.register(receipt)
+            if _mint_receipt_on_miss_enabled():
+                self._mint_unified_receipt_on_miss(task_id, receipt)
         return result, cost, receipt
+
+    def _mint_unified_receipt_on_miss(
+        self, task_id: str, comp: ComputationReceipt
+    ) -> None:
+        try:
+            from cmplx.receipt.types import ReceiptType
+
+            from cmplx.morphon import MorphonController
+
+            prov = MorphonController.get().get_provider("receipt")
+            if prov is not None:
+                prov.mint(
+                    receipt_type=ReceiptType.POST.value,
+                    atom_id=task_id,
+                    operation="speedlight_cache_miss",
+                    payload={
+                        "computation_receipt_id": comp.receipt_id,
+                        "result_hash": comp.result_hash,
+                    },
+                )
+                return
+        except Exception:
+            pass
+        from cmplx.receipt.chain import ReceiptChain
+        from cmplx.receipt.types import ReceiptType
+
+        ReceiptChain().mint(
+            receipt_type=ReceiptType.POST.value,
+            atom_id=task_id,
+            operation="speedlight_cache_miss",
+            payload={
+                "computation_receipt_id": comp.receipt_id,
+                "result_hash": comp.result_hash,
+            },
+        )
+
+    def mint_cache_snapshot(
+        self,
+        workspace: Path,
+        run_id: str,
+        step_id: str,
+        *,
+        task_id: str = "",
+        inputs: Optional[dict] = None,
+        outputs: Optional[dict] = None,
+        mirror_computation: bool = True,
+    ) -> dict:
+        """Write run receipt via receipt spine; optionally mirror into cache store."""
+        from cmplx.receipt.chain import ReceiptChain
+
+        chain = ReceiptChain()
+        run_receipt = chain.write_run_receipt(
+            workspace=workspace,
+            run_id=run_id,
+            step_id=step_id,
+            controller="speedlight",
+            inputs=inputs or {"task_id": task_id},
+            outputs=outputs or {},
+            artifacts=[],
+            extra={"snapshot": True},
+        )
+        if mirror_computation and task_id:
+            cached = self.speedlight.receipt_cache.get(task_id)
+            if cached is None:
+                self.speedlight.compute(task_id, lambda: outputs or {})
+        return run_receipt
 
     # ── Cache pass-throughs ───────────────────────────────────────────
 
@@ -143,3 +213,11 @@ class SpeedLightProvider:
             f"index={len(self.index)} "
             f"prototypes={self.equivalence.prototype_count()}>"
         )
+
+
+def _mint_receipt_on_miss_enabled() -> bool:
+    return os.environ.get("SPEEDLIGHT_MINT_RECEIPT", "1").strip().lower() in (
+        "1",
+        "true",
+        "yes",
+    )

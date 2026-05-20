@@ -6,10 +6,17 @@ from typing import Any, Dict
 
 
 class ControllerContext:
-    def __init__(self, workspace: Path, run_id: str, run_dir: Path) -> None:
+    def __init__(
+        self,
+        workspace: Path,
+        run_id: str,
+        run_dir: Path,
+        step_id: str = "step-0",
+    ) -> None:
         self.workspace = workspace
         self.run_id = run_id
         self.run_dir = run_dir
+        self.step_id = step_id
 
 
 class BaseController:

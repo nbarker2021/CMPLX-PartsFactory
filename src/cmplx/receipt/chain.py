@@ -9,10 +9,24 @@ traces backward from any tip.
 """
 from __future__ import annotations
 
+import os
 from collections import Counter
-from typing import Any, Optional
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
-from .types import GENESIS_HASH, Receipt, ReceiptType, compute_receipt_hash
+from .types import (
+    GENESIS_HASH,
+    Receipt,
+    ReceiptType,
+    compute_receipt_hash,
+    normalize_receipt_type,
+)
+
+try:
+    from .ledger_manager import OperationReceipt, ReceiptLedgerManager
+except ImportError:  # pragma: no cover
+    OperationReceipt = Any  # type: ignore[misc, assignment]
+    ReceiptLedgerManager = Any  # type: ignore[misc, assignment]
 
 
 class ReceiptChain:
@@ -20,7 +34,11 @@ class ReceiptChain:
 
     name: str = "receipt_chain"
 
-    def __init__(self) -> None:
+    def __init__(self, storage_mode: str = "memory") -> None:
+        self.storage_mode = storage_mode
+        self._runs_dir = Path(
+            os.environ.get("RECEIPT_RUNS_DIR", "./data/receipt-runs")
+        )
         self._chain: list[Receipt] = []
         self._head: str = GENESIS_HASH
         self._by_id: dict[str, Receipt] = {}
@@ -28,8 +46,15 @@ class ReceiptChain:
         self._by_agent: dict[str, list[str]] = {}
         self._by_type: dict[str, list[str]] = {}
         self._by_atom: dict[str, list[str]] = {}
+        self._operation_manager: Optional[ReceiptLedgerManager] = None
 
     # ── Mint ──────────────────────────────────────────────────────────
+
+    @property
+    def operation_manager(self) -> ReceiptLedgerManager:
+        if self._operation_manager is None:
+            self._operation_manager = ReceiptLedgerManager("receipt_chain")
+        return self._operation_manager
 
     def mint(
         self,
@@ -45,6 +70,7 @@ class ReceiptChain:
         parent_hash: str = "",
     ) -> Receipt:
         """Append a new receipt. Returns the minted Receipt."""
+        receipt_type = normalize_receipt_type(receipt_type)
         parent = parent_hash or self._head
         receipt = Receipt(
             prev_hash=parent,
@@ -267,6 +293,59 @@ class ReceiptChain:
         self._by_agent.clear()
         self._by_type.clear()
         self._by_atom.clear()
+
+    # ── Run JSONL ledger (SpeedLight) ─────────────────────────────────
+
+    def write_run_receipt(self, workspace: Path, **kwargs: Any) -> Dict[str, Any]:
+        from ._persistence import jsonl_run_ledger
+
+        return jsonl_run_ledger.write_receipt(workspace, **kwargs)
+
+    def verify_run_ledger(self, workspace: Path, run_id: str, **kwargs: Any) -> Dict[str, Any]:
+        from ._persistence.jsonl_run_ledger import verify_ledger
+
+        return verify_ledger(workspace, run_id, **kwargs)
+
+    # ── CQE operation profile ─────────────────────────────────────────
+
+    def mint_operation(
+        self,
+        claim: str,
+        pre_state: Dict[str, Any],
+        post_state: Dict[str, Any],
+        *,
+        agent_id: str = "",
+        atom_id: str = "",
+        energies: Optional[Dict[str, float]] = None,
+        validators: Optional[Dict[str, bool]] = None,
+        also_mint_spine: bool = True,
+    ) -> OperationReceipt:
+        """Create CQE-style OperationReceipt; optionally mirror on Merkle spine."""
+        op = self.operation_manager.create_receipt(
+            claim=claim,
+            pre_state=pre_state,
+            post_state=post_state,
+            energies=energies,
+            validators=validators,
+        )
+        if also_mint_spine:
+            self.mint(
+                ReceiptType.PROCESS.value,
+                agent_id=agent_id,
+                atom_id=atom_id or claim,
+                operation=f"operation:{claim}",
+                payload={
+                    "operation_receipt": {
+                        "sequence": op.sequence,
+                        "merkle_root": op.merkle_root,
+                        "parity64": op.parity64,
+                    },
+                    "pre_state": pre_state,
+                    "post_state": post_state,
+                    "energies": op.energies,
+                },
+            )
+        return op
 
     def __repr__(self) -> str:
         return (

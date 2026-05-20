@@ -146,6 +146,25 @@ def test_receipt_ledger_uses_unified_port_when_registered():
     assert found.agent_id == "expert_1"
 
 
+def test_wallet_record_uses_unified_port():
+    """Port path sets payload.wallet_op (completion pass 2026-05-21)."""
+    register_all()
+    from wallet.receipts import ReceiptLedger
+
+    ledger = ReceiptLedger()
+    ledger.record(
+        expert_id="expert_wallet",
+        receipt_type="SPEND",
+        amount=3.0,
+        operation="pay",
+    )
+    provider = MorphonController.get().get_provider("receipt")
+    recent = provider.chain.recent(limit=1)
+    assert recent
+    assert recent[0].payload.get("wallet_op") == "SPEND"
+    assert recent[0].payload.get("amount") == 3.0
+
+
 def test_receipt_ledger_falls_back_to_legacy_chain_without_port():
     """When `receipt` port isn't registered, ReceiptLedger keeps working
     with a local SHA-256 chain (matches pre-Wave-0.3 behavior)."""

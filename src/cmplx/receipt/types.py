@@ -19,7 +19,7 @@ GENESIS_HASH: str = "0" * 64
 
 
 class ReceiptType(str, Enum):
-    """The 10 canonical receipt operation classes."""
+    """Canonical receipt operation classes (10 core + 2 engine extensions)."""
     MINT = "MINT"           # New artifact created
     POST = "POST"           # Content posted
     BOND = "BOND"           # Two grains/entities bonded
@@ -30,13 +30,69 @@ class ReceiptType(str, Enum):
     DEATH = "DEATH"         # Entity terminated
     GATE = "GATE"           # NSL gate decision
     CROSSING = "CROSSING"   # Boundary traversal
+    # CMPLX-1T engine types that are semantically distinct from PROCESS/POST
+    TOOL_EXECUTION = "TOOL_EXECUTION"
+    CHECKPOINT = "CHECKPOINT"
 
 
 CANONICAL_TYPES: tuple[str, ...] = tuple(t.value for t in ReceiptType)
 
+# CMPLX-1T SpeedLight / agent.core dotted types → canonical enum value
+LEGACY_TYPE_ALIASES: dict[str, str] = {
+    "morphon.created": ReceiptType.MINT.value,
+    "state.transition": ReceiptType.PROCESS.value,
+    "policy.check": ReceiptType.GATE.value,
+    "tool.execution": ReceiptType.TOOL_EXECUTION.value,
+    "data.access": ReceiptType.PROCESS.value,
+    "agent.dispatch": ReceiptType.ASSIGN.value,
+    "tier.promotion": ReceiptType.ASSIGN.value,
+    "checkpoint": ReceiptType.CHECKPOINT.value,
+    "error": ReceiptType.DEATH.value,
+    "metrics": ReceiptType.POST.value,
+}
+
+DAG_EDGE_TYPES: tuple[str, ...] = (
+    "depends",
+    "caused_by",
+    "depends_on",
+    "parent_of",
+    "child_of",
+    "bond",
+    "snap_overlap",
+)
+
 
 def is_canonical_type(t: str) -> bool:
     return t in CANONICAL_TYPES
+
+
+def normalize_receipt_type(
+    receipt_type: str,
+    *,
+    strict: bool | None = None,
+) -> str:
+    """Map legacy/dotted types to canonical enum values.
+
+    When ``strict`` is None, reads ``RECEIPT_STRICT_TYPES`` env (0 = permissive).
+    Non-aliased custom types pass through in permissive mode.
+    """
+    import os
+
+    if strict is None:
+        strict = os.environ.get("RECEIPT_STRICT_TYPES", "0").strip() in (
+            "1",
+            "true",
+            "yes",
+        )
+    key = receipt_type.strip()
+    if key in CANONICAL_TYPES:
+        return key
+    mapped = LEGACY_TYPE_ALIASES.get(key)
+    if mapped:
+        return mapped
+    if strict:
+        raise ValueError(f"Unknown receipt type: {receipt_type!r}")
+    return key
 
 
 def compute_receipt_hash(

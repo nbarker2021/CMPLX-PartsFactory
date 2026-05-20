@@ -16,11 +16,13 @@ they then lose the ledger entry for that step.
 """
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Optional
 
 from .gate369 import Body, EnneadPackage, Gate369Engine, Predicate
 from .label import SNAPLabel
 from .labeler import SNAPLabeler
+from ._receipt_bridge import mint_snap_operation
 from .ledger import SNAPLedger, SNAPTransaction
 from .lenses import LensBank
 
@@ -50,10 +52,14 @@ class SNAPEngine:
     def label(self, item: Any, key: str = "",
               context: Optional[dict] = None) -> SNAPLabel:
         result = self.labeler.label(item, key, context)
-        self.ledger.append("label", {
+        payload = {
             "item_key": result.item_key,
             "label_count": len(result.all_labels),
-        })
+        }
+        tx = self.ledger.append("label", payload)
+        mint_snap_operation(
+            "label", {**payload, "tx_hash": tx.hash}, atom_id=result.item_key
+        )
         return result
 
     def process_gate369(
@@ -63,13 +69,15 @@ class SNAPEngine:
         state: Optional[dict] = None,
     ) -> dict:
         trace = self.gate369.process(bodies, predicates, state)
-        self.ledger.append("gate369", {
+        payload = {
             "triad_size": len(trace["triad"]["members"]),
             "hexad_size": len(trace["hexad"]),
             "ennead_facets": len(trace["ennead"]["facets"]),
             "containment_c": trace["ennead"]["containment_c"],
             "crystallized": trace["ennead"]["crystallized"],
-        })
+        }
+        tx = self.ledger.append("gate369", payload)
+        mint_snap_operation("gate369", {**payload, "tx_hash": tx.hash})
         return trace
 
     def crystallize(self, ennead: EnneadPackage) -> SNAPTransaction:
@@ -80,12 +88,60 @@ class SNAPEngine:
         directly to keep the dependency direction crystal → snap, not
         snap → crystal).
         """
-        return self.ledger.append("crystallize", {
+        payload = {
             "facets": [b.id for b in ennead.facets],
             "containment_c": ennead.containment_c,
             "lens": ennead.lens_name,
             "reversible": ennead.reversibility,
-        })
+            "crystallized": ennead.containment_c > 0.7,
+        }
+        tx = self.ledger.append("crystallize", payload)
+        mint_snap_operation("crystallize", {**payload, "tx_hash": tx.hash})
+        return tx
+
+    def mint_run_snapshot(
+        self,
+        workspace: Path,
+        run_id: str,
+        step_id: str,
+        *,
+        inputs: Optional[dict] = None,
+        mirror_to_receipt_port: bool = True,
+    ) -> dict:
+        """Persist run-level snapshot via receipt spine JSONL ledger."""
+        from cmplx.receipt.chain import ReceiptChain
+
+        outputs = {
+            "ledger_length": self.ledger.length,
+            "ledger_head": self.ledger.head,
+            "ledger_ok": self.ledger.verify(),
+        }
+        run_receipt = ReceiptChain().write_run_receipt(
+            workspace=workspace,
+            run_id=run_id,
+            step_id=step_id,
+            controller="snap",
+            inputs=inputs or {},
+            outputs=outputs,
+            artifacts=[],
+            extra={"snapshot": True, "snap_entries": self.ledger.to_dict_list()},
+        )
+        if mirror_to_receipt_port:
+            mint_snap_operation(
+                "run_snapshot",
+                outputs,
+                receipt_type="PROCESS",
+                atom_id=run_id,
+            )
+        return run_receipt
+
+    def ledger_export(self) -> dict:
+        return {
+            "length": self.ledger.length,
+            "head": self.ledger.head,
+            "verified": self.ledger.verify(),
+            "entries": self.ledger.to_dict_list(),
+        }
 
     # ── Reporting ─────────────────────────────────────────────────────
 

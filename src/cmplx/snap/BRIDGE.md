@@ -6,12 +6,18 @@
 the port to label items, evaluate lens states, or run a Gate369
 selection.
 
+## Ports consumed
+
+- `receipt` — unified provenance when `SNAP_MINT_RECEIPT=1` (default on).
+  `SNAPEngine` mints `POST` on label, `GATE` on Gate369 fail, `PROCESS` otherwise;
+  `SNAPLedger` remains the in-process mirror chain. `mint_run_snapshot(workspace, …)`
+  writes run JSONL via `ReceiptChain.write_run_receipt` for controller/CQE alignment.
+
 ## Ports consumed (optional)
 
-- `crystal` — when a Gate369 ennead reaches `containment_c > 0.7`,
-  SNAP can mint a `Crystal` with the ennead's facets as nodes and
-  the SNAPLabel as `snap_labels`. Optional: ennead output is usable
-  on its own.
+- `crystal` — `CrystalRegistry.mount_ennead` mounts ennead facets as
+  `E8Node`s with `snap_labels` from `SNAPEngine.label`; `crystallize`
+  records the ledger op when containment warrants it.
 - `memory` (planned) — to persist `SNAPTransaction` chains beyond
   process lifetime (MMDB row per transaction).
 

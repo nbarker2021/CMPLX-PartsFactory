@@ -1,0 +1,43 @@
+# SpeedLight Worldline HTTP service (slot-04 local production)
+#
+#   docker compose -f docker-compose.speedlight.yml up -d --build
+#   curl http://localhost:8843/health
+
+name: cmplx-speedlight
+
+services:
+  cmplx-speedlight:
+    image: python:3.12-slim
+    container_name: cmplx-speedlight
+    init: true
+    restart: unless-stopped
+    working_dir: /app
+    command:
+      [
+        "sh",
+        "-c",
+        "pip install -q fastapi uvicorn pydantic 2>/dev/null; "
+        "python -m uvicorn cmplx.speedlight._adapters.http_service:app --host 0.0.0.0 --port 8843",
+      ]
+    environment:
+      PORT: "8843"
+      SPEEDLIGHT_MINT_RECEIPT: ${SPEEDLIGHT_MINT_RECEIPT:-1}
+      PYTHONPATH: /app/src
+    ports:
+      - "${SPEEDLIGHT_PORT:-8843}:8843"
+    volumes:
+      - type: bind
+        source: ./src
+        target: /app/src
+        read_only: true
+    labels:
+      cmplx.layer: speedlight
+      cmplx.role: slot-04-worldline
+      cmplx.api: http://localhost:${SPEEDLIGHT_PORT:-8843}
+    networks:
+      - cmplx-backend
+
+networks:
+  cmplx-backend:
+    external: true
+    name: cmplx-backend

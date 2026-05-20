@@ -8,6 +8,13 @@ go through this port for any idempotent computation:
 result = mc.get_provider("cache").compute_and_cache(address, "kaprekar", compute_fn)
 ```
 
+## Ports consumed
+
+- `receipt` — run/controller snapshots and optional cache-miss POST mint
+  (`SPEEDLIGHT_MINT_RECEIPT=1`). `SpeedlightProvider.mint_cache_snapshot` and
+  `SpeedLightController` call `ReceiptChain.write_run_receipt`; unified POST
+  types use `get_provider("receipt").mint(POST, ...)`.
+
 ## Ports consumed (optional)
 
 - `memory` (MMDB) — for durable receipt persistence. SpeedLight's T2

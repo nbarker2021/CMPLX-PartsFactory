@@ -1,0 +1,43 @@
+# SNAP Engine HTTP service (slot-17 local production)
+#
+#   docker compose -f docker-compose.snap.yml up -d
+#   curl http://localhost:8823/health
+
+name: cmplx-snap
+
+services:
+  cmplx-snap:
+    image: python:3.12-slim
+    container_name: cmplx-snap
+    init: true
+    restart: unless-stopped
+    working_dir: /app
+    command:
+      [
+        "sh",
+        "-c",
+        "pip install -q fastapi uvicorn pydantic 2>/dev/null; "
+        "python -m uvicorn cmplx.snap._adapters.http_service:app --host 0.0.0.0 --port 8823",
+      ]
+    environment:
+      PORT: "8823"
+      SNAP_MINT_RECEIPT: ${SNAP_MINT_RECEIPT:-1}
+      PYTHONPATH: /app/src
+    ports:
+      - "${SNAP_PORT:-8823}:8823"
+    volumes:
+      - type: bind
+        source: ./src
+        target: /app/src
+        read_only: true
+    labels:
+      cmplx.layer: snap
+      cmplx.role: slot-17-stratification
+      cmplx.api: http://localhost:${SNAP_PORT:-8823}
+    networks:
+      - cmplx-backend
+
+networks:
+  cmplx-backend:
+    external: true
+    name: cmplx-backend

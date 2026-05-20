@@ -207,9 +207,43 @@ def test_registry_add_node_binds_everything():
                         labels=["important", "verified"])
     # Bind-everything assertion: the node has all three identity fields
     assert node.snap_labels == ["important", "verified"]
-    assert node.mdhg_address  # not empty
+    assert node.mdhg_address
     assert "full" in node.mdhg_address
     assert len(node.e8_coords) == 8
+
+
+def test_registry_add_node_auto_labels_from_snap(monkeypatch):
+    monkeypatch.setenv("SNAP_MINT_RECEIPT", "0")
+    from cmplx.snap import SNAPEngine
+
+    reg = CrystalRegistry()
+    mc = MorphonController.get()
+    mc.register("snap", SNAPEngine())
+    c = reg.create(name="kb")
+    node = reg.add_node(c.crystal_id, content="e8 lattice function")
+    assert node.snap_labels
+    assert any("e8" in lbl.lower() or "structural" in lbl.lower() for lbl in node.snap_labels)
+
+
+def test_registry_mount_ennead_from_snap(monkeypatch):
+    monkeypatch.setenv("SNAP_MINT_RECEIPT", "0")
+    from cmplx.snap import SNAPEngine
+    from cmplx.snap.gate369 import Body, EnneadPackage
+
+    reg = CrystalRegistry()
+    mc = MorphonController.get()
+    eng = SNAPEngine()
+    mc.register("snap", eng)
+    c = reg.create(name="ennead_kb")
+    ennead = EnneadPackage(
+        facets=[Body(id=str(i), payload=f"facet-{i}") for i in range(9)],
+        containment_c=0.85,
+    )
+    nodes = reg.mount_ennead(c.crystal_id, ennead)
+    assert len(nodes) == 9
+    assert all(n.snap_labels for n in nodes)
+    assert eng.ledger.length >= 1
+    assert nodes[0].mdhg_address
 
 
 def test_registry_add_node_extends_receipt_chain():

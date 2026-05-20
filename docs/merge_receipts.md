@@ -1,5 +1,26 @@
 # Merge Receipt Ledger
 
+## 2026-05-21 — slot-01 completion pass
+
+- **Witness inventory v2:** `receipt-witness-inventory-2026-05-21.jsonl` (101 rows, waves 1–4)
+- **Persistence:** `_persistence/jsonl_run_ledger.py` owns run JSONL; `file_ledger` shim
+- **Signing:** `signing.py` workspace key store for run receipts
+- **Wallet:** `payload.wallet_op` on unified port path
+- **Tests:** `pytest tests/receipt/ tests/runtime/test_wave_0_3_4_receipt_migration.py` — **72** passed
+- **Matrix:** `receipt-capability-matrix-2026-05-21.md`
+- **Deferred:** broadcast/dispatch/MMDB (`receipt-delegation-gaps.md`)
+
+## 2026-05-20 — slot-01 Receipt Chain production merge
+
+- **Receipt type:** `PROCESS` (+ spine helpers `mint_operation`, `write_run_receipt`)
+- **Target:** `src/cmplx/receipt/` — single `ReceiptChain` spine; HTTP delegates via `_adapters/http_service.py`
+- **Gate B:** `identity_review/reports/receipt-merge-design-2026-05-20.md`
+- **Tests:** `pytest tests/receipt/` — 56 passed (2026-05-20)
+- **Compose:** `docker-compose.receipt.yml` → `:8010/health`
+- **Deferred:** wallet/broadcast/dispatch delegation (`receipt-delegation-gaps.md`)
+
+---
+
 Transitional ledger of merges accepted against the [Attractor Frame](ATTRACTOR_FRAME.md). Once Wave 0.2 lands and `MorphonController.get("receipt")` is live in the runtime, these merges replay into the canonical receipt chain. Until then, this file is the audit trail.
 
 Each entry records the receipt type, target slot(s), source/destination, gate outputs, and the proposal it satisfies.

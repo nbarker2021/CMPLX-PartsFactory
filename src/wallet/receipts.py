@@ -120,13 +120,16 @@ class ReceiptLedger:
         try:
             from cmplx.morphon import MorphonController
             provider = MorphonController.get().get_provider("receipt")
+            from cmplx.receipt.types import ReceiptType
+
             rec = provider.mint(
-                receipt_type="process",  # PROCESS in the unified grammar
+                receipt_type=ReceiptType.PROCESS.value,
                 agent_id=expert_id,
                 atom_id=expert_id,
                 operation=operation,
                 payload={
-                    "operation_kind": receipt_type,  # wallet's 7 types as label
+                    "wallet_op": receipt_type,
+                    "operation_kind": receipt_type,
                     "amount": amount,
                     "balance_before": balance_before,
                     "balance_after": balance_after,

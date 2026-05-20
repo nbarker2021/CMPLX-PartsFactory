@@ -11,7 +11,7 @@ when registered (lazy lookup so the registry runs standalone too).
 from __future__ import annotations
 
 from dataclasses import asdict
-from typing import Optional
+from typing import Any, Optional
 
 from .fabric import ATOM_LEVELS, DEFAULT_FABRIC, LevelConfig, assign_address
 from .types import (
@@ -19,7 +19,6 @@ from .types import (
     E8Node,
     ToolCrystal,
 )
-
 
 class CrystalRegistry:
     """In-process registry of data crystals + tool crystals.
@@ -34,6 +33,44 @@ class CrystalRegistry:
         self._crystals: dict[str, Crystal] = {}
         self._nodes_by_crystal: dict[str, list[E8Node]] = {}
         self._tools: dict[str, ToolCrystal] = {}
+
+    def _snap_engine(self) -> Any:
+        """Resolve SNAP via morphon port, else in-process fallback."""
+        try:
+            from cmplx.morphon import MorphonController
+
+            ctrl = MorphonController.get()
+            if ctrl.has("snap"):
+                return ctrl.get_provider("snap")
+        except Exception:
+            pass
+        try:
+            from cmplx.snap import SNAPEngine
+
+            return SNAPEngine()
+        except Exception:
+            return None
+
+    def _snap_labels_for(
+        self,
+        content: str,
+        *,
+        key: str = "",
+        content_type: str = "atom",
+        labels: Optional[list[str]] = None,
+    ) -> list[str]:
+        if labels is not None:
+            return list(labels)
+        engine = self._snap_engine()
+        if engine is None:
+            return []
+        item_key = key or (content[:32] if content else "node")
+        snap_label = engine.label(
+            content,
+            key=item_key,
+            context={"content_type": content_type},
+        )
+        return list(snap_label.all_labels)
 
     # ── Data crystal CRUD ───────────────────────────────────────────────
 
@@ -79,11 +116,17 @@ class CrystalRegistry:
             levels = ATOM_LEVELS
 
         coords = list(e8_coords) if e8_coords else list(crystal.e8_root)
+        snap_labels = self._snap_labels_for(
+            content,
+            key=content[:32] if content else "",
+            content_type=content_type,
+            labels=labels,
+        )
         mdhg = assign_address(
             content=content,
             e8_coords=coords,
             entry_type=content_type,
-            labels=labels,
+            labels=snap_labels,
             levels=levels,
         )
         node = E8Node(
@@ -91,7 +134,7 @@ class CrystalRegistry:
             content=content,
             content_type=content_type,
             e8_coords=coords,
-            snap_labels=list(labels or []),
+            snap_labels=snap_labels,
             mdhg_address=mdhg,
         )
         self._nodes_by_crystal[crystal_id].append(node)
@@ -99,6 +142,31 @@ class CrystalRegistry:
         crystal.total_mass += node.mass
         crystal.extend_receipt(f"node:{node.node_id}")
         return node
+
+    def mount_ennead(
+        self,
+        crystal_id: str,
+        ennead: Any,
+        *,
+        record_crystallize: bool = True,
+    ) -> list[E8Node]:
+        """Mount Gate369 ennead facets as nodes; optional SNAP crystallize ledger op."""
+        engine = self._snap_engine()
+        if record_crystallize and engine is not None:
+            engine.crystallize(ennead)
+        nodes: list[E8Node] = []
+        for body in getattr(ennead, "facets", ()) or ():
+            payload = getattr(body, "payload", None)
+            content = str(payload if payload is not None else getattr(body, "id", ""))
+            nodes.append(
+                self.add_node(
+                    crystal_id,
+                    content=content,
+                    content_type="ennead_facet",
+                    labels=None,
+                )
+            )
+        return nodes
 
     def get(self, crystal_id: str) -> Optional[Crystal]:
         return self._crystals.get(crystal_id)

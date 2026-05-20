@@ -28,7 +28,7 @@ to mount a fact / asset / tool at a specific lattice position.
 
 | Importer (current + planned) | What |
 |---|---|
-| `cmplx.snap` (planned) | `Crystal`, `E8Node` to attach labels to mounted nodes. |
+| `cmplx.snap` | `SNAPEngine.label` via `CrystalRegistry.add_node` / `mount_ennead`. |
 | `cmplx.engine.cqe` (planned) | `ToolCrystal`, `CompositionRule` for the executor + boundary enforcement. |
 | `cmplx.worlds.forge` (planned) | `Crystal` as world-state representation; `assign_address` for spatial routing. |
 | `cmplx.transport.pixel` (future) | `E8Node.snap_labels` + `e8_coords` to render shape pixels (SNAP-driven render). |

@@ -1,0 +1,49 @@
+# Receipt Chain HTTP service (slot-01 local production)
+#
+#   docker compose -f docker-compose.receipt.yml up -d --build
+#   curl http://localhost:8010/health
+
+name: cmplx-receipt
+
+services:
+  cmplx-receipt:
+    image: python:3.12-slim
+    container_name: cmplx-receipt
+    init: true
+    restart: unless-stopped
+    working_dir: /app
+    command:
+      [
+        "sh",
+        "-c",
+        "pip install -q fastapi uvicorn pydantic psycopg2-binary 2>/dev/null; "
+        "python -m uvicorn cmplx.receipt._adapters.http_service:app --host 0.0.0.0 --port 8010",
+      ]
+    environment:
+      PORT: "8010"
+      RECEIPT_STRICT_TYPES: ${RECEIPT_STRICT_TYPES:-0}
+      RECEIPT_STORAGE: ${RECEIPT_STORAGE:-memory}
+      RECEIPT_RUNS_DIR: /app/data/receipt-runs
+      PG_URL: ${PG_URL:-}
+      PYTHONPATH: /app/src
+    ports:
+      - "${RECEIPT_PORT:-8010}:8010"
+    volumes:
+      - type: bind
+        source: ./src
+        target: /app/src
+        read_only: true
+      - type: bind
+        source: ./data
+        target: /app/data
+    labels:
+      cmplx.layer: receipt
+      cmplx.role: slot-01-chain
+      cmplx.api: http://localhost:${RECEIPT_PORT:-8010}
+    networks:
+      - cmplx-backend
+
+networks:
+  cmplx-backend:
+    external: true
+    name: cmplx-backend

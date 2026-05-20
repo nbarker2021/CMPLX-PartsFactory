@@ -40,8 +40,8 @@ def test_genesis_hash_is_64_zeros():
 
 
 def test_canonical_types_count():
-    assert len(CANONICAL_TYPES) == 10
-    for name in ("MINT", "BOND", "PROCESS", "GATE", "CROSSING"):
+    assert len(CANONICAL_TYPES) == 12
+    for name in ("MINT", "BOND", "PROCESS", "GATE", "CROSSING", "TOOL_EXECUTION", "CHECKPOINT"):
         assert name in CANONICAL_TYPES
 
 

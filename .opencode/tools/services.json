@@ -48,6 +48,21 @@
         "atoms": {"method": "GET", "url": "http://host.docker.internal:8844/tarpit/atoms"}
       }
     },
+    "service-receipt": {
+      "description": "Receipt Chain (slot-01). Merkle-chained operation provenance; canonical spine for all ports.",
+      "endpoints": {
+        "health": {"method": "GET", "url": "http://host.docker.internal:8010/health"},
+        "status": {"method": "GET", "url": "http://host.docker.internal:8010/status"},
+        "mint": {"method": "POST", "url": "http://host.docker.internal:8010/mint"},
+        "verify": {"method": "POST", "url": "http://host.docker.internal:8010/verify"},
+        "stats": {"method": "GET", "url": "http://host.docker.internal:8010/stats"},
+        "docs": {"method": "GET", "url": "http://host.docker.internal:8010/docs"}
+      },
+      "examples": [
+        "curl http://host.docker.internal:8010/health",
+        "docker compose -f docker-compose.receipt.yml up -d"
+      ]
+    },
     "service-speedlight": {
       "description": "SpeedLight receipt cache. SHA-256 content-addressed cache with Merkle ledger.",
       "endpoints": {

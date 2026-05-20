@@ -15,7 +15,7 @@ when registered.
 
 ## Surface
 
-### Receipt types (10 canonical)
+### Receipt types (12 canonical + legacy aliases)
 
 `ReceiptType` enum — the operation classes that produce receipts:
 
@@ -29,14 +29,17 @@ when registered.
 - `DEATH` — agent / entity terminated
 - `GATE` — NSL gate decision (accept / reject / amortize)
 - `CROSSING` — boundary traversal (wall emission, layer transition)
+- `TOOL_EXECUTION` — tool/run step (CMPLX-1T engine)
+- `CHECKPOINT` — checkpoint record
 
-Custom types are allowed (string-typed `receipt_type`); the enum is
-the canonical set.
+Legacy dotted types (e.g. `morphon.created`) map via `LEGACY_TYPE_ALIASES`
+and `normalize_receipt_type()`. Wallet ops use `payload.wallet_op`, not
+new enum members. HTTP: `RECEIPT_STRICT_TYPES=0` (default permissive).
 
 ### `Receipt` dataclass
 
 Fields:
-- `receipt_id: str` (12-hex auto-id)
+- `receipt_id: str` (16-hex auto-id)
 - `receipt_hash: str` — `SHA256(prev_hash:operation:atom_id:timestamp)`
 - `prev_hash: str` — points back to the prior receipt
 - `receipt_type: str` — one of `ReceiptType` or custom
@@ -97,13 +100,20 @@ common patterns.
 - `GENESIS_HASH = "0" * 64` — the all-zero head used before any
   receipt has been minted
 
-## What's NOT in this layer
+### Run JSONL + CQE (facade on `ReceiptChain`)
 
-- The HTTP service skin (`/mint`, `/verify`, `/chain/{atom_id}`,
-  `/dag_edge`, `/recent`, etc.) — lives in
-  `services/receipt_service.py`, planned.
-- Durable persistence — uses `memory` port (MMDB) when registered;
-  in-process dict is the default.
-- Cross-system refactoring (SNAPLedger / Crystal.receipt_chain /
-  NSLLedger → all delegate to ReceiptChain) — separate follow-up;
-  this package establishes the primitive without rewiring callers.
+- `write_run_receipt(workspace, ...)` — SpeedLight `ledger.jsonl` runs
+- `verify_run_ledger(workspace, run_id)` — JSONL integrity
+- Env: `RECEIPT_RUNS_DIR`, `CQE_DETERMINISTIC_TIME` (tests)
+- `mint_operation(claim, pre_state, post_state, ...)` — CQE `OperationReceipt` + optional spine mirror
+
+## HTTP adapter
+
+`_adapters/http_service.py` — delegates to `ReceiptProvider` (no duplicate chain).
+Compose: `docker compose -f docker-compose.receipt.yml up` → port **8010**.
+
+## What's NOT in this layer (yet)
+
+- Wallet `ReceiptLedger` fallback removal — see `receipt-delegation-gaps.md`
+- SNAP / broadcast / dispatch rewiring
+- Repo-kernel route promotion

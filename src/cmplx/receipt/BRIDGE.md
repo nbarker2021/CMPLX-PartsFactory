@@ -36,6 +36,14 @@ imported by every system without risking dependency cycles.
 | `cmplx.morsr.Handshake` (planned wiring) | Each pulse handshake → `PROCESS` receipt with `delta_phi` set from NSL sectors. |
 | `cmplx.engine.cqe` (next) | The whole executor mints receipts at every step. |
 
+## HTTP production (2026-05-20–21)
+
+- **Module:** `cmplx.receipt._adapters.http_service:app`
+- **Port:** **8010** (`RECEIPT_PORT`, `docker-compose.receipt.yml`)
+- **Delegate:** all routes call `ReceiptProvider` / `ReceiptChain` (no in-module duplicate chain)
+- **Env:** `RECEIPT_STRICT_TYPES=0` (permissive), `RECEIPT_RUNS_DIR`, optional `PG_URL`
+- **Smoke:** `curl http://localhost:8010/health` (requires Docker + `cmplx-backend` network)
+
 ## External JSONL bridges (2026-05-18)
 
 `receipts_bridge.py` — escrow merge from CQE unified runtime / geometry_lattice
