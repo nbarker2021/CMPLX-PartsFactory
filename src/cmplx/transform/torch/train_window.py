@@ -15,13 +15,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Optional, Sequence
 
+from ...runtime_paths import runtime_path
 from .hf_on_demand import hf_lane_from_env
 from .hf_adapter import TrainerHarnessSketch
 
 _TRAIN_WINDOW_ENV = "CMPLX_TRAIN_WINDOW"
 _TRAIN_ON_VALUES = frozenset({"1", "true", "yes", "on"})
 _HF_MODEL_ENV = "CMPLX_HF_MODEL"
-_REPORT_DIR = Path(__file__).resolve().parents[4] / "data" / "train_windows"
+_REPORT_DIR = runtime_path("data", "train_windows")
 
 
 def train_window_from_env() -> bool:

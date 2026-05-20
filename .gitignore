@@ -52,6 +52,7 @@ data/brain_images/
 data/calibration/
 data/extracted_zips/
 data/postgres/
+data/train_windows/
 data/*_report.json
 data/*_stats.json
 data/*_stats*.json

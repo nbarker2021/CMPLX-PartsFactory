@@ -41,7 +41,7 @@ Optional HF lane (default off): `CMPLX_HF_LANE=off|on_demand|train` — see `src
 | `CMPLX_HF_LANE=train` | Enables bounded train window |
 | `CMPLX_TRAIN_WINDOW=1` | Same as train lane (alternative toggle) |
 
-Train window Phase A: admit-mask substrate loop + JSON job report under `data/train_windows/`. Phase B (optional): set `CMPLX_HF_MODEL` for lazy HF stub forward inside the window — not a full frontier LM by default.
+Train window Phase A: admit-mask substrate loop + JSON job report under `CMPLX_RUNTIME_DIR\data\train_windows\`. Phase B (optional): set `CMPLX_HF_MODEL` for lazy HF stub forward inside the window — not a full frontier LM by default.
 
 **Planned downtime example (nightly, 3600s wall clock):**
 
@@ -64,7 +64,7 @@ Dry-run plan only: add `--dry-run`. Custom token list: `--tokens-file path\to\to
 | Crystal | Production: `crystals/identity_review.crystal` |
 | DB | Must match crystal `token_index.sqlite` (`token_index_identity_review.sqlite` source) |
 | `max_steps` | Bounded step count (default CLI: 10) |
-| Reports | `data/train_windows/<UTC-timestamp>.json` |
+| Reports | `%CMPLX_RUNTIME_DIR%\data\train_windows\<UTC-timestamp>.json` |
 | `wall_clock_budget_sec` | Hard stop (e.g. 600 = 10 min maintenance window) |
 | Tokens | Optional list; empty uses harness default (pull from index in ops scripts) |
 
