@@ -17,36 +17,46 @@ def _reset():
     MorphonController.reset_for_tests()
 
 
-def test_snap_mint_env_default_on():
+def test_snap_mint_env_default_on(monkeypatch):
+    monkeypatch.delenv("SNAP_MINT_RECEIPT", raising=False)
     assert snap_mint_receipt_enabled()
+
+
+def _snap_receipts(chain) -> list:
+    return [r for r in chain._chain if str(getattr(r, "operation", "")).startswith("snap_")]
 
 
 def test_engine_mints_receipt_on_label(monkeypatch):
     monkeypatch.setenv("SNAP_MINT_RECEIPT", "1")
-    MorphonController.get().register("receipt", ReceiptProvider())
+    prov = ReceiptProvider()
+    MorphonController.get().register("receipt", prov)
+    before = len(prov.chain._chain)
     eng = SNAPEngine()
     eng.label("hello", key="h")
-    chain = MorphonController.get().get_provider("receipt").chain
-    assert len(chain._chain) >= 1
+    assert len(_snap_receipts(prov.chain)) >= 1
+    assert len(prov.chain._chain) > before
 
 
 def test_engine_mints_receipt_off(monkeypatch):
     monkeypatch.setenv("SNAP_MINT_RECEIPT", "0")
-    MorphonController.get().register("receipt", ReceiptProvider())
+    prov = ReceiptProvider()
+    MorphonController.get().register("receipt", prov)
+    before = len(prov.chain._chain)
     eng = SNAPEngine()
     eng.label("x", key="x")
-    chain = MorphonController.get().get_provider("receipt").chain
-    assert len(chain._chain) == 0
+    assert len(_snap_receipts(prov.chain)) == 0
+    assert len(prov.chain._chain) == before
 
 
 def test_ledger_and_receipt_both_grow_on_label(monkeypatch):
     monkeypatch.setenv("SNAP_MINT_RECEIPT", "1")
-    MorphonController.get().register("receipt", ReceiptProvider())
+    prov = ReceiptProvider()
+    MorphonController.get().register("receipt", prov)
     eng = SNAPEngine()
     eng.label("dual", key="d")
     assert eng.ledger.length == 1
     assert eng.ledger.verify()
-    assert len(MorphonController.get().get_provider("receipt").chain._chain) >= 1
+    assert len(_snap_receipts(prov.chain)) >= 1
 
 
 def test_gate369_mints_gate_when_not_crystallized(monkeypatch):
