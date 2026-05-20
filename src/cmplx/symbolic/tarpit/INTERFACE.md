@@ -6,9 +6,14 @@ where every primitive is a `Grain` (a 1D ribbon in representation
 space), grains bond into `Dust` and `Triad`s, and every step emits
 either an `OutputWall` or an `ErrorWall`.
 
-Promoted from `evolving_tarpit/` + `glyph_tarpit/` + `unified_tarpit.py`
-canonicals (the three exemplars). Converted to pure-stdlib (no numpy)
-so it lives alongside the rest of `cmplx`.
+Canonical lineage names (witness register — not separate merge packages):
+
+- **evolving_tarpit** — evolution / mutation ecology
+- **glyphic_tarpit** — glyph + Jot/SK combinator surface (corpus alias: `glyph_tarpit`)
+- **unified_tarpit** — single-file union exemplar (`unified_tarpit.py`)
+
+Spine: `src/cmplx/symbolic/tarpit/` (pure stdlib + ALENA constants). See
+`canonical_forms.py` and `identity_review/registers/tarpit-canonical-forms.md`.
 
 ## Surface
 

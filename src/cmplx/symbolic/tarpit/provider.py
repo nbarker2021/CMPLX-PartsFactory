@@ -19,6 +19,7 @@ from typing import Any
 from cmplx.morphon import Morphon, SymbolicReport
 
 from ._functions import run_etp_with_ledger
+from ._receipt_bridge import mint_tarpit_operation
 
 
 # The 6-symbol "loopless" alphabet used for encode_to_etp. Excludes `[` and `]`
@@ -223,53 +224,29 @@ class TarPitSymbolicProvider:
     def _mint_step_receipts(
         self, morphon: Morphon, ledger: list[dict]
     ) -> list:
-        """Mint one receipt per ledger step if the receipt port is registered.
-
-        Step semantics → receipt grammar:
-          - normal step (envelope_ok, no error)  → PROCESS
-          - envelope failure                      → GATE
-          - error wall this step                  → DEATH
-        """
-        try:
-            from cmplx.morphon import MorphonController
-            receipt_provider = MorphonController.get().get_provider("receipt")
-        except (LookupError, ImportError):
-            return []
-
+        """Mint one receipt per ledger step via unified receipt bridge."""
         receipts = []
         for row in ledger:
-            # Decide receipt type from row state.
-            error_class = row.get("last_error_class")
-            envelope_ok = row.get("envelope_ok", True)
-
-            if error_class:
-                receipt_type = "DEATH"
-            elif not envelope_ok:
-                receipt_type = "GATE"
-            else:
-                receipt_type = "PROCESS"
-
+            mint_tarpit_operation(
+                "etp_step",
+                {
+                    "step": row.get("step"),
+                    "ip_before": row.get("ip_before"),
+                    "instr": row.get("instr"),
+                    "wall10": row.get("wall10"),
+                    "torus8": row.get("torus8"),
+                    "digital_root": row.get("digital_root"),
+                    "envelope_ok": row.get("envelope_ok", True),
+                    "error_class": row.get("last_error_class"),
+                },
+                atom_id=morphon.id,
+            )
             try:
-                rec = receipt_provider.mint(
-                    receipt_type=receipt_type,
-                    atom_id=morphon.id,
-                    operation="etp_step",
-                    payload={
-                        "step": row.get("step"),
-                        "ip_before": row.get("ip_before"),
-                        "instr": row.get("instr"),
-                        "wall10": row.get("wall10"),
-                        "torus8": row.get("torus8"),
-                        "digital_root": row.get("digital_root"),
-                        "envelope_ok": envelope_ok,
-                        "error_class": error_class,
-                    },
-                )
-                receipts.append(rec)
-            except (AttributeError, TypeError):
-                # Receipt provider's signature differs from expected; skip
-                # silently rather than failing the whole derive(). The
-                # missing-receipts case is fine — receipts are auxiliary,
-                # not required for ETP correctness.
-                break
+                from cmplx.morphon import MorphonController
+
+                prov = MorphonController.get().get_provider("receipt")
+                if prov is not None and getattr(prov, "chain", None) is not None:
+                    receipts.append(prov.chain._chain[-1])
+            except Exception:
+                pass
         return receipts

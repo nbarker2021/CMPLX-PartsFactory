@@ -19,6 +19,7 @@ from typing import Optional
 from .bond import BondEngine, Dust, Triad
 from .grain import GrainField
 from .jot import JotGrainEncoder
+from ._receipt_bridge import mint_tarpit_operation
 from .walls import (
     ErrorClass,
     ErrorWall,
@@ -251,6 +252,10 @@ class TarpitEcology:
             for g in mirrored.counter_grains[:2]:
                 self.field.set_grain(self.field.pointer, g)
             self.result.mirrors_applied += 1
+            mint_tarpit_operation(
+                "mirror",
+                {"step": self.step_count, "counter_grains": len(mirrored.counter_grains)},
+            )
 
     # ── Run + finalize ────────────────────────────────────────────────
 
@@ -275,6 +280,12 @@ class TarpitEcology:
                     promoted.append(t)
         self.result.dusts = dusts
         self.result.triads = list({t.id: t for t in (triads_from_field + promoted)}.values())
+        for triad in self.result.triads:
+            mint_tarpit_operation(
+                "triad",
+                {"triad_id": triad.id, "grains": len(triad.grains)},
+                atom_id=triad.id,
+            )
 
         grains = self.field.all_grains()
         residuals = [g.mass for g in grains]

@@ -2,8 +2,12 @@
 
 ## Port provided
 
-`symbolic` — `TarpitEcology` is the canonical provider. Components
-that need symbolic / combinator-style execution go through this port.
+`symbolic` — `TarPitSymbolicProvider` is the canonical port provider;
+`TarpitEcology` is the in-process runtime for program execution.
+
+**Canonical corpus forms** (witness only, not separate packages):
+`evolving_tarpit`, `glyphic_tarpit`, `unified_tarpit` — see
+`canonical_forms.py` and `identity_review/registers/tarpit-canonical-forms.md`.
 
 ## Ports consumed (optional)
 

@@ -48,6 +48,16 @@ Env: `SPEEDLIGHT_MINT_RECEIPT=1` (POST mint on cache miss via receipt port), `SP
 
 Windows pytest (if runs hang): `$env:PYTHONPATH='src'; $env:PYTEST_DISABLE_PLUGIN_AUTOLOAD='1'; python -m pytest tests/speedlight/ -q`
 
+### TarPit symbolic (slot-18, port 8844)
+
+```powershell
+docker compose -f docker-compose.tarpit.yml up -d
+curl http://localhost:8844/health
+curl http://localhost:8844/canonical-forms
+```
+
+Env: `TARPIT_MINT_RECEIPT=1`, `TARPIT_PORT=8844`. Canonical forms: `evolving_tarpit`, `glyphic_tarpit`, `unified_tarpit` (see `identity_review/registers/tarpit-canonical-forms.md`).
+
 ### SNAP stratification (slot-17, port 8823)
 
 ```powershell
