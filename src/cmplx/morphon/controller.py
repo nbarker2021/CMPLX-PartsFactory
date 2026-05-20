@@ -467,6 +467,13 @@ class MorphonController:
         # 5. persist
         memory = self.get_provider("memory")
         memory.store(finalized)
+        from ._receipt_bridge import mint_morphon_event
+
+        mint_morphon_event(
+            "admit_and_store",
+            morphon_id=finalized.id,
+            detail={"ports_used": used_ports},
+        )
         return finalized
 
     def evolve(self, morphon: Morphon, op: str, **kwargs: Any) -> Morphon:

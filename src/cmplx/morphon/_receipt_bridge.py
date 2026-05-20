@@ -32,6 +32,7 @@ def mint_morphon_event(
             "evolved_from": ReceiptType.BIRTH.value,
             "register": ReceiptType.ASSIGN.value,
             "gate_miss": ReceiptType.GATE.value,
+            "admit_and_store": ReceiptType.PROCESS.value,
         }
         receipt_type = mapping.get(event, ReceiptType.PROCESS.value)
 
