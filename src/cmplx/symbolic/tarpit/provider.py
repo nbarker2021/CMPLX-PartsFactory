@@ -168,6 +168,11 @@ class TarPitSymbolicProvider:
         )
         return {"session": session.to_dict(), "result": agg.to_dict()}
 
+    def probe_atom(self, program: str, **kwargs: Any) -> dict[str, Any]:
+        """Wrap ETP run as unified_tarpit Atom (compressed signature)."""
+        envelope = kwargs.pop("envelope", None)
+        return self.aggregator.probe_atom(program, envelope=envelope, **kwargs)
+
     def evolve_program(
         self,
         program: str,
@@ -249,6 +254,8 @@ class TarPitSymbolicProvider:
                 "glyphic_tarpit",
                 "unified_tarpit",
             ],
+            "atom_layer": True,
+            "mdhg_tape": True,
         }
 
     def __repr__(self) -> str:

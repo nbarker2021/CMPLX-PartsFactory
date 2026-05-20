@@ -11,12 +11,15 @@ from pydantic import BaseModel, Field
 
 from cmplx.morphon import Morphon
 
+from ..mdhg_tape import MDHGTapeBackend, TarpitMDHGTape
 from ..provider import TarPitSymbolicProvider
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [tarpit] %(message)s")
 logger = logging.getLogger("tarpit")
 
 _provider = TarPitSymbolicProvider()
+_tape_backend = MDHGTapeBackend(":memory:")
+_mdhg_tape = TarpitMDHGTape(backend=_tape_backend)
 
 
 app = FastAPI(
@@ -81,7 +84,7 @@ def run_program(body: RunRequest) -> Dict[str, Any]:
     env = None
     if body.envelope_enabled:
         env = RelativityEnvelope(enabled=True, max_delta_component=body.envelope_max_delta)
-    if body.mode in ("glyph", "jot", "evolve", "etp"):
+    if body.mode in ("glyph", "jot", "evolve", "etp", "atom"):
         return _provider.execute_aggregated(
             body.program, mode=body.mode, envelope=env  # type: ignore[arg-type]
         )
@@ -92,6 +95,42 @@ def run_program(body: RunRequest) -> Dict[str, Any]:
         envelope=env,
     )
     return out
+
+
+@app.post("/atom")
+def probe_atom(body: RunRequest) -> Dict[str, Any]:
+    from .._functions import RelativityEnvelope
+
+    env = None
+    if body.envelope_enabled:
+        env = RelativityEnvelope(enabled=True, max_delta_component=body.envelope_max_delta)
+    return _provider.probe_atom(
+        body.program,
+        envelope=env,
+    )
+
+
+class TapeWriteRequest(BaseModel):
+    planet_id: str = "planet_0"
+    slot: int = 0
+    payload: Dict[str, Any] = Field(default_factory=dict)
+    glyph: str = "α"
+
+
+@app.post("/tape/write")
+def tape_write(body: TapeWriteRequest) -> Dict[str, Any]:
+    tape = _mdhg_tape
+    tape.pointer = (body.planet_id, body.slot)
+    payload = dict(body.payload)
+    payload.setdefault("glyph", body.glyph)
+    result = tape.write_cell(payload)
+    return {"written": result, "pointer": tape.pointer}
+
+
+@app.get("/tape/read")
+def tape_read(planet_id: str = "planet_0", slot: int = 0) -> Dict[str, Any]:
+    cell = _mdhg_tape.read_cell((planet_id, slot))
+    return {"cell": cell}
 
 
 @app.post("/evolve")

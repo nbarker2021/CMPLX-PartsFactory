@@ -17,7 +17,7 @@ from .glyphic import GLYPH_LEXICON, glyphs_to_etp_program
 from ._functions import RelativityEnvelope, run_etp_with_ledger
 from ._receipt_bridge import mint_tarpit_operation
 
-ExecutionMode = Literal["etp", "glyph", "jot", "evolve"]
+ExecutionMode = Literal["etp", "glyph", "jot", "evolve", "atom"]
 
 
 @dataclass
@@ -94,12 +94,39 @@ class TarpitAggregator:
             )
         return program
 
+    def probe_atom(
+        self,
+        program: str,
+        *,
+        envelope: Optional[RelativityEnvelope] = None,
+        mirror_policy: str = "pole",
+    ) -> dict[str, Any]:
+        """unified_tarpit atom wrap — ledger compressed to DerivationKey + signature."""
+        from .atoms import Atom
+
+        env_delta = None
+        if envelope and envelope.enabled:
+            env_delta = envelope.max_delta_component
+        atom = Atom.from_program(
+            program,
+            dimension=self.dimension,
+            max_steps=self.max_steps,
+            mirror_policy=mirror_policy,
+            envelope_max_delta=env_delta,
+        )
+        mint_tarpit_operation(
+            "atom_probe",
+            atom.compact_repr(),
+            atom_id=atom.atom_id,
+        )
+        return {"atom": atom.compact_repr(), "derivation_hash": atom.derivation_key.deterministic_hash()}
+
     def run_unified(
         self,
         program: str,
         *,
         envelope: Optional[RelativityEnvelope] = None,
-        mirror_policy: str = "auto",
+        mirror_policy: str = "pole",
     ) -> dict[str, Any]:
         """unified_tarpit: ledger + envelope probe via ``run_etp_with_ledger``."""
         env = envelope or RelativityEnvelope(enabled=False)
@@ -159,6 +186,22 @@ class TarpitAggregator:
                 best = results[-1] if results else ComputationResult()
                 agg = self._aggregate_ecology_result(session.program, best, session.mode)
                 session.lineage = [r.program for r in results]
+            elif session.mode == "atom":
+                atom_out = self.probe_atom(session.program, envelope=envelope)
+                session.results = [atom_out]
+                agg = AggregatedRun(
+                    program=session.program,
+                    mode="atom",
+                    success=True,
+                    steps=0,
+                    bonds=0,
+                    mirrors=0,
+                    digital_root=int(atom_out["atom"].get("dr", 0)),
+                    final_mass=float(atom_out["atom"].get("mass", 0.0)),
+                    envelope_ok=True,
+                    ledger_rows=0,
+                    canonical_forms=["unified_tarpit"],
+                )
             elif session.mode in ("etp", "glyph", "jot"):
                 ledger_out = self.run_unified(session.program, envelope=envelope)
                 eco_result = self.run_ecology(session.program)

@@ -15,6 +15,9 @@
   `infer_emergent_lattice()` runs. Currently uses statistical
   heuristics over bond demand; the geometry-port-driven form is
   planned.
+- `mdhg_tape` — `TarpitMDHGTape` / `MDHGTapeBackend` (glyphic preview);
+  HTTP `POST /tape/write`, `GET /tape/read`. Full CMPLX MDHG routing TBD.
+- `atoms` — `Atom`, `DerivationKey`, `AtomField`; HTTP `POST /atom`, mode `atom`.
 - `addressing` — `Grain.compute_hash()` could route through MDHG for
   channel-aware bucketing. Currently uses raw SHA256.
 - `crystal` — `CrystalRegistry.mount_triad` mounts `Triad.grains` as

@@ -41,3 +41,22 @@ def test_http_evolve(client):
     r = client.post("/evolve", json={"program": "}01", "iterations": 2})
     assert r.status_code == 200
     assert r.json()["canonical_form"] == "evolving_tarpit"
+
+
+def test_http_atom(client):
+    r = client.post("/atom", json={"program": "}01", "max_steps": 25})
+    assert r.status_code == 200
+    body = r.json()
+    assert "atom" in body
+    assert body["atom"]["atom_id"]
+
+
+def test_http_tape_roundtrip(client):
+    w = client.post(
+        "/tape/write",
+        json={"planet_id": "planet_0", "slot": 1, "glyph": "α", "payload": {"n": 1}},
+    )
+    assert w.status_code == 200
+    r = client.get("/tape/read", params={"planet_id": "planet_0", "slot": 1})
+    assert r.status_code == 200
+    assert r.json()["cell"]["glyph"] == "α"

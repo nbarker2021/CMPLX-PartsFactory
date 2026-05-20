@@ -25,6 +25,17 @@ from .grain import (
 )
 from .jot import CombinatorGrain, JotGrainEncoder, SKCombinator
 from .aggregation import AggregatedRun, ExecutionSession, TarpitAggregator
+from .atoms import (
+    Atom,
+    AtomBondResult,
+    AtomField,
+    BondType,
+    DerivationKey,
+    InvariantSignature,
+    bond_atoms,
+    wrap_run,
+)
+from .mdhg_tape import MDHGTapeBackend, TarpitMDHGTape, TapePosition
 from .canonical_forms import CANONICAL_ALIASES, CANONICAL_FORMS, normalize_form_name
 from .glyphic import GLYPH_LEXICON, annotate_grain_tags, glyphs_to_etp_program
 from .provider import TarPitSymbolicProvider
@@ -48,6 +59,9 @@ __all__ = [
     "ComputationPhase", "ComputationResult", "TarpitEcology",
     "TarPitSymbolicProvider",
     "TarpitAggregator", "ExecutionSession", "AggregatedRun",
+    "Atom", "AtomField", "AtomBondResult", "BondType",
+    "DerivationKey", "InvariantSignature", "bond_atoms", "wrap_run",
+    "MDHGTapeBackend", "TarpitMDHGTape", "TapePosition",
     "CANONICAL_FORMS", "CANONICAL_ALIASES", "normalize_form_name",
     "GLYPH_LEXICON", "glyphs_to_etp_program", "annotate_grain_tags",
     "RelativityEnvelope", "run_etp_with_ledger",
