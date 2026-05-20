@@ -118,9 +118,13 @@ runtime-data/
 # Python build / cache artifacts
 # ============================================================
 __pycache__/
+**/__pycache__/
 *.pyc
+**/*.pyc
 *.pyo
+**/*.pyo
 *.pyd
+**/*.pyd
 *.egg-info/
 .eggs/
 .pytest_cache/
