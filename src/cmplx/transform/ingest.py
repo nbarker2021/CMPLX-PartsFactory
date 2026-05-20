@@ -11,6 +11,8 @@ from pathlib import Path
 from typing import Iterable, Optional, Sequence
 
 from cmplx.morphon import Morphon
+
+from .morphon_ingest import forge_ingest_morphon
 from cmplx.primitives.core import NLAECNFChain
 from cmplx.runtime_paths import runtime_path
 from cmplx.snap.labeler import SNAPLabeler
@@ -59,6 +61,7 @@ class IngestStats:
     new_meanings: int = 0
     new_labels: int = 0
     cache_hits: int = 0
+    bond_morphons: int = 0
     elapsed_seconds: float = 0.0
 
     def as_dict(self) -> dict:
@@ -70,6 +73,7 @@ class IngestStats:
             "new_meanings": self.new_meanings,
             "new_labels": self.new_labels,
             "cache_hits": self.cache_hits,
+            "bond_morphons": self.bond_morphons,
             "elapsed_seconds": round(self.elapsed_seconds, 3),
         }
 
@@ -200,6 +204,7 @@ class CorpusIngester:
         translation_key: str = "",
     ) -> None:
         cache = get_cache_provider() if _has("cache") else None
+        prev_morphon: Optional[Morphon] = None
         for seg in segments:
             bond = QuadBond(quad_left=seg.concat[:4], quad_right=seg.concat[4:], level=1)
             hit = lookup.probe(bond, CaseMode.LOWER)
@@ -217,14 +222,22 @@ class CorpusIngester:
                 continue
             if store.by_concat(seg.concat, stream=seg.stream):
                 continue
-            morphon = Morphon.forge(
-                payload={
+            morphon, bond_m = forge_ingest_morphon(
+                {
                     "concat": seg.concat,
                     "snap_key": snap_key,
                     "token_metrics": compute_token_metrics(seg.concat).as_dict(),
-                }
+                    "translation_key": translation_key,
+                    "stream": seg.stream,
+                },
+                prev=prev_morphon,
+                store=self.register_ports,
+                bond_with_prev=self.register_ports and prev_morphon is not None,
             )
             morphon.e8_coordinates = tuple(float(c) for c in canonical["e8_coords"])
+            if bond_m is not None:
+                stats.bond_morphons += 1
+            prev_morphon = morphon
             payload = IndexEntryPayload(
                 concat=seg.concat,
                 morphon_id=morphon.id,
@@ -275,6 +288,7 @@ class CorpusIngester:
         cache = get_cache_provider() if _has("cache") else None
         chunk_anchor = re.sub(r"\s+", "", chunk)[:8].ljust(8, "a")
         chunk_canonical = NLAECNFChain.full_chain(chunk_anchor)
+        prev_morphon: Optional[Morphon] = None
 
         for seg in segments:
             if len(seg) < 4:
@@ -306,15 +320,23 @@ class CorpusIngester:
                 stats.bond_skips += 1
             elif not store.by_concat(concat, stream=self.stream):
                 token_metrics = compute_token_metrics(concat)
-                morphon = Morphon.forge(
-                    payload={
+                morphon, bond_m = forge_ingest_morphon(
+                    {
                         "concat": concat,
                         "snap_key": snap_key,
                         "token_metrics": token_metrics.as_dict(),
-                    }
+                        "source_doc": source_doc,
+                        "source_span": source_span,
+                    },
+                    prev=prev_morphon,
+                    store=self.register_ports,
+                    bond_with_prev=self.register_ports and prev_morphon is not None,
                 )
                 morphon.e8_coordinates = tuple(float(c) for c in canonical["e8_coords"])
                 morphon.dr_channel = int(canonical["digital_root"])
+                if bond_m is not None:
+                    stats.bond_morphons += 1
+                prev_morphon = morphon
                 payload = IndexEntryPayload(
                     concat=concat,
                     morphon_id=morphon.id,

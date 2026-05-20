@@ -486,6 +486,69 @@ class MorphonController:
             detail={"parent": morphon.id, **{k: str(v) for k, v in kwargs.items()}},
         ))
 
+    def combine(
+        self,
+        left: Morphon,
+        right: Morphon,
+        method: str,
+        **kwargs: Any,
+    ) -> Morphon | dict[str, Any]:
+        """Combine two morphons via a named ``CombineMethod`` (see ``combinations``)."""
+        from .combinations import combine_pair
+
+        result = combine_pair(left, right, method, **kwargs)
+        if isinstance(result, Morphon):
+            from ._receipt_bridge import mint_morphon_event
+
+            mint_morphon_event(
+                "combine",
+                morphon_id=result.id,
+                detail={
+                    "method": method,
+                    "parents": [left.id, right.id],
+                    "combination": result.payload.get("combination"),
+                },
+            )
+        return result
+
+    def pipeline(
+        self,
+        payload: Mapping[str, Any],
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        """Datum → morphon production path via ``MorphonSubstrateProvider``."""
+        from .substrate import MorphonSubstrateProvider
+
+        return MorphonSubstrateProvider().pipeline(payload, **kwargs)
+
+    def store(self, morphon: Morphon) -> Morphon:
+        """Persist via the registered ``memory`` provider."""
+        memory = self.get_provider("memory")
+        memory.store(morphon)
+        from ._receipt_bridge import mint_morphon_event
+
+        mint_morphon_event(
+            "store",
+            morphon_id=morphon.id,
+            detail={"identity_kind": morphon.payload.get("identity_kind")},
+        )
+        return morphon
+
+    def fetch(self, morphon_id: str) -> Morphon | None:
+        """Load a morphon by id when ``memory`` is registered; else ``None``."""
+        if not self.has("memory"):
+            return None
+        return self.get_provider("memory").fetch(morphon_id)
+
+    def fetch_required(self, morphon_id: str) -> Morphon:
+        """Like ``fetch`` but raises ``LookupError`` when missing or no memory port."""
+        if not self.has("memory"):
+            raise LookupError("no provider registered for port 'memory'")
+        found = self.fetch(morphon_id)
+        if found is None:
+            raise LookupError(f"morphon not found: {morphon_id!r}")
+        return found
+
 
 # ---------------------------------------------------------------------------
 # Convenience: module-level helpers that delegate to the singleton

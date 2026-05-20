@@ -18,6 +18,8 @@ from typing import Any
 
 from cmplx.morphon import Morphon, SymbolicReport
 
+from cmplx.morphon.links import link_morphon_to_tarpit_atom
+
 from .aggregation import ExecutionMode, TarpitAggregator
 from ._functions import RelativityEnvelope, run_etp_with_ledger
 from ._receipt_bridge import mint_tarpit_operation
@@ -201,6 +203,40 @@ class TarPitSymbolicProvider:
         """Wrap ETP run as unified_tarpit Atom (compressed signature)."""
         envelope = kwargs.pop("envelope", None)
         return self.aggregator.probe_atom(program, envelope=envelope, **kwargs)
+
+    def probe_atom_for_morphon(
+        self,
+        morphon: Morphon,
+        program: str | None = None,
+        **kwargs: Any,
+    ) -> tuple[dict[str, Any], Morphon]:
+        """Probe TarPit atom and attach explicit ``morphon_tarpit`` labels.
+
+        Returns ``(atom_probe_dict, morphon)`` with same ``morphon.id`` and
+        payload keys: ``linkage_kind``, ``morphon_id``, ``tarpit_atom_id``,
+        ``tarpit_derivation_hash``, ``tarpit_program``.
+        """
+        prog = program or self.encode_to_etp(morphon)
+        atom_out = self.probe_atom(prog, **kwargs)
+        linked = link_morphon_to_tarpit_atom(morphon, atom_out, tarpit_program=prog)
+        atom = atom_out.get("atom") or {}
+        mint_tarpit_operation(
+            "bond",
+            {
+                "morphon_id": linked.id,
+                "tarpit_atom_id": atom.get("atom_id", ""),
+                "linkage_kind": "morphon_tarpit",
+                "program_len": len(prog),
+            },
+            atom_id=linked.id,
+        )
+        return atom_out, linked
+
+    def derive_and_link(self, morphon: Morphon) -> tuple[SymbolicReport, Morphon]:
+        """``derive`` then ``probe_atom_for_morphon`` — production convenience."""
+        report = self.derive(morphon)
+        atom_out, linked = self.probe_atom_for_morphon(morphon)
+        return report, linked
 
     def evolve_program(
         self,

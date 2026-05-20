@@ -16,7 +16,15 @@ Public surface:
 from __future__ import annotations
 
 from .state import MorphonState, can_transition, assert_transition, is_terminal
+from .links import (
+    LINKAGE_MORPHON_TARPIT,
+    decode_link_from_payload,
+    is_tarpit_linked,
+    link_morphon_to_tarpit_atom,
+)
 from .morphon import Morphon, Receipt
+from .combinations import CombineMethod, combine_pair
+from .substrate import MorphonSubstrateProvider
 from .controller import (
     MorphonController,
     AddressingProvider,
@@ -39,6 +47,13 @@ __all__ = [
     "Morphon",
     "MorphonState",
     "Receipt",
+    "MorphonSubstrateProvider",
+    "LINKAGE_MORPHON_TARPIT",
+    "is_tarpit_linked",
+    "link_morphon_to_tarpit_atom",
+    "decode_link_from_payload",
+    "CombineMethod",
+    "combine_pair",
     "MorphonController",
     "AddressingProvider",
     "AtlasProvider",

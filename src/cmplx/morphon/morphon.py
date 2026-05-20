@@ -152,7 +152,7 @@ class Morphon:
             detail=dict(detail),
         )
         updated = self.attach_receipt(r)
-        if operation in ("forge", "transition", "evolved_from"):
+        if operation in ("forge", "transition", "evolved_from", "link_tarpit"):
             from ._receipt_bridge import mint_morphon_event
 
             mint_morphon_event(
@@ -165,6 +165,17 @@ class Morphon:
     # ------------------------------------------------------------------
     # Payload evolution
     # ------------------------------------------------------------------
+
+    def annotate_links(self, **labels: Any) -> "Morphon":
+        """Merge explicit cross-system linkage into payload (same morphon id).
+
+        Used when binding to TarPit ``Atom`` or other ports — see
+        ``cmplx.morphon.links`` for key names.
+        """
+        body = dict(self.payload)
+        body.update(labels)
+        updated = replace(self, payload=body)
+        return updated._with_receipt("link_tarpit", dict(labels))
 
     def with_payload(self, payload: Mapping[str, Any]) -> "Morphon":
         """Return a new morphon (NEW id) carrying a new payload, with
@@ -228,6 +239,7 @@ class Morphon:
 
     def serialize(self) -> dict[str, Any]:
         """Produce a JSON-safe dict round-trippable via `deserialize`."""
+        fc = self.fractal_coordinate
         return {
             "id": self.id,
             "created_at": self.created_at,
@@ -236,6 +248,13 @@ class Morphon:
             "e8_coordinates": list(self.e8_coordinates) if self.e8_coordinates else None,
             "leech_point": self.leech_point,
             "dr_channel": self.dr_channel,
+            "quad_encoding": list(self.quad_encoding) if self.quad_encoding else None,
+            "parity_channels": list(self.parity_channels) if self.parity_channels else None,
+            "sacred_frequency": self.sacred_frequency,
+            "digital_root": self.digital_root,
+            "fractal_coordinate": (
+                {"real": fc.real, "imag": fc.imag} if fc is not None else None
+            ),
             "parent": self.parent,
             "children": list(self.children),
             "receipts": [
@@ -248,6 +267,10 @@ class Morphon:
     @classmethod
     def deserialize(cls, data: Mapping[str, Any]) -> "Morphon":
         """Reconstruct a morphon from `serialize()` output."""
+        fc_raw = data.get("fractal_coordinate")
+        fractal: Optional[complex] = None
+        if isinstance(fc_raw, Mapping):
+            fractal = complex(float(fc_raw["real"]), float(fc_raw["imag"]))
         return cls(
             id=data["id"],
             created_at=data["created_at"],
@@ -260,6 +283,19 @@ class Morphon:
             ),
             leech_point=data.get("leech_point"),
             dr_channel=data.get("dr_channel"),
+            quad_encoding=(
+                tuple(data["quad_encoding"])
+                if data.get("quad_encoding") is not None
+                else None
+            ),
+            parity_channels=(
+                tuple(data["parity_channels"])
+                if data.get("parity_channels") is not None
+                else None
+            ),
+            sacred_frequency=data.get("sacred_frequency"),
+            digital_root=data.get("digital_root"),
+            fractal_coordinate=fractal,
             parent=data.get("parent"),
             children=tuple(data.get("children") or ()),
             receipts=tuple(
