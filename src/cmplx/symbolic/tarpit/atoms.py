@@ -249,6 +249,9 @@ class Atom:
         }
 
 
+_ETP_BRIDGE_OPS = "}<>+01"
+
+
 class BondType(Enum):
     RESONANCE = "resonance"
     DUST = "dust"
@@ -257,26 +260,143 @@ class BondType(Enum):
 
 
 @dataclass
-class AtomBondResult:
-    bonded: bool
+class Mediator:
+    """Bonding mediator between two atoms (torus midpoint interpolation)."""
+
+    wall_serial: str
+    torus_digits: List[int]
+    digital_root: int
+    source: str = "interpolation"
+
+    @classmethod
+    def from_atoms(cls, a: Atom, b: Atom) -> "Mediator":
+        t1 = a.signature.torus_final
+        t2 = b.signature.torus_final
+        n = min(len(t1), len(t2))
+        mid_torus: List[int] = []
+        for i in range(n):
+            diff = (t2[i] - t1[i]) % 8
+            if diff > 4:
+                mid = (t1[i] - (8 - diff) // 2) % 8
+            else:
+                mid = (t1[i] + diff // 2) % 8
+            mid_torus.append(mid)
+
+        dr = (a.signature.digital_root + b.signature.digital_root) % 9
+        if dr == 0 and (a.signature.digital_root + b.signature.digital_root) > 0:
+            dr = 9
+
+        a_res = a.signature.residual_digits
+        b_res = b.signature.residual_digits
+        n_res = max(len(a_res), len(b_res))
+        med_digits: List[int] = []
+        for i in range(min(n_res, 8)):
+            d1 = a_res[i] if i < len(a_res) else 0
+            d2 = b_res[i] if i < len(b_res) else 0
+            med_digits.append((d1 + d2) // 2)
+        while len(med_digits) < 8:
+            med_digits.append(0)
+
+        closures = (a.signature.closure_count + b.signature.closure_count) // 2
+        serial = f"{closures}.{''.join(str(d) for d in med_digits)}"
+
+        return cls(
+            wall_serial=serial,
+            torus_digits=mid_torus,
+            digital_root=dr,
+            source="interpolation",
+        )
+
+
+@dataclass
+class Composite:
+    """Bonded atom pair + mediator — promotable to next-level Atom."""
+
+    pole_a: Atom
+    pole_b: Atom
+    mediator: Mediator
     bond_type: BondType
     compatibility: float
-    reason: str = ""
+    composite_id: str = ""
+
+    def __post_init__(self) -> None:
+        if not self.composite_id:
+            raw = self.pole_a.atom_id + "|" + self.pole_b.atom_id
+            self.composite_id = hashlib.sha256(raw.encode()).hexdigest()[:12]
+
+    def _bridge_token(self) -> str:
+        t = self.mediator.torus_digits
+        tokens = []
+        for i in range(min(2, len(t))):
+            tokens.append(_ETP_BRIDGE_OPS[t[i] % len(_ETP_BRIDGE_OPS)])
+        return "".join(tokens) if tokens else ">"
+
+    def promote(self) -> Atom:
+        composite_program = (
+            self.pole_a.derivation_key.program
+            + self._bridge_token()
+            + self.pole_b.derivation_key.program
+        )
+        new_level = max(self.pole_a.level, self.pole_b.level) + 1
+        a_env = self.pole_a.derivation_key.envelope_max_delta
+        b_env = self.pole_b.derivation_key.envelope_max_delta
+        env_delta: Optional[float] = None
+        if a_env is not None and b_env is not None:
+            env_delta = min(a_env, b_env)
+        elif a_env is not None:
+            env_delta = a_env
+        elif b_env is not None:
+            env_delta = b_env
+
+        atom = Atom.from_program(
+            composite_program,
+            dimension=self.pole_a.derivation_key.dimension,
+            max_steps=self.pole_a.derivation_key.max_steps,
+            mirror_policy=self.pole_a.derivation_key.mirror_policy,
+            envelope_max_delta=env_delta,
+        )
+        atom.level = new_level
+        atom.derivation_key.level = new_level
+        atom._lineage = [self.pole_a.atom_id, self.pole_b.atom_id]
+        return atom
 
     def to_dict(self) -> Dict[str, Any]:
         return {
+            "composite_id": self.composite_id,
+            "bond_type": self.bond_type.value,
+            "compatibility": round(self.compatibility, 4),
+            "poles": [self.pole_a.atom_id, self.pole_b.atom_id],
+            "mediator_dr": self.mediator.digital_root,
+        }
+
+
+@dataclass
+class BondResult:
+    """Outcome of an atom bond attempt."""
+
+    bonded: bool
+    bond_type: BondType
+    compatibility: float = 0.0
+    composite: Optional[Composite] = None
+    reason: str = ""
+
+    def to_dict(self) -> Dict[str, Any]:
+        out: Dict[str, Any] = {
             "bonded": self.bonded,
             "bond_type": self.bond_type.value,
             "compatibility": round(self.compatibility, 4),
             "reason": self.reason,
         }
+        if self.composite is not None:
+            out["composite"] = self.composite.to_dict()
+        return out
 
 
 def bond_atoms(
     a: Atom,
     b: Atom,
     threshold: float = BOND_THRESHOLD_DUST,
-) -> AtomBondResult:
+) -> BondResult:
     compat = a.wall_compatibility(b)
     if compat >= BOND_THRESHOLD_RESONANCE:
         bond_type = BondType.RESONANCE
@@ -288,25 +408,39 @@ def bond_atoms(
         bond_type = BondType.FAILED
 
     if compat < threshold:
-        return AtomBondResult(
+        return BondResult(
             bonded=False,
             bond_type=BondType.FAILED,
             compatibility=compat,
             reason=f"compatibility {compat:.3f} < threshold {threshold:.3f}",
         )
-    return AtomBondResult(
+
+    mediator = Mediator.from_atoms(a, b)
+    composite = Composite(
+        pole_a=a,
+        pole_b=b,
+        mediator=mediator,
+        bond_type=bond_type,
+        compatibility=compat,
+    )
+    return BondResult(
         bonded=True,
         bond_type=bond_type,
         compatibility=compat,
+        composite=composite,
     )
 
 
 @dataclass
 class AtomField:
-    """Workspace for multi-atom chemistry (probe + pairwise bond screening)."""
+    """Multi-atom chemistry — bond, composite, promote."""
 
     atoms: Dict[str, Atom] = field(default_factory=dict)
+    composites: List[Composite] = field(default_factory=list)
+    promoted: Dict[str, Atom] = field(default_factory=dict)
+    failed_bonds: List[BondResult] = field(default_factory=list)
     bond_threshold: float = BOND_THRESHOLD_DUST
+    max_level: int = 3
 
     def add_atom(self, atom: Atom) -> None:
         self.atoms[atom.atom_id] = atom
@@ -316,22 +450,124 @@ class AtomField:
         self.add_atom(atom)
         return atom
 
+    def add_programs(self, programs: List[str], **kwargs: Any) -> List[Atom]:
+        return [self.add_program(p, **kwargs) for p in programs]
+
     def screen_bonds(self) -> List[Dict[str, Any]]:
-        """Pairwise bond screen over all atoms in the field."""
         ids = list(self.atoms.keys())
         results: List[Dict[str, Any]] = []
         for i, aid in enumerate(ids):
             for bid in ids[i + 1 :]:
                 a, b = self.atoms[aid], self.atoms[bid]
                 br = bond_atoms(a, b, threshold=self.bond_threshold)
-                results.append(
-                    {
-                        "a": aid,
-                        "b": bid,
-                        **br.to_dict(),
-                    }
-                )
+                results.append({"a": aid, "b": bid, **br.to_dict()})
         return results
+
+    def run_chemistry(self, promote: bool = True) -> Dict[str, Any]:
+        atom_list = list(self.atoms.values())
+        n = len(atom_list)
+        bonds_attempted = 0
+        bonds_succeeded = 0
+
+        for i in range(n):
+            for j in range(i + 1, n):
+                a, b = atom_list[i], atom_list[j]
+                bonds_attempted += 1
+                result = bond_atoms(a, b, threshold=self.bond_threshold)
+                if result.bonded and result.composite is not None:
+                    bonds_succeeded += 1
+                    self.composites.append(result.composite)
+                    if promote:
+                        promoted_atom = result.composite.promote()
+                        self.promoted[promoted_atom.atom_id] = promoted_atom
+                else:
+                    self.failed_bonds.append(result)
+
+        return {
+            "n_atoms": n,
+            "bonds_attempted": bonds_attempted,
+            "bonds_succeeded": bonds_succeeded,
+            "bonds_failed": bonds_attempted - bonds_succeeded,
+            "composites": len(self.composites),
+            "promoted_atoms": len(self.promoted),
+        }
+
+    def run_multilevel(self, max_level: int = 2) -> Dict[str, Any]:
+        results: List[Dict[str, Any]] = []
+        r0 = self.run_chemistry(promote=True)
+        r0["level"] = 0
+        results.append(r0)
+
+        for level in range(1, min(max_level, self.max_level) + 1):
+            if not self.promoted:
+                break
+            level_field = AtomField(
+                bond_threshold=self.bond_threshold, max_level=self.max_level
+            )
+            for atom in self.promoted.values():
+                level_field.add_atom(atom)
+            rN = level_field.run_chemistry(promote=(level < max_level))
+            rN["level"] = level
+            results.append(rN)
+            self.promoted = level_field.promoted
+            self.composites.extend(level_field.composites)
+
+        return {
+            "levels": results,
+            "total_composites": len(self.composites),
+            "final_promoted": len(self.promoted),
+        }
+
+    def compatibility_matrix(self) -> Dict[str, Any]:
+        atom_list = list(self.atoms.values())
+        n = len(atom_list)
+        ids = [a.atom_id for a in atom_list]
+        matrix: List[List[float]] = []
+        off_diag: List[float] = []
+        for i in range(n):
+            row: List[float] = []
+            for j in range(n):
+                if i == j:
+                    row.append(1.0)
+                else:
+                    v = atom_list[i].wall_compatibility(atom_list[j])
+                    row.append(v)
+                    if j > i:
+                        off_diag.append(v)
+            matrix.append(row)
+        return {
+            "ids": ids,
+            "matrix": matrix,
+            "mean_compatibility": sum(off_diag) / len(off_diag) if off_diag else 0.0,
+            "max_off_diagonal": max(off_diag) if off_diag else 0.0,
+            "min_off_diagonal": min(off_diag) if off_diag else 0.0,
+        }
+
+    def summary(self) -> Dict[str, Any]:
+        all_atoms = list(self.atoms.values()) + list(self.promoted.values())
+        masses = [a.signature.mass for a in all_atoms]
+        lattices = [a.signature.lattice for a in all_atoms]
+        bond_types = [c.bond_type.value for c in self.composites]
+        return {
+            "base_atoms": len(self.atoms),
+            "promoted_atoms": len(self.promoted),
+            "composites": len(self.composites),
+            "failed_bonds": len(self.failed_bonds),
+            "mass_distribution": {
+                "mean": sum(masses) / len(masses) if masses else 0.0,
+                "max": max(masses) if masses else 0.0,
+                "closed": sum(1 for a in all_atoms if a.signature.is_closed),
+            },
+            "lattice_distribution": _count_values(lattices),
+            "bond_types": _count_values(bond_types),
+        }
+
+
+def _count_values(items: List[str]) -> Dict[str, int]:
+    counts: Dict[str, int] = {}
+    for item in items:
+        counts[item] = counts.get(item, 0) + 1
+    return counts
 
 
 def wrap_run(run_output: Dict[str, Any], key: DerivationKey) -> Atom:

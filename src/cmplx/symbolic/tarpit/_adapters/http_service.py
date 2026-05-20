@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 
 from cmplx.morphon import Morphon
 
+from ..mdhg_bridge import bind_tape_cell
 from ..mdhg_tape import MDHGTapeBackend, TarpitMDHGTape
 from ..provider import TarPitSymbolicProvider
 
@@ -117,14 +118,26 @@ class TapeWriteRequest(BaseModel):
     glyph: str = "α"
 
 
+class ChemistryRequest(BaseModel):
+    programs: List[str] = Field(..., min_length=1)
+    promote: bool = True
+    max_level: int = 1
+
+
+@app.post("/chemistry")
+def run_chemistry(body: ChemistryRequest) -> Dict[str, Any]:
+    return _provider.run_chemistry(
+        body.programs, promote=body.promote, max_level=body.max_level
+    )
+
+
 @app.post("/tape/write")
 def tape_write(body: TapeWriteRequest) -> Dict[str, Any]:
     tape = _mdhg_tape
     tape.pointer = (body.planet_id, body.slot)
     payload = dict(body.payload)
     payload.setdefault("glyph", body.glyph)
-    result = tape.write_cell(payload)
-    return {"written": result, "pointer": tape.pointer}
+    return bind_tape_cell(tape, payload, position=(body.planet_id, body.slot))
 
 
 @app.get("/tape/read")

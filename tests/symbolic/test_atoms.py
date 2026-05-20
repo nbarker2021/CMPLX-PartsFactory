@@ -47,6 +47,26 @@ def test_bond_atoms_self_compatible():
     br = bond_atoms(atom, atom)
     assert br.bonded
     assert br.compatibility == 1.0
+    assert br.composite is not None
+
+
+def test_composite_promote():
+    a = Atom.from_program("}01", max_steps=15)
+    b = Atom.from_program("}10", max_steps=15)
+    br = bond_atoms(a, b, threshold=0.0)
+    if br.composite:
+        promoted = br.composite.promote()
+        assert promoted.level >= 1
+        assert len(promoted._lineage) == 2
+
+
+def test_run_chemistry():
+    field = AtomField(bond_threshold=0.0)
+    field.add_program("}01", max_steps=15)
+    field.add_program("}10", max_steps=15)
+    stats = field.run_chemistry(promote=True)
+    assert stats["bonds_attempted"] == 1
+    assert stats["n_atoms"] == 2
 
 
 def test_atom_field_screen():
@@ -63,4 +83,4 @@ def test_atom_field_threshold():
     a = field.add_program("}01", max_steps=15)
     b = field.add_program("}10", max_steps=15)
     br = bond_atoms(a, b, threshold=0.99)
-    assert not br.bonded or br.compatibility >= 0.99
+    assert not br.bonded or (br.compatibility >= 0.99 and br.composite is not None)

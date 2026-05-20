@@ -57,6 +57,15 @@ def test_http_tape_roundtrip(client):
         json={"planet_id": "planet_0", "slot": 1, "glyph": "α", "payload": {"n": 1}},
     )
     assert w.status_code == 200
+    assert w.json()["routing"]["mdhg_address"]
     r = client.get("/tape/read", params={"planet_id": "planet_0", "slot": 1})
     assert r.status_code == 200
     assert r.json()["cell"]["glyph"] == "α"
+
+
+def test_http_chemistry(client):
+    r = client.post("/chemistry", json={"programs": ["}01", "}10"], "max_level": 0})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["canonical_form"] == "unified_tarpit"
+    assert "chemistry" in body

@@ -168,6 +168,35 @@ class TarPitSymbolicProvider:
         )
         return {"session": session.to_dict(), "result": agg.to_dict()}
 
+    def run_chemistry(
+        self,
+        programs: list[str],
+        *,
+        promote: bool = True,
+        max_level: int = 1,
+    ) -> dict[str, Any]:
+        from .atoms import AtomField
+
+        field = AtomField(
+            bond_threshold=0.35,
+        )
+        # AtomField uses per-program kwargs via add_program
+        for p in programs:
+            field.add_program(
+                p,
+                dimension=self.default_dimension,
+                max_steps=self.default_max_steps,
+            )
+        if max_level > 0:
+            stats = field.run_multilevel(max_level=max_level)
+        else:
+            stats = field.run_chemistry(promote=promote)
+        return {
+            "chemistry": stats,
+            "summary": field.summary(),
+            "canonical_form": "unified_tarpit",
+        }
+
     def probe_atom(self, program: str, **kwargs: Any) -> dict[str, Any]:
         """Wrap ETP run as unified_tarpit Atom (compressed signature)."""
         envelope = kwargs.pop("envelope", None)
