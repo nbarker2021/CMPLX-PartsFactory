@@ -31,10 +31,16 @@ def test_mint_enabled_default():
 
 def test_forge_mints_birth_on_receipt_port(receipt_provider):
     m = Morphon.forge(payload={"x": 1})
+    assert m.payload["identity_kind"] == "morphon"
     assert len(receipt_provider.chain._chain) >= 1
     last = receipt_provider.chain._chain[-1]
     assert last.receipt_type == ReceiptType.BIRTH.value
     assert last.atom_id == m.id
+
+
+def test_etp_derived_identity_kind():
+    m = Morphon.forge(payload={"etp_decode": True, "steps": 1})
+    assert m.payload["identity_kind"] == "morphon_etp_derived"
 
 
 def test_transition_mints_crossing(receipt_provider):

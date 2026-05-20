@@ -30,7 +30,8 @@ from cmplx.morphon import (
 def test_forge_creates_morphon_at_created_state():
     m = Morphon.forge(payload={"text": "hello"})
     assert m.state is MorphonState.CREATED
-    assert m.payload == {"text": "hello"}
+    assert m.payload["text"] == "hello"
+    assert m.payload["identity_kind"] == "morphon"
     assert m.id
     assert m.created_at
     # The forge call should leave one receipt.
@@ -51,7 +52,8 @@ def test_with_payload_creates_a_new_morphon_with_parent_link():
     assert child.id != parent.id
     assert child.parent == parent.id
     assert child.state is MorphonState.CREATED
-    assert child.payload == {"x": 2}
+    assert child.payload["x"] == 2
+    assert child.payload["identity_kind"] == "morphon"
 
 
 def test_serialize_round_trip():

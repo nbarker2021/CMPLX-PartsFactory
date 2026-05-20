@@ -95,10 +95,19 @@ class Morphon:
 
         Use the `parent` argument to record lineage when a morphon is
         born inside another's evolution.
+
+        Every forged morphon carries ``payload["identity_kind"]`` so
+        substrate atoms are distinguishable from TarPit ``Atom`` (ETP
+        compression) and from bare receipt ``atom_id`` strings.
         """
+        body = dict(payload)
+        if body.get("etp_decode"):
+            body.setdefault("identity_kind", "morphon_etp_derived")
+        else:
+            body.setdefault("identity_kind", "morphon")
         m = cls(
             id=morphon_id or str(uuid.uuid4()),
-            payload=dict(payload),
+            payload=body,
             parent=parent,
         )
         return m._with_receipt("forge", {"parent": parent})
