@@ -1,0 +1,56 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "repo-kernel: up",
+      "type": "shell",
+      "command": "docker compose -f docker-compose.repo-kernel.yml up -d --build",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "repo-kernel: restart",
+      "type": "shell",
+      "command": "docker compose -f docker-compose.repo-kernel.yml restart repo-kernel",
+      "problemMatcher": []
+    },
+    {
+      "label": "repo-kernel: health",
+      "type": "shell",
+      "command": "Invoke-RestMethod http://localhost:8786/api/health | ConvertTo-Json -Depth 6",
+      "problemMatcher": []
+    },
+    {
+      "label": "repo-kernel: workbook",
+      "type": "shell",
+      "command": "Invoke-RestMethod http://localhost:8786/api/global-tool-workbook | ConvertTo-Json -Depth 8",
+      "problemMatcher": []
+    },
+    {
+      "label": "repo-kernel: gitnexus status",
+      "type": "shell",
+      "command": "Invoke-RestMethod http://localhost:8786/api/gitnexus/status | ConvertTo-Json -Depth 8",
+      "problemMatcher": []
+    },
+    {
+      "label": "repo-kernel: named capabilities",
+      "type": "shell",
+      "command": "Invoke-RestMethod http://localhost:8786/api/global/knowledge/devkit-ingest | ConvertTo-Json -Depth 6; Invoke-RestMethod http://localhost:8786/api/global/mcp/local-os | ConvertTo-Json -Depth 6; Invoke-RestMethod http://localhost:8786/api/global/code-execution/octa64 | ConvertTo-Json -Depth 6; Invoke-RestMethod http://localhost:8786/api/global/validation/mcp-os | ConvertTo-Json -Depth 6; Invoke-RestMethod http://localhost:8786/api/global/synthesis/cqe-modular | ConvertTo-Json -Depth 6",
+      "problemMatcher": []
+    },
+    {
+      "label": "repo-kernel: focused tests",
+      "type": "shell",
+      "command": "python -m pytest tests/test_gitnexus_bridge.py tests/test_global_location_map.py -q",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "repo-kernel: all tests",
+      "type": "shell",
+      "command": "python -m pytest tests -q",
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,406 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": [
+    "./.opencode/plugins/cmplx-context-router.mjs"
+  ],
+  "disabled_hooks": [],
+  "disabled_agents": [
+    "hephaestus",
+    "prometheus",
+    "atlas",
+    "oracle",
+    "librarian",
+    "explore",
+    "multimodal-looker",
+    "metis",
+    "momus",
+    "sisyphus-junior"
+  ],
+  "disabled_tools": [],
+  "agents": {
+    "sisyphus": {
+      "prompt_append": "file:///workspace/PartsFactory/CMPLX-PartsFactory/AGENTS.md",
+      "model": "deepseek-v4-flash-free",
+      "fallback_models": [
+        "deepseek-v4-flash-free"
+      ],
+      "permission": {
+        "read": "allow",
+        "edit": "allow",
+        "write": "allow",
+        "bash": "ask",
+        "webfetch": "deny",
+        "websearch": "deny"
+      }
+    }
+  },
+  "categories": {
+    "cmplx-core": {
+      "model": "deepseek-v4-flash-free"
+    }
+  },
+  "skills": {
+    "sources": [
+      "/workspace/PartsFactory/CMPLX-PartsFactory/.opencode/skills"
+    ]
+  },
+  "cmplx_control": {
+    "version": "2026-05-18-hooks-memory-skills-tools",
+    "scope": [
+      "/workspace/PartsFactory",
+      "/workspace/PartsFactory/CMPLX-PartsFactory",
+      "/workspace/MannyUnification2",
+      "/workspace/OCbuild"
+    ],
+    "deferred": [
+      "agents",
+      "mcp"
+    ],
+    "hooks": {
+      "native_hooks_enabled_by_empty_disabled_hooks": [
+        "agent-usage-reminder",
+        "category-skill-reminder",
+        "keyword-detector",
+        "think-mode",
+        "auto-slash-command",
+        "start-work",
+        "ralph-loop",
+        "comment-checker",
+        "todo-continuation-enforcer",
+        "unstable-agent-babysitter",
+        "legacy-plugin-toast",
+        "auto-update-checker",
+        "prometheus-md-only",
+        "sisyphus-junior-notepad"
+      ],
+      "cmplx_pause_gates": [
+        "session-start",
+        "user-prompt",
+        "pre-tool",
+        "post-tool",
+        "pre-edit",
+        "post-edit",
+        "stop-final",
+        "compaction-continuation"
+      ],
+      "underinformed_work_rule": "Any boundary where an ordinary AI would proceed from stale, missing, generic, or name-only context must refresh into the correct CMPLX lane before continuing.",
+      "trigger_routes": [
+        {
+          "hook_point": "session.start",
+          "opencode_points": [
+            "Event session start",
+            "rules-injector",
+            "directory-readme-injector",
+            "directory-agents-injector"
+          ],
+          "cursor_points": [
+            "sessionStart"
+          ],
+          "codex_gate": "session-start",
+          "underinformed_risk": "Agent starts from generic context or stale prior session state.",
+          "required_skills": [
+            "hook-pause-gates",
+            "cmplx-memory-review",
+            "repo-kernel-control"
+          ],
+          "required_tools_or_lanes": [
+            "identity_review latest checkpoint",
+            "identity-register",
+            "reading-map",
+            "repo AGENTS.md"
+          ],
+          "action": "Load current controls, durable identity memory, and workspace boundary before planning."
+        },
+        {
+          "hook_point": "user.prompt",
+          "opencode_points": [
+            "chat.message",
+            "keyword-detector",
+            "think-mode",
+            "start-work",
+            "context-injector-messages-transform"
+          ],
+          "cursor_points": [
+            "beforeSubmitPrompt",
+            "afterAgentThought"
+          ],
+          "codex_gate": "user-prompt",
+          "underinformed_risk": "Agent treats names, folders, or generated labels as essence.",
+          "required_skills": [
+            "hook-pause-gates",
+            "cmplx-memory-review"
+          ],
+          "required_tools_or_lanes": [
+            "identity-register",
+            "read-ledger",
+            "Claude/Cursor memory when lineage is involved"
+          ],
+          "action": "Classify the request, translate names into concepts, and load relevant identity memory."
+        },
+        {
+          "hook_point": "skill.selection",
+          "opencode_points": [
+            "category-skill-reminder",
+            "auto-slash-command",
+            "tool.execute.after"
+          ],
+          "cursor_points": [
+            "postToolUse",
+            "afterAgentResponse"
+          ],
+          "codex_gate": "skill-reminder",
+          "underinformed_risk": "Agent uses raw tools without the procedural skill that should shape the work.",
+          "required_skills": [
+            "hook-pause-gates"
+          ],
+          "required_tools_or_lanes": [
+            "C:/Users/borke/.codex/skills",
+            ".opencode/skills"
+          ],
+          "action": "Select the narrow CMPLX skill before continuing: memory review, repo-kernel, tool discovery, catalog build, or composition test."
+        },
+        {
+          "hook_point": "tool.before.read_or_search",
+          "opencode_points": [
+            "tool.execute.before",
+            "bash-file-read-guard",
+            "directory-readme-injector",
+            "rules-injector"
+          ],
+          "cursor_points": [
+            "preToolUse",
+            "beforeReadFile",
+            "beforeShellExecution"
+          ],
+          "codex_gate": "pre-tool",
+          "underinformed_risk": "Agent scans too broadly, misses existing indexes, or reads the wrong tree.",
+          "required_skills": [
+            "cmplx-memory-review",
+            "cmplx-tool-discovery"
+          ],
+          "required_tools_or_lanes": [
+            "rg",
+            "rg --files",
+            "existing indexes",
+            "repo-kernel health when controller evidence matters"
+          ],
+          "action": "Use bounded discovery, existing indexes first, and state what evidence lane is being read."
+        },
+        {
+          "hook_point": "tool.before.edit_or_write",
+          "opencode_points": [
+            "tool.execute.before",
+            "write-existing-file-guard",
+            "comment-checker",
+            "prometheus-md-only"
+          ],
+          "cursor_points": [
+            "preToolUse",
+            "afterFileEdit",
+            "beforeShellExecution"
+          ],
+          "codex_gate": "pre-edit",
+          "underinformed_risk": "Agent mutates evidence, overwrites existing work, or edits without lineage search.",
+          "required_skills": [
+            "cmplx-memory-review",
+            "cmplx-tool-discovery"
+          ],
+          "required_tools_or_lanes": [
+            "creative/evidence/doctrine boundary check",
+            "existing implementation search",
+            "apply_patch"
+          ],
+          "action": "Confirm writable target, search existing implementations, and name files before editing."
+        },
+        {
+          "hook_point": "tool.after",
+          "opencode_points": [
+            "tool.execute.after",
+            "hashline-read-enhancer",
+            "tool-output-truncator",
+            "json-error-recovery",
+            "task-resume-info",
+            "category-skill-reminder"
+          ],
+          "cursor_points": [
+            "postToolUse",
+            "postToolUseFailure",
+            "afterShellExecution",
+            "afterMCPExecution"
+          ],
+          "codex_gate": "post-tool",
+          "underinformed_risk": "Agent fails to absorb tool output into the working map.",
+          "required_skills": [
+            "hook-pause-gates",
+            "cmplx-memory-review"
+          ],
+          "required_tools_or_lanes": [
+            "direct commentary",
+            "read-ledger",
+            "source-ledger",
+            "checkpoint when identity changes"
+          ],
+          "action": "Summarize what changed, record failures/timeouts, and update durable memory when the map changes."
+        },
+        {
+          "hook_point": "composition_or_catalog_work",
+          "opencode_points": [
+            "tool.execute.before",
+            "tool.execute.after",
+            "category-skill-reminder"
+          ],
+          "cursor_points": [
+            "preToolUse",
+            "postToolUse"
+          ],
+          "codex_gate": "specialized-skill",
+          "underinformed_risk": "Agent hand-rolls catalog or composition work without provenance/conservation discipline.",
+          "required_skills": [
+            "cmplx-catalog-build",
+            "cmplx-composition-test",
+            "cmplx-tool-discovery"
+          ],
+          "required_tools_or_lanes": [
+            "catalog/artifact_index.sqlite",
+            "catalog/manifest.json",
+            "calibration ledgers",
+            "NSL/dPhi conservation notes"
+          ],
+          "action": "Route catalog work to catalog-build, capability finding to tool-discovery, and wiring/parity checks to composition-test."
+        },
+        {
+          "hook_point": "compaction_or_resume",
+          "opencode_points": [
+            "experimental.session.compacting",
+            "compaction-context-injector",
+            "compaction-todo-preserver",
+            "todo-continuation-enforcer",
+            "task-resume-info"
+          ],
+          "cursor_points": [
+            "preCompact",
+            "stop",
+            "sessionEnd",
+            "sessionStart"
+          ],
+          "codex_gate": "compaction-continuation",
+          "underinformed_risk": "Agent loses the reason for the work, user corrections, or next reads.",
+          "required_skills": [
+            "hook-pause-gates",
+            "cmplx-memory-review"
+          ],
+          "required_tools_or_lanes": [
+            "identity_review checkpoint",
+            "read-ledger",
+            "source-ledger",
+            "plan/status"
+          ],
+          "action": "Write or read a compact continuation state with sources, decisions, risks, and next reads."
+        },
+        {
+          "hook_point": "final.answer",
+          "opencode_points": [
+            "stop-continuation-guard",
+            "empty-task-response-detector",
+            "task-resume-info"
+          ],
+          "cursor_points": [
+            "stop",
+            "afterAgentResponse"
+          ],
+          "codex_gate": "stop-final",
+          "underinformed_risk": "Agent reports completion while answering an older request or omitting durable updates.",
+          "required_skills": [
+            "hook-pause-gates"
+          ],
+          "required_tools_or_lanes": [
+            "newest user request sanity check",
+            "changed files list",
+            "verification result"
+          ],
+          "action": "Check newest request, unfinished work, files changed, and verification before final response."
+        }
+      ],
+      "purpose": "Hooks are the linear pause layer for CMPLX work: context intake, memory injection, policy check, provenance, receipts, and continuation state."
+    },
+    "memory": {
+      "identity_review_root": "/workspace/PartsFactory/identity_review",
+      "required_registers": [
+        "/workspace/PartsFactory/identity_review/registers/identity-register.md",
+        "/workspace/PartsFactory/identity_review/registers/reading-map.md",
+        "/workspace/PartsFactory/identity_review/registers/read-ledger.md",
+        "/workspace/PartsFactory/identity_review/registers/source-ledger.md"
+      ],
+      "required_reports": [
+        "/workspace/PartsFactory/identity_review/reports/codex-operating-profile-draft.md",
+        "/workspace/PartsFactory/identity_review/reports/codex-agent-control-merge-research.md"
+      ],
+      "checkpoint_policy": "For long-running CMPLX review/control work, update identity_review checkpoints and ledgers."
+    },
+    "skills": {
+      "sources": [
+        "/workspace/PartsFactory/CMPLX-PartsFactory/.opencode/skills"
+      ],
+      "codex_sources": [
+        "C:/Users/borke/.codex/skills"
+      ],
+      "required_project_skills": [
+        "hook-pause-gates",
+        "memory-review",
+        "cmplx-memory-review",
+        "catalog-build",
+        "composition-test",
+        "repo-kernel-control",
+        "tool-discovery"
+      ],
+      "policy": "Skills are project procedures and do not replace the memory gate."
+    },
+    "tools": {
+      "search_first": [
+        "rg",
+        "rg --files"
+      ],
+      "existing_indexes_first": [
+        "/workspace/PartsFactory/CMPLX-PartsFactory/data/atomic_index.sqlite",
+        "/workspace/PartsFactory/CMPLX-PartsFactory/data/family_census.json",
+        "/workspace/PartsFactory/CMPLX-PartsFactory/data/orphan_decisions.json",
+        "/workspace/PartsFactory/CMPLX-PartsFactory/data/batch_scan.json"
+      ],
+      "repo_kernel": {
+        "base": "http://host.docker.internal:8786",
+        "health": "/api/health",
+        "policy": "Prefer bounded controller reads; use call-plan routes for execution/mutation intent."
+      },
+      "policy": "Use tools as evidence instruments. Prefer bounded reads, record failures/timeouts, and do not mutate evidence/doctrine spaces without explicit user direction."
+    }
+  },
+  "experimental": {
+    "max_tools": 32,
+    "task_system": true,
+    "aggressive_truncation": false,
+    "safe_hook_creation": true
+  },
+  "hashline_edit": true,
+  "model_fallback": false,
+  "runtime_fallback": false,
+  "background_task": {
+    "providerConcurrency": 2,
+    "modelConcurrency": 2
+  },
+  "claude_code": {
+    "hooks": true,
+    "mcp": false
+  },
+  "tmux": {
+    "enabled": false
+  },
+  "sisyphus_agent": {
+    "disabled": true
+  },
+  "notification": {
+    "enabled": false
+  },
+  "openclaw": {
+    "enabled": false
+  }
+}

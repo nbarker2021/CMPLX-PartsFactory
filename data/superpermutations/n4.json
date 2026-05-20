@@ -1,0 +1,13 @@
+{
+  "n": 4,
+  "status": "validated",
+  "superpermutation": "123412314231243121342132413214321",
+  "superperm": "123412314231243121342132413214321",
+  "length": 33,
+  "permutation_count": 24,
+  "palindrome": true,
+  "provenance_class": "minimal",
+  "source_url": "bundled:primitives/superperm.py",
+  "sha256": "e48e28dddfecb2c4db580da20f5927d317f80b5dc99fb2a16aec9d223e4a35d4",
+  "coverage_checksum": "c27e98c83a71d280"
+}

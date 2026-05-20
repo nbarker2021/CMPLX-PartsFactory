@@ -1,0 +1,9 @@
+{
+  "id": "tree_3",
+  "status": "stub",
+  "n": 4,
+  "phase": 3,
+  "scheduler": "sequence_tree",
+  "body": null,
+  "note": "Escrow stub — populate from validated corpus before production scheduling."
+}

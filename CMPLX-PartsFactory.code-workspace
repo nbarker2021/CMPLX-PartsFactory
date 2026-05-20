@@ -1,0 +1,80 @@
+{
+  "folders": [
+    {
+      "name": "CMPLX-PartsFactory",
+      "path": "."
+    },
+    {
+      "name": "Repo Kernel Controller",
+      "path": "services/repo-kernel"
+    },
+    {
+      "name": "Repo Kernel Manifest",
+      "path": "repo_kernel"
+    },
+    {
+      "name": "Controller Docs",
+      "path": "docs"
+    }
+  ],
+  "settings": {
+    "cmplx.controlLayer.baseUrl": "http://localhost:8786",
+    "cmplx.controlLayer.composeFile": "docker-compose.repo-kernel.yml",
+    "cmplx.controlLayer.health": "/api/health",
+    "cmplx.controlLayer.workbook": "/api/global-tool-workbook",
+    "cmplx.controlLayer.namedCapabilities": [
+      "/api/global/knowledge/devkit-ingest",
+      "/api/global/mcp/local-os",
+      "/api/global/code-execution/octa64",
+      "/api/global/validation/mcp-os",
+      "/api/global/synthesis/cqe-modular"
+    ],
+    "python.defaultInterpreterPath": "python",
+    "python.analysis.extraPaths": [
+      "src",
+      "services/repo-kernel"
+    ],
+    "python.analysis.diagnosticMode": "openFilesOnly",
+    "python.analysis.userFileIndexingLimit": 4000,
+    "python.analysis.exclude": [
+      "CMPLX-1T/**",
+      "CMPLX-Manny/**",
+      "CMPLXUNI/**",
+      "CMPLX-TMN-main/**",
+      "CMPLXMCP/**",
+      "staging/**",
+      "data/**"
+    ],
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "CMPLX-1T/**": true,
+      "CMPLX-Manny/**": true,
+      "CMPLXUNI/**": true,
+      "CMPLX-TMN-main/**": true,
+      "CMPLXMCP/**": true,
+      "staging/**": true,
+      "data/**": true,
+      "repo_kernel/repos/**": true
+    },
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/.pytest_cache": true
+    },
+    "search.exclude": {
+      ".opencode/node_modules": true,
+      "repo_kernel/repos/**/.git": true,
+      "corpus_extracted": true,
+      "CMPLX-1T/**": true,
+      "staging/**": true,
+      "data/**": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-azuretools.vscode-docker",
+      "humao.rest-client",
+      "redhat.vscode-yaml"
+    ]
+  }
+}

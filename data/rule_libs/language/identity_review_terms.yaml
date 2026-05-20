@@ -1,0 +1,36 @@
+kind: language
+name: identity_review
+version: "1"
+min_common: 0
+common_bigrams:
+  - mo
+  - or
+  - rp
+  - ph
+  - ho
+  - on
+  - ni
+  - ic
+  - tr
+  - ra
+  - an
+  - ns
+  - sf
+  - fo
+  - or
+  - rm
+  - me
+  - ea
+  - an
+  - in
+  - ng
+  - un
+  - ni
+  - if
+  - fi
+  - ic
+  - ca
+  - at
+  - ti
+  - on
+forbidden_bigrams: []

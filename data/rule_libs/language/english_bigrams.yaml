@@ -1,0 +1,47 @@
+kind: language
+name: english
+version: "1"
+min_common: 1
+common_bigrams:
+  - th
+  - he
+  - in
+  - er
+  - an
+  - re
+  - on
+  - at
+  - en
+  - nd
+  - ti
+  - es
+  - or
+  - te
+  - of
+  - ed
+  - is
+  - it
+  - al
+  - ar
+  - st
+  - to
+  - nt
+  - ng
+  - se
+  - ha
+  - as
+  - ou
+  - io
+  - le
+forbidden_bigrams:
+  - qq
+  - jj
+  - vv
+  - zz
+  - xx
+  - ww
+  - kk
+  - jq
+  - qj
+  - qz
+  - zq

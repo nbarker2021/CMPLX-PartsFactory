@@ -1,0 +1,442 @@
+{
+  "version": "3.8",
+  "services": {
+    "graph-controller": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "controller"
+      ],
+      "environment": {
+        "NODE_ID": "graph-controller",
+        "ROLE": "controller",
+        "GRAPH_SPEC": "{\"nodes\": [{\"node_id\": \"gateway\", \"role\": \"gateway\", \"active_axes\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"neighbors\": [\"compute_protein\", \"compute_turbulence\"]}, {\"node_id\": \"compute_protein\", \"role\": \"domain\", \"active_axes\": [0, 1, 2, 3, 8, 9, 16, 17], \"neighbors\": [\"storage\", \"governance\"]}, {\"node_id\": \"compute_turbulence\", \"role\": \"domain\", \"active_axes\": [0, 1, 2, 4, 5, 6, 16, 17, 18, 20, 21, 22], \"neighbors\": [\"storage\", \"governance\"]}, {\"node_id\": \"storage\", \"role\": \"storage\", \"active_axes\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"neighbors\": []}, {\"node_id\": \"governance\", \"role\": \"governance\", \"active_axes\": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23], \"neighbors\": []}]}"
+      },
+      "ports": [
+        "8080:8080"
+      ],
+      "volumes": [
+        "mmdb-data:/data/mmdb",
+        "receipt-chain:/data/receipts"
+      ],
+      "networks": [
+        "morphon-net"
+      ]
+    },
+    "gateway": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "gateway"
+      ],
+      "environment": {
+        "NODE_ID": "gateway",
+        "ROLE": "gateway",
+        "ACTIVE_AXES": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23",
+        "NEIGHBORS": "compute_protein,compute_turbulence"
+      },
+      "volumes": [
+        "mdhg-gateway:/data/mdhg",
+        "speedlight-cache:/data/speedlight"
+      ],
+      "networks": [
+        "morphon-net"
+      ],
+      "depends_on": {
+        "graph-controller": {
+          "condition": "service_started"
+        }
+      }
+    },
+    "compute-protein": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "domain"
+      ],
+      "environment": {
+        "NODE_ID": "compute_protein",
+        "ROLE": "domain",
+        "ACTIVE_AXES": "0,1,2,3,8,9,16,17",
+        "NEIGHBORS": "storage,governance"
+      },
+      "volumes": [
+        "mdhg-compute-protein:/data/mdhg",
+        "speedlight-cache:/data/speedlight"
+      ],
+      "networks": [
+        "morphon-net"
+      ],
+      "depends_on": {
+        "graph-controller": {
+          "condition": "service_started"
+        }
+      }
+    },
+    "compute-turbulence": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "domain"
+      ],
+      "environment": {
+        "NODE_ID": "compute_turbulence",
+        "ROLE": "domain",
+        "ACTIVE_AXES": "0,1,2,4,5,6,16,17,18,20,21,22",
+        "NEIGHBORS": "storage,governance"
+      },
+      "volumes": [
+        "mdhg-compute-turbulence:/data/mdhg",
+        "speedlight-cache:/data/speedlight"
+      ],
+      "networks": [
+        "morphon-net"
+      ],
+      "depends_on": {
+        "graph-controller": {
+          "condition": "service_started"
+        }
+      }
+    },
+    "storage": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "storage"
+      ],
+      "environment": {
+        "NODE_ID": "storage",
+        "ROLE": "storage",
+        "ACTIVE_AXES": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23",
+        "NEIGHBORS": ""
+      },
+      "volumes": [
+        "mdhg-storage:/data/mdhg",
+        "speedlight-cache:/data/speedlight"
+      ],
+      "networks": [
+        "morphon-net"
+      ],
+      "depends_on": {
+        "graph-controller": {
+          "condition": "service_started"
+        }
+      }
+    },
+    "governance": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "governance"
+      ],
+      "environment": {
+        "NODE_ID": "governance",
+        "ROLE": "governance",
+        "ACTIVE_AXES": "0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23",
+        "NEIGHBORS": ""
+      },
+      "volumes": [
+        "mdhg-governance:/data/mdhg",
+        "speedlight-cache:/data/speedlight"
+      ],
+      "networks": [
+        "morphon-net"
+      ],
+      "depends_on": {
+        "graph-controller": {
+          "condition": "service_started"
+        }
+      }
+    },
+    "nanoclaw-dim": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "DimClaw"
+      ],
+      "environment": {
+        "NODE_ID": "brs-dim",
+        "ROLE": "DimClaw"
+      },
+      "networks": [
+        "morphon-net"
+      ],
+      "deploy": {
+        "replicas": 1,
+        "resources": {
+          "limits": {
+            "cpus": "0.25",
+            "memory": "256M"
+          }
+        }
+      }
+    },
+    "nanoclaw-audit": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "AuditClaw"
+      ],
+      "environment": {
+        "NODE_ID": "brs-audit",
+        "ROLE": "AuditClaw"
+      },
+      "networks": [
+        "morphon-net"
+      ],
+      "deploy": {
+        "replicas": 1,
+        "resources": {
+          "limits": {
+            "cpus": "0.25",
+            "memory": "256M"
+          }
+        }
+      }
+    },
+    "nanoclaw-awb": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "AWBClaw"
+      ],
+      "environment": {
+        "NODE_ID": "brs-awb",
+        "ROLE": "AWBClaw"
+      },
+      "networks": [
+        "morphon-net"
+      ],
+      "deploy": {
+        "replicas": 1,
+        "resources": {
+          "limits": {
+            "cpus": "0.25",
+            "memory": "256M"
+          }
+        }
+      }
+    },
+    "nanoclaw-hodge": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "HodgeClaw"
+      ],
+      "environment": {
+        "NODE_ID": "brs-hodge",
+        "ROLE": "HodgeClaw"
+      },
+      "networks": [
+        "morphon-net"
+      ],
+      "deploy": {
+        "replicas": 1,
+        "resources": {
+          "limits": {
+            "cpus": "0.25",
+            "memory": "256M"
+          }
+        }
+      }
+    },
+    "nanoclaw-escrow": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "EscrowClaw"
+      ],
+      "environment": {
+        "NODE_ID": "brs-escrow",
+        "ROLE": "EscrowClaw"
+      },
+      "networks": [
+        "morphon-net"
+      ],
+      "deploy": {
+        "replicas": 1,
+        "resources": {
+          "limits": {
+            "cpus": "0.25",
+            "memory": "256M"
+          }
+        }
+      }
+    },
+    "nanoclaw-crt": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "CRTClaw"
+      ],
+      "environment": {
+        "NODE_ID": "brs-crt",
+        "ROLE": "CRTClaw"
+      },
+      "networks": [
+        "morphon-net"
+      ],
+      "deploy": {
+        "replicas": 1,
+        "resources": {
+          "limits": {
+            "cpus": "0.25",
+            "memory": "256M"
+          }
+        }
+      }
+    },
+    "nanoclaw-syndrome": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "SyndromeClaw"
+      ],
+      "environment": {
+        "NODE_ID": "brs-syndrome",
+        "ROLE": "SyndromeClaw"
+      },
+      "networks": [
+        "morphon-net"
+      ],
+      "deploy": {
+        "replicas": 1,
+        "resources": {
+          "limits": {
+            "cpus": "0.25",
+            "memory": "256M"
+          }
+        }
+      }
+    },
+    "nanoclaw-eversionclaw": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "EversionClaw"
+      ],
+      "environment": {
+        "NODE_ID": "nanoclaw-eversionclaw",
+        "ROLE": "EversionClaw"
+      },
+      "networks": [
+        "morphon-net"
+      ],
+      "deploy": {
+        "replicas": 2
+      }
+    },
+    "nanoclaw-inflationclaw": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "InflationClaw"
+      ],
+      "environment": {
+        "NODE_ID": "nanoclaw-inflationclaw",
+        "ROLE": "InflationClaw"
+      },
+      "networks": [
+        "morphon-net"
+      ],
+      "deploy": {
+        "replicas": 2
+      }
+    },
+    "nanoclaw-gatekeeper": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "GateKeeper"
+      ],
+      "environment": {
+        "NODE_ID": "nanoclaw-gatekeeper",
+        "ROLE": "GateKeeper"
+      },
+      "networks": [
+        "morphon-net"
+      ],
+      "deploy": {
+        "replicas": 2
+      }
+    },
+    "nanoclaw-receipt": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "ReceiptClaw"
+      ],
+      "environment": {
+        "NODE_ID": "receipt-manager",
+        "ROLE": "ReceiptClaw"
+      },
+      "volumes": [
+        "receipt-chain:/data/receipts"
+      ],
+      "networks": [
+        "morphon-net"
+      ]
+    },
+    "nanoclaw-swarm": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "SwarmClaw"
+      ],
+      "environment": {
+        "NODE_ID": "swarm-manager",
+        "ROLE": "SwarmClaw",
+        "HEAL_RATE": "0.03007",
+        "CAPSULE_TTL": "300"
+      },
+      "networks": [
+        "morphon-net"
+      ]
+    },
+    "nanoclaw-route": {
+      "image": "cmplx/morphon:latest",
+      "command": [
+        "--role",
+        "RouteClaw"
+      ],
+      "environment": {
+        "NODE_ID": "route-manager",
+        "ROLE": "RouteClaw"
+      },
+      "networks": [
+        "morphon-net"
+      ]
+    }
+  },
+  "volumes": {
+    "mmdb-data": {
+      "driver": "local"
+    },
+    "receipt-chain": {
+      "driver": "local"
+    },
+    "speedlight-cache": {
+      "driver": "local"
+    },
+    "mdhg-gateway": {
+      "driver": "local"
+    },
+    "mdhg-compute-protein": {
+      "driver": "local"
+    },
+    "mdhg-compute-turbulence": {
+      "driver": "local"
+    },
+    "mdhg-storage": {
+      "driver": "local"
+    },
+    "mdhg-governance": {
+      "driver": "local"
+    }
+  },
+  "networks": {
+    "morphon-net": {
+      "driver": "bridge"
+    }
+  }
+}

@@ -1,0 +1,262 @@
+# CMPLX-PartsFactory — Persistent Live Service
+# ==============================================
+# Runs opencode-session as an always-on HTTP agent service
+# with ngrok TCP tunnel for remote access.
+#
+# The agent operates directly on the PartsFactory filesystem,
+# has full SNAPDNA/ThinkTank/governance capabilities,
+# and is accessible via:
+#   - Local:  http://localhost:8080 (health) / http://localhost:4096 (opencode API)
+#   - Remote: ngrok TCP tunnel (check http://localhost:4040 for URL)
+#   - Discord: @mention the bot
+#
+# Requirements:
+#   - NGROK_AUTHTOKEN in .env (get from https://dashboard.ngrok.com)
+#   - OPENCODE_SERVER_PASSWORD in .env (for remote auth)
+#
+# Usage:
+#   docker compose up -d --build
+
+name: cmplx-partsfactory
+
+services:
+  # ═══════════════════════════════════════════════════════════════════
+  # PRIMARY: OpenCode Agent Service (live HTTP API)
+  # ═══════════════════════════════════════════════════════════════════
+  opencode-session:
+    image: cmplx-opencode-session:latest
+    container_name: opencode-session
+    build:
+      context: .
+      dockerfile: Dockerfile.opencode
+      args:
+        NODE_VERSION: ${NODE_VERSION:-22}
+        OPENCODE_NPM_PACKAGE: ${OPENCODE_NPM_PACKAGE:-opencode-ai@latest}
+    init: true
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    depends_on:
+      - docker
+    working_dir: /workspace/PartsFactory/CMPLX-PartsFactory
+    environment:
+      TZ: ${TZ:-America/Los_Angeles}
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+      DOCKER_GID: ${DOCKER_GID:-998}
+      DOCKER_HOST: tcp://docker:2375
+
+      # Run opencode in serve mode — this is the live agent
+      OPENCODE_SERVER_USERNAME: ${OPENCODE_SERVER_USERNAME:-opencode}
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD:?Set OPENCODE_SERVER_PASSWORD in .env}
+      OPENCODE_CONFIG: /workspace/PartsFactory/CMPLX-PartsFactory/opencode.json
+
+      # Service discovery — uses Docker DNS names on backend network
+      CMPLX_API_URL: http://cmplx-unified-api:8851
+      RESEARCH_API_URL: http://research-api:3000
+      MANNY_RUNTIME_URL: http://manny-runtime:8870
+      DB_AGGREGATOR_URL: http://db-aggregator-api:8815
+      TARPIT_API_URL: http://tarpit-api:8844
+      MMDB_UNIFIED_URL: http://mmdb-unified:8084
+      MDHG_UNIFIED_URL: http://mdhg-unified:8085
+      SPEEDLIGHT_API_URL: http://speedlight-api:8843
+      SNAP_UNIFIED_URL: http://snap-unified:8083
+      MANNY_MANIFOLD_URL: http://manny-manifold-api:8840
+
+      # Databases (via Docker DNS on backend network)
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: unification_hub
+      POSTGRES_USER: ${POSTGRES_USER:-research}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
+      CACHE_PG_URL: ${CACHE_PG_URL:-postgresql://${POSTGRES_USER:-research}:${POSTGRES_PASSWORD}@postgres-cache:5432/unification_aggregator}
+      REDIS_URL: redis://redis:6379/0
+      RABBITMQ_URL: amqp://manny:manny@rabbitmq:5672/
+
+      # Discord bridge
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:-}
+
+      # Model routing + API keys
+      DEFAULT_MODEL: ${DEFAULT_MODEL:-deepseek-v4-flash-free}
+      SMALL_MODEL: ${SMALL_MODEL:-deepseek-v4-flash-free}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENCODE_API_KEY: ${OPENCODE_API_KEY:-}
+      OPENCODE_GO_API_KEY: ${OPENCODE_GO_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
+
+      # SNAPDNA expert export directory
+      SNAPDNA_OUT_DIR: /workspace/PartsFactory/CMPLX-PartsFactory/catalog/experts
+
+    # Command: run opencode serve on port 4096
+    command: ["opencode", "serve", "--hostname", "0.0.0.0", "--port", "4096"]
+
+    ports:
+      - "${OPENCODE_API_PORT:-4096}:4096"
+
+    volumes:
+      # Host project dir at identical path for self-compose
+      - type: bind
+        source: ${HOST_PROJECT_DIR}
+        target: ${HOST_PROJECT_DIR}
+
+      # Three-space mounts — the entire workspace
+      - type: bind
+        source: ${HOST_PARTS_FACTORY:-/mnt/d/PartsFactory}
+        target: /workspace/PartsFactory
+      - type: bind
+        source: ${HOST_MANNY_UNIFICATION:-/mnt/d/Manny Unification 2}
+        target: /workspace/MannyUnification2
+        read_only: true
+      - type: bind
+        source: ${HOST_OC_BUILD:-/mnt/d/OC build}
+        target: /workspace/OCbuild
+        read_only: true
+
+      # Persistent opencode state (survives container rebuild)
+      - type: bind
+        source: ${HOST_PROJECT_DIR}/data/share
+        target: /home/node/.local/share/opencode
+      - type: bind
+        source: ${HOST_PROJECT_DIR}/data/state
+        target: /home/node/.local/state/opencode
+      - type: bind
+        source: ${HOST_PROJECT_DIR}/data/config
+        target: /home/node/.config/opencode
+      - type: bind
+        source: ${HOST_PROJECT_DIR}/docker-cache
+        target: /home/node/.docker
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - cmplx-backend
+      - backend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ═══════════════════════════════════════════════════════════════════
+  # DOCKER-IN-DOCKER — rootless sandboxed Docker daemon
+  # Replaces host /var/run/docker.sock mount (CR-1 fix).
+  # ═══════════════════════════════════════════════════════════════════
+  docker:
+    image: docker:27-dind-rootless
+    container_name: cmplx-dind
+    restart: unless-stopped
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - dind_data:/home/rootlessuser/.local/share/docker
+    networks:
+      - cmplx-backend
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "com.cmplx.service=dind"
+      - "com.cmplx.tier=runtime"
+
+  # ═══════════════════════════════════════════════════════════════════
+  # NGROK: TCP Tunnel for Remote Access
+  # ═══════════════════════════════════════════════════════════════════
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok-cmplx
+    environment:
+      NGROK_AUTHTOKEN: ${NGROK_AUTHTOKEN:?Set NGROK_AUTHTOKEN in .env}
+    command:
+      - "tcp"
+      - "host.docker.internal:4096"
+      - "--region=us"
+    ports:
+      - "4040:4040"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - cmplx-backend
+      - backend
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ═══════════════════════════════════════════════════════════════════
+  # DISCORD BRIDGE — routes messages to opencode agent
+  # ═══════════════════════════════════════════════════════════════════
+  discord-bridge:
+    image: cmplx-discord-bridge:latest
+    container_name: discord-bridge
+    build:
+      context: ./services/discord-bridge
+      dockerfile: Dockerfile
+    init: true
+    restart: unless-stopped
+    environment:
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:?err}
+      DISCORD_CHANNELS: ${DISCORD_CHANNELS:-}
+      OPENCODE_API_URL: http://opencode-session:4096
+      OPENCODE_SERVER_USERNAME: opencode
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD}
+      RESEARCH_API_URL: http://research-api:3000
+      MANNY_RUNTIME_URL: http://manny-runtime:8870
+      default_api: opencode
+    networks:
+      - cmplx-backend
+    depends_on:
+      - opencode-session
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ═══════════════════════════════════════════════════════════════════
+  # WORKFORCE HUB — web UI + REST + MCP SSE → OpenCode agent API
+  # ═══════════════════════════════════════════════════════════════════
+  workforce-hub:
+    image: cmplx-workforce-hub:latest
+    container_name: workforce-hub
+    build:
+      context: ./services/workforce-hub
+      dockerfile: Dockerfile
+    init: true
+    restart: unless-stopped
+    environment:
+      WORKFORCE_HUB_PORT: 8775
+      WORKFORCE_HUB_CORS_ORIGINS: "*"
+      OPENCODE_WORKFORCE_URL: http://opencode-session:4096
+      OPENCODE_SERVER_USERNAME: opencode
+      OPENCODE_SERVER_PASSWORD: ${OPENCODE_SERVER_PASSWORD}
+      FASTMCP_INSTANCE: cmplx-workforce-primary
+      AUTOMATION_HUB_ID: cmplx-workforce
+      AUTOMATION_HUB_PUBLIC_TITLE: CMPLX Workforce Hub
+    ports:
+      - "8775:8775"
+    networks:
+      - cmplx-backend
+    depends_on:
+      - opencode-session
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  dind_data:
+    driver: local
+
+networks:
+  cmplx-backend:
+    driver: bridge
+    name: cmplx-backend
+  backend:
+    external: true
+    name: backend

@@ -1,0 +1,27 @@
+# CMPLXMCP runtime shim compose draft.
+#
+# This is intentionally separate and is not started by repo-kernel. Use only
+# after reviewing the transport notes in services/cmplxmcp-runtime/README.md.
+
+name: cmplxmcp-runtime
+
+services:
+  cmplxmcp-stdio:
+    image: cmplxmcp-runtime:latest
+    container_name: cmplxmcp-stdio
+    build:
+      context: ./services/cmplxmcp-runtime
+      dockerfile: Dockerfile
+    stdin_open: true
+    tty: false
+    environment:
+      CMPLXMCP_MODULE: /module
+    volumes:
+      - type: bind
+        source: ./repo_kernel/repos/CMPLXMCP
+        target: /module
+        read_only: true
+    labels:
+      cmplx.layer: repo-kernel-runtime-shim
+      cmplx.module: CMPLXMCP
+      cmplx.transport: stdio-mcp

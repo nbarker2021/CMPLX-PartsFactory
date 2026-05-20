@@ -1,0 +1,52 @@
+name: morphonic-pytest
+
+on:
+  push:
+    paths:
+      - "src/cmplx/transform/**"
+      - "src/cmplx/primitives/**"
+      - "tests/transform/**"
+      - "tests/primitives/**"
+      - "scripts/morphonic_e2e_smoke.py"
+      - ".github/workflows/morphonic-pytest.yml"
+  pull_request:
+    paths:
+      - "src/cmplx/transform/**"
+      - "src/cmplx/primitives/**"
+      - "tests/transform/**"
+      - "tests/primitives/**"
+      - "scripts/morphonic_e2e_smoke.py"
+      - ".github/workflows/morphonic-pytest.yml"
+
+jobs:
+  morphonic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install package (dev extras)
+        run: pip install -e ".[dev]"
+
+      - name: Validate superpermutations (require n=4,5)
+        env:
+          PYTHONPATH: src
+        run: python scripts/validate_superpermutations.py --require 4,5
+
+      - name: Pytest transform + primitives
+        env:
+          PYTHONPATH: src
+        run: python -m pytest tests/transform/ tests/primitives/ -q
+
+      - name: Morphonic E2E smoke (--quick)
+        env:
+          PYTHONPATH: src
+        run: python scripts/morphonic_e2e_smoke.py --quick
+
+      - name: HF on-demand lane tests
+        env:
+          PYTHONPATH: src
+        run: python -m pytest tests/transform/test_hf_on_demand.py -q

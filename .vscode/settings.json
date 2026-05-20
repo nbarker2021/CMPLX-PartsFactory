@@ -1,0 +1,45 @@
+{
+  "python.defaultInterpreterPath": "python",
+  "python.analysis.extraPaths": ["src", "services/repo-kernel"],
+  "python.analysis.diagnosticMode": "openFilesOnly",
+  "python.analysis.indexing": true,
+  "python.analysis.userFileIndexingLimit": 4000,
+  "python.analysis.exclude": [
+    "CMPLX-1T/**",
+    "CMPLX-Manny/**",
+    "CMPLXUNI/**",
+    "CMPLX-TMN-main/**",
+    "CMPLXMCP/**",
+    "staging/**",
+    "data/**",
+    "work/**",
+    "**/node_modules/**",
+    "**/site-packages/**"
+  ],
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/**": true,
+    "**/__pycache__/**": true,
+    "CMPLX-1T/**": true,
+    "CMPLX-Manny/**": true,
+    "CMPLXUNI/**": true,
+    "CMPLX-TMN-main/**": true,
+    "CMPLXMCP/**": true,
+    "staging/**": true,
+    "data/**": true,
+    "repo_kernel/repos/**": true
+  },
+  "search.exclude": {
+    "CMPLX-1T/**": true,
+    "CMPLX-Manny/**": true,
+    "CMPLXUNI/**": true,
+    "staging/**": true,
+    "data/**": true,
+    "**/*.sqlite": true
+  },
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true
+  }
+}

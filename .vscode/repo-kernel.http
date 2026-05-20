@@ -1,0 +1,41 @@
+@base = http://localhost:8786
+
+### Health
+GET {{base}}/api/health
+
+### Live workbook
+GET {{base}}/api/global-tool-workbook
+
+### Compact state
+GET {{base}}/api/global-state
+
+### GitNexus evidence lane
+GET {{base}}/api/gitnexus/status
+
+### Knowledge: DevKit ingest
+GET {{base}}/api/global/knowledge/devkit-ingest
+
+### MCP: local OS
+GET {{base}}/api/global/mcp/local-os
+
+### Code execution: octa64
+GET {{base}}/api/global/code-execution/octa64
+
+### Validation: MCP OS
+GET {{base}}/api/global/validation/mcp-os
+
+### Synthesis: CQE modular
+GET {{base}}/api/global/synthesis/cqe-modular
+
+### Plan-only octa64 call
+POST {{base}}/api/global/code-execution/octa64/call-plan
+Content-Type: application/json
+
+{
+  "operation": "tool",
+  "name": "run_graph",
+  "arguments": {
+    "graph": "demo.json"
+  },
+  "dry_run": true
+}

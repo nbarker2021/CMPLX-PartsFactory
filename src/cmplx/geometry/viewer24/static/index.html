@@ -1,0 +1,26 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Main Viewer — CA Overlay</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>Main Viewer (CA Overlay)</h1>
+    <div class="controls">
+      <textarea id="points" rows="3" placeholder='[[x,y], ...]'></textarea>
+      <button id="load">Load Points</button>
+      <button id="caInit">Init CA</button>
+      <button id="caPlay">Play</button>
+      <button id="caPause">Pause</button>
+      <label>Alpha <input id="alpha" type="number" value="160" min="0" max="255" step="5"></label>
+      <a href="/inverse" target="_blank">Open Inverse Viewer</a>
+      <span id="status"></span>
+    </div>
+  </header>
+  <main id="grid"></main>
+  <script src="/static/main.js"></script>
+</body>
+</html>

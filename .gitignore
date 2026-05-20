@@ -1,0 +1,180 @@
+# .gitignore — only the new unified build (src/cmplx/, projections/, docs/,
+# tests/, top-level config) gets tracked. Everything else is iteration
+# trail or Kimi's active runtime / catalog layer.
+
+# ============================================================
+# Secrets / local env
+# ============================================================
+.env
+.env.secrets
+.env.virtualdisks
+.gitignore.draft
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Archives and generated handoff/upload bundles
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+
+# ============================================================
+# Kimi's data layer — shared SQLite catalogs and runtime state.
+# Regenerable from indexers; too big / binary for git.
+# ============================================================
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+*.db
+*.db-shm
+*.db-wal
+data/*.sqlite
+data/*.sqlite-shm
+data/*.sqlite-wal
+data/*.db
+data/atomic_index.sqlite
+data/batch_scan.json
+data/generation_catalog_sample.json
+data/staging_plan.jsonl
+data/orphan_decisions.json
+data/family_census.json
+data/expert_memories/
+data/share/
+data/state/
+data/config/
+data/bisect/
+data/brain_images/
+data/calibration/
+data/extracted_zips/
+data/postgres/
+data/*_report.json
+data/*_stats.json
+data/*_stats*.json
+data/*_result.json
+data/*_probe.json
+data/*_before.json
+data/*_after.json
+data/*_run.log
+data/*.log
+data/*.jsonl
+data/*_demo.json
+data/tools_in_action.json
+
+# Keep the *.md reports under data/ tracked (they're tiny and useful)
+# Note: HARDENED_INDEX.md, PENDING_REVIEW_INDEX.md, SECOND_PASS_REVIEW.md,
+# MASTER_BUILD_TEMPLATE.md, etc. are all small markdown — they stay.
+
+# Generated crystals are portable runtime/evidence bundles, not source.
+crystals/*.crystal/
+
+# ============================================================
+# Repo mirrors — Kimi's repo_kernel layer. Provenance-only;
+# not tracked as code.
+# ============================================================
+repo_kernel/repos/*
+!repo_kernel/repos/.gitkeep
+repo_kernel/state/
+repo_kernel/quarantine/
+.gitnexus
+
+# ============================================================
+# Parts catalogs — local iteration trail (not the unified build).
+# Provenance via repo-kernel / three_space; do not publish to git.
+# ============================================================
+CMPLX-1T/
+CMPLX-Manny/
+CMPLXUNI/
+CMPLX-TMN-main/
+CMPLXMCP/
+
+# ============================================================
+# Iteration trail. The historical merger artifacts.
+# (Mostly moved to D:/PartsFactory/CMPLX-history/, but
+#  re-list here in case any get re-emitted.)
+# ============================================================
+work/
+staging/
+corpus_extracted/
+catalog/
+share/
+src/cmplx_pending/
+projections_pending/
+docker-cache/
+reports/
+results/
+logs/
+export/
+var/
+.runtime/
+runtime-data/
+
+# ============================================================
+# Python build / cache artifacts
+# ============================================================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+build/
+dist/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# ============================================================
+# Node / JS / TS
+# ============================================================
+node_modules/
+*.log
+.next/
+.nuxt/
+.cache/
+
+# ============================================================
+# OS / IDE / Editor
+# ============================================================
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/repo-kernel.http
+.idea/
+*.swp
+*.swo
+*~
+
+# ============================================================
+# Backup / temp
+# ============================================================
+*.bak
+*.old
+*.orig
+*.tmp
+
+# ============================================================
+# Kimi / Claude / agent runtime artifacts
+# ============================================================
+.cache/
+.opencode/node_modules/
+.opencode/package.json
+.opencode/package-lock.json
+.opencode/pnpm-lock.yaml
+.opencode/bun.lock
+.opencode/yarn.lock

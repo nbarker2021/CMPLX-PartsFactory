@@ -1,0 +1,106 @@
+{
+  "tools": {
+    "service-mmd": {
+      "description": "MMDB crystal storage. Store, search, and retrieve crystals with E8-proximity.",
+      "endpoints": {
+        "store": {"method": "POST", "url": "http://host.docker.internal:8824/store"},
+        "search": {"method": "POST", "url": "http://host.docker.internal:8824/search"},
+        "get": {"method": "GET", "url": "http://host.docker.internal:8824/crystal/{id}"},
+        "stats": {"method": "GET", "url": "http://host.docker.internal:8824/stats"}
+      },
+      "examples": [
+        "curl -X POST http://host.docker.internal:8824/store -H 'Content-Type: application/json' -d '{\"content\":\"data\",\"domain\":\"general\"}'",
+        "curl http://host.docker.internal:8824/stats"
+      ]
+    },
+    "service-mdhg": {
+      "description": "MDHG hierarchical graph. 9-level sessions, node traversal, directional travel.",
+      "endpoints": {
+        "create_session": {"method": "POST", "url": "http://host.docker.internal:8825/session"},
+        "add_node": {"method": "POST", "url": "http://host.docker.internal:8825/add_node"},
+        "get_graph": {"method": "GET", "url": "http://host.docker.internal:8825/graph/{session}"},
+        "traverse": {"method": "POST", "url": "http://host.docker.internal:8825/traverse"}
+      },
+      "examples": [
+        "curl -X POST http://host.docker.internal:8825/session -H 'Content-Type: application/json' -d '{\"name\":\"explore\",\"max_depth\":9}'"
+      ]
+    },
+    "service-snap": {
+      "description": "SNAP Engine. Gate369 selection, concept stratifier, polarity lenses, taxonomy.",
+      "endpoints": {
+        "gate369": {"method": "POST", "url": "http://host.docker.internal:8823/gate369"},
+        "stratify": {"method": "POST", "url": "http://host.docker.internal:8823/stratify"},
+        "triad": {"method": "POST", "url": "http://host.docker.internal:8823/triad"},
+        "taxonomy": {"method": "GET", "url": "http://host.docker.internal:8823/taxonomy"},
+        "angles": {"method": "GET", "url": "http://host.docker.internal:8823/angles"}
+      },
+      "examples": [
+        "curl -X POST http://host.docker.internal:8823/stratify -H 'Content-Type: application/json' -d '{\"concept\":\"E8 lattice\",\"depth\":5}'",
+        "curl -X POST http://host.docker.internal:8823/gate369 -H 'Content-Type: application/json' -d '{\"items\":[\"a\",\"b\",\"c\"],\"context\":\"select best\"}'"
+      ]
+    },
+    "service-tarpit": {
+      "description": "TarPit bond chemistry. Create atoms, form bonds, navigate bond chains.",
+      "endpoints": {
+        "create_atom": {"method": "POST", "url": "http://host.docker.internal:8844/tarpit/create_atom"},
+        "bond": {"method": "POST", "url": "http://host.docker.internal:8844/tarpit/bond"},
+        "navigate": {"method": "POST", "url": "http://host.docker.internal:8844/tarpit/navigate"},
+        "atoms": {"method": "GET", "url": "http://host.docker.internal:8844/tarpit/atoms"}
+      }
+    },
+    "service-speedlight": {
+      "description": "SpeedLight receipt cache. SHA-256 content-addressed cache with Merkle ledger.",
+      "endpoints": {
+        "put": {"method": "POST", "url": "http://host.docker.internal:8843/v1/cache"},
+        "get": {"method": "GET", "url": "http://host.docker.internal:8843/v1/cache/{key}"},
+        "receipt": {"method": "GET", "url": "http://host.docker.internal:8843/v1/receipts/{id}"}
+      }
+    },
+    "service-manny": {
+      "description": "Manny Runtime brain. Expert domains, triadic reasoning, capacity checks.",
+      "endpoints": {
+        "probe": {"method": "POST", "url": "http://host.docker.internal:8870/probe"},
+        "run": {"method": "POST", "url": "http://host.docker.internal:8870/run"},
+        "experts": {"method": "GET", "url": "http://host.docker.internal:8870/experts"},
+        "capacity": {"method": "GET", "url": "http://host.docker.internal:8870/capacity"}
+      }
+    },
+    "service-research": {
+      "description": "Research API gateway. Chat sessions, model queries.",
+      "endpoints": {
+        "chat": {"method": "POST", "url": "http://host.docker.internal:3000/api/chat"},
+        "health": {"method": "GET", "url": "http://host.docker.internal:3000/health"}
+      }
+    },
+    "pipeline-catalog": {
+      "description": "PartsFactory catalog operations. Query tool index, register compositions.",
+      "python_module": "catalog",
+      "functions": ["search_tools", "get_manifest", "record_composition", "log_discovery"]
+    },
+    "pipeline-services": {
+      "description": "PartsFactory service registry. Probe all services, check health, list endpoints.",
+      "python_module": "services.registry",
+      "functions": ["check_health", "list_services"]
+    },
+    "repo-kernel-control": {
+      "description": "Canonical CMPLX repo unification controller. Use this before direct upstream ports.",
+      "endpoints": {
+        "health": {"method": "GET", "url": "http://host.docker.internal:8786/api/health"},
+        "workbook": {"method": "GET", "url": "http://host.docker.internal:8786/api/global-tool-workbook"},
+        "global_state": {"method": "GET", "url": "http://host.docker.internal:8786/api/global-state"},
+        "gitnexus_status": {"method": "GET", "url": "http://host.docker.internal:8786/api/gitnexus/status"},
+        "devkit_ingest": {"method": "GET", "url": "http://host.docker.internal:8786/api/global/knowledge/devkit-ingest"},
+        "mcp_local_os": {"method": "GET", "url": "http://host.docker.internal:8786/api/global/mcp/local-os"},
+        "octa64": {"method": "GET", "url": "http://host.docker.internal:8786/api/global/code-execution/octa64"},
+        "mcp_os_validation": {"method": "GET", "url": "http://host.docker.internal:8786/api/global/validation/mcp-os"},
+        "cqe_modular": {"method": "GET", "url": "http://host.docker.internal:8786/api/global/synthesis/cqe-modular"}
+      },
+      "examples": [
+        "curl http://host.docker.internal:8786/api/global-tool-workbook",
+        "curl http://host.docker.internal:8786/api/global/knowledge/devkit-ingest",
+        "curl http://host.docker.internal:8786/api/global/mcp/local-os",
+        "curl http://host.docker.internal:8786/api/global/code-execution/octa64"
+      ]
+    }
+  }
+}

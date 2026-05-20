@@ -1,0 +1,32 @@
+{
+  "n": 4,
+  "octad_layout": "1_palindrome_7_trees",
+  "description": "Eightfold supervisor sheet: phase 0 = palindromic superset window; phases 1-7 = sequence-tree schedulers keyed by tree_ids.",
+  "palindrome_id": "pal_n4_superset",
+  "superperm_ref": "123412314231243121342132413214321",
+  "tree_ids": [
+    "tree_1",
+    "tree_2",
+    "tree_3",
+    "tree_4",
+    "tree_5",
+    "tree_6",
+    "tree_7"
+  ],
+  "trees": [
+    {"id": "tree_1", "path": "trees/tree_1.json", "status": "stub", "phase": 1},
+    {"id": "tree_2", "path": "trees/tree_2.json", "status": "stub", "phase": 2},
+    {"id": "tree_3", "path": "trees/tree_3.json", "status": "stub", "phase": 3},
+    {"id": "tree_4", "path": "trees/tree_4.json", "status": "stub", "phase": 4},
+    {"id": "tree_5", "path": "trees/tree_5.json", "status": "stub", "phase": 5},
+    {"id": "tree_6", "path": "trees/tree_6.json", "status": "stub", "phase": 6},
+    {"id": "tree_7", "path": "trees/tree_7.json", "status": "stub", "phase": 7}
+  ],
+  "digit_to_letter": {
+    "1": "a",
+    "2": "b",
+    "3": "c",
+    "4": "d"
+  },
+  "n5_research_slot": "n5.json"
+}

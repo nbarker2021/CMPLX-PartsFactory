@@ -1,0 +1,21 @@
+# GitNexus three-space mount override for CMPLX-PartsFactory.
+#
+# Use with the Manny Docker starter suite compose:
+#   docker compose --env-file "D:\Manny Unification 2\agent ecosystem\Docker starter template suite\.env.unified" `
+#     -f "D:\Manny Unification 2\agent ecosystem\Docker starter template suite\docker-compose.master.yml" `
+#     -f "D:\PartsFactory\CMPLX-PartsFactory\docker-compose.gitnexus-three-space.yml" `
+#     --profile rebuild-graph-manager up -d gitnexus-rebuild-server gitnexus-rebuild-web
+#
+# GitNexus writes per-target indexes when `analyze` is run. Only analyze bounded
+# targets deliberately; do not run an unbounded full-root analyze across these mounts.
+
+services:
+  gitnexus-rebuild-server:
+    volumes:
+      - type: bind
+        source: ${HOST_PARTS_FACTORY:-D:/PartsFactory}
+        target: /workspace/current-partsfactory
+      - type: bind
+        source: ${HOST_OC_BUILD:-D:/OC build}
+        target: /workspace/current-oc-build
+        read_only: true

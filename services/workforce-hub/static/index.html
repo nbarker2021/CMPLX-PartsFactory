@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CMPLX Workforce Hub</title>
+  <style>
+    :root { color-scheme: dark light; }
+    body { font-family: system-ui, sans-serif; margin: 0; background: #0f1115; color: #e8eaed; min-height: 100vh; display: flex; flex-direction: column; }
+    header { padding: 12px 16px; border-bottom: 1px solid #2a2f3a; background: #161b22; }
+    header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+    header p { margin: 4px 0 0; font-size: 0.85rem; opacity: 0.85; }
+    main { flex: 1; display: flex; flex-direction: column; max-width: 900px; margin: 0 auto; width: 100%; padding: 16px; box-sizing: border-box; }
+    #log { flex: 1; overflow-y: auto; border: 1px solid #2a2f3a; border-radius: 8px; padding: 12px; background: #0d1117; font-size: 0.9rem; white-space: pre-wrap; }
+    .msg { margin-bottom: 12px; padding: 8px 10px; border-radius: 6px; }
+    .msg.user { background: #1f3a5f; border-left: 3px solid #58a6ff; }
+    .msg.assistant { background: #1c242c; border-left: 3px solid #3fb950; }
+    .msg.system { opacity: 0.75; font-size: 0.8rem; }
+    form { display: flex; gap: 8px; margin-top: 12px; }
+    input[type="text"] { flex: 1; padding: 10px 12px; border-radius: 6px; border: 1px solid #30363d; background: #0d1117; color: inherit; }
+    button { padding: 10px 18px; border-radius: 6px; border: none; background: #238636; color: #fff; font-weight: 600; cursor: pointer; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
+    a { color: #58a6ff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CMPLX Workforce Hub</h1>
+    <p><code>cmplx-workforce</code> · OpenCode · <a href="/api/opencode/doc" target="_blank" rel="noopener">OpenAPI</a> · MCP: <code id="mcp-url"></code></p>
+  </header>
+  <main>
+    <div class="row">
+      <button type="button" id="newSession">New session</button>
+      <span id="sessionLabel" class="msg system">No session yet</span>
+    </div>
+    <div id="log"></div>
+    <form id="chatForm">
+      <input type="text" id="input" placeholder="Message to OpenCode…" autocomplete="off" />
+      <button type="submit" id="send">Send</button>
+    </form>
+  </main>
+  <script>
+    const SK = 'cmplx_workforce_session';
+    const log = document.getElementById('log');
+    const input = document.getElementById('input');
+    const form = document.getElementById('chatForm');
+    const sendBtn = document.getElementById('send');
+    const newSessionBtn = document.getElementById('newSession');
+    const sessionLabel = document.getElementById('sessionLabel');
+    document.getElementById('mcp-url').textContent = location.origin + '/mcp/sse';
+    let sessionId = sessionStorage.getItem(SK) || '';
+    function append(role, text) {
+      const d = document.createElement('div');
+      d.className = 'msg ' + role;
+      d.textContent = text;
+      log.appendChild(d);
+      log.scrollTop = log.scrollHeight;
+    }
+    function setSession(id) {
+      sessionId = id;
+      sessionStorage.setItem(SK, id);
+      sessionLabel.textContent = id ? 'Session: ' + id : 'No session yet';
+    }
+    async function api(path, opts) {
+      const r = await fetch(path, { headers: { 'Content-Type': 'application/json' }, ...opts });
+      const t = await r.text();
+      let j = null;
+      try { j = JSON.parse(t); } catch (_) {}
+      if (!r.ok) throw new Error((j && (j.detail || j.message)) || t || r.status);
+      return j !== null ? j : t;
+    }
+    async function health() {
+      try {
+        const h = await api('/api/health', { method: 'GET' });
+        append('system', 'Health: ' + JSON.stringify(h, null, 2));
+      } catch (e) {
+        append('system', 'Health failed: ' + e.message);
+      }
+    }
+    newSessionBtn.addEventListener('click', async () => {
+      newSessionBtn.disabled = true;
+      try {
+        const s = await api('/api/sessions', { method: 'POST', body: JSON.stringify({ title: 'cmplx-workforce-ui' }) });
+        const id = s.id || s.ID;
+        if (!id) throw new Error('No session id: ' + JSON.stringify(s));
+        setSession(id);
+        append('system', 'Session ' + id);
+      } catch (e) {
+        append('system', 'New session: ' + e.message);
+      } finally {
+        newSessionBtn.disabled = false;
+      }
+    });
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const text = input.value.trim();
+      if (!text || !sessionId) return;
+      sendBtn.disabled = true;
+      append('user', text);
+      input.value = '';
+      try {
+        const body = { parts: [{ type: 'text', text: text }] };
+        const res = await api('/api/sessions/' + encodeURIComponent(sessionId) + '/message', { method: 'POST', body: JSON.stringify(body) });
+        const parts = res.parts || [];
+        const txt = JSON.stringify(res, null, 2);
+        append('assistant', parts.length ? parts.map(p => (p.text || JSON.stringify(p))).join('\n') : txt);
+      } catch (e) {
+        append('system', 'Send: ' + e.message);
+      } finally {
+        sendBtn.disabled = false;
+      }
+    });
+    if (sessionId) setSession(sessionId);
+    health();
+  </script>
+</body>
+</html>

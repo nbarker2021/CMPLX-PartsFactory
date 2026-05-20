@@ -1,0 +1,174 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "deepseek-v4-flash-free",
+  "small_model": "deepseek-v4-flash-free",
+  "autoupdate": false,
+  "instructions": [
+    "/workspace/PartsFactory/CMPLX-PartsFactory/AGENTS.md",
+    "/workspace/PartsFactory/CMPLX-PartsFactory/.opencode/agents/cmplx-cataloger.md",
+    "/workspace/PartsFactory/CMPLX-PartsFactory/.opencode/agents/cmplx-composer.md",
+    "/workspace/PartsFactory/CMPLX-PartsFactory/.opencode/agents/cmplx-memory-reviewer.md",
+    "/workspace/PartsFactory/CMPLX-PartsFactory/.opencode/agents/cmplx-aletheia2-archivist.md",
+    "/workspace/PartsFactory/CMPLX-PartsFactory/docs/MEMORY_REVIEW_PROTOCOL.md",
+    "/workspace/OCbuild/knowledge/FOUNDATIONAL_DESIGN_DOCTRINE.md",
+    "/workspace/OCbuild/knowledge/WORK_WINDOW_KNOWLEDGE_GATE.md",
+    "/workspace/OCbuild/knowledge/WORK_WINDOW_PROTOCOL.md",
+    "/workspace/OCbuild/knowledge/PERMISSIONS_AND_CREATION_BOUNDARIES.md",
+    "/workspace/OCbuild/START_HERE.md",
+    "/workspace/OCbuild/AGENTS.md",
+    "/workspace/MannyUnification2/AGENTS.md",
+    "/workspace/MannyUnification2/AGENT_MANAGEMENT_SUITE.md",
+    "/workspace/MannyUnification2/AGENT_DATABASE_DOCTRINE.md"
+  ],
+  "agent": {
+    "cmplx-cataloger": {
+      "description": "Discovers, catalogs, and indexes tools from the ecosystem. Scan PostgreSQL, SQLite, filesystem for capabilities.",
+      "mode": "subagent",
+      "model": "deepseek-v4-flash-free",
+      "steps": 12,
+      "permission": {
+        "read": "allow",
+        "grep": "allow",
+        "glob": "allow",
+        "list": "allow",
+        "edit": "ask",
+        "bash": {
+          "*": "ask",
+          "pwd": "allow",
+          "ls *": "allow",
+          "find *": "allow",
+          "python *": "ask",
+          "curl *": "ask",
+          "git status*": "allow",
+          "git diff*": "allow"
+        }
+      }
+    },
+    "cmplx-composer": {
+      "description": "Tests tool compositions, records geodesic paths through capability space.",
+      "mode": "subagent",
+      "model": "deepseek-v4-flash-free",
+      "steps": 8,
+      "permission": {
+        "read": "allow",
+        "grep": "allow",
+        "glob": "allow",
+        "edit": "ask",
+        "bash": {
+          "*": "ask",
+          "python *": "ask",
+          "pytest *": "ask"
+        }
+      }
+    },
+    "cmplx-memory-reviewer": {
+      "description": "Reviews brain state, memory files, and session history before work windows.",
+      "mode": "subagent",
+      "model": "deepseek-v4-flash-free",
+      "steps": 6,
+      "permission": {
+        "read": "allow",
+        "grep": "allow",
+        "glob": "allow",
+        "list": "allow",
+        "edit": "deny",
+        "bash": {
+          "*": "ask",
+          "grep *": "allow",
+          "find *": "allow",
+          "git diff*": "allow"
+        }
+      }
+    },
+    "cmplx-aletheia2-archivist": {
+      "description": "Deep expert on Aletheia 2 five-layer CQE system. E8, Leech, MORSR, governance.",
+      "mode": "subagent",
+      "model": "deepseek-v4-flash-free",
+      "steps": 10,
+      "permission": {
+        "read": "allow",
+        "grep": "allow",
+        "glob": "allow",
+        "list": "allow",
+        "edit": "deny",
+        "bash": "ask"
+      }
+    },
+    "service-probe": {
+      "description": "Probe running Docker services (MMDB, MDHG, SNAP, TarPit, SpeedLight, Manny). Returns health and state.",
+      "mode": "subagent",
+      "model": "deepseek-v4-flash-free",
+      "steps": 4,
+      "permission": {
+        "read": "allow",
+        "bash": {
+          "curl *": "allow",
+          "python *": "ask"
+        }
+      }
+    }
+  },
+  "mcp": {
+    "filesystem": {
+      "type": "local",
+      "command": [
+        "npx", "-y", "@modelcontextprotocol/server-filesystem",
+        "/workspace/PartsFactory",
+        "/workspace/OCbuild",
+        "/workspace/MannyUnification2"
+      ],
+      "enabled": true
+    },
+    "memory": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-memory"],
+      "enabled": true
+    },
+    "sequential-thinking": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "enabled": true
+    },
+    "git": {
+      "type": "local",
+      "command": ["npx", "-y", "@mseep/git-mcp-server", "/workspace/PartsFactory/CMPLX-PartsFactory"],
+      "enabled": true
+    }
+  },
+  "skill": {
+    "sources": [
+      "/workspace/PartsFactory/CMPLX-PartsFactory/.opencode/skills"
+    ]
+  },
+  "permission": {
+    "*": "allow",
+    "edit": "allow",
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    },
+    "bash": {
+      "*": "ask",
+      "pwd": "allow",
+      "ls *": "allow",
+      "find *": "allow",
+      "cat *": "allow",
+      "grep *": "allow",
+      "rg *": "allow",
+      "git status*": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "docker ps*": "allow",
+      "docker compose ps*": "allow",
+      "docker compose config*": "allow",
+      "curl http://*": "allow",
+      "python *": "ask",
+      "pytest *": "ask",
+      "npm test*": "ask"
+    },
+    "webfetch": "deny",
+    "websearch": "deny"
+  }
+}

@@ -1,0 +1,24 @@
+# Security: prevent secrets and local state from being baked into Docker images
+.env
+.env.*
+!.env.template
+!.env.example
+*.db
+*.sqlite
+*.sqlite3
+*.pem
+*.key
+secrets/
+credentials/
+tokens/
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.git/
+.gitignore
+data/
+results/
+logs/
+*.log

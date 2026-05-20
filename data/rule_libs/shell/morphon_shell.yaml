@@ -1,0 +1,7 @@
+kind: shell
+version: "1"
+config:
+  max_arity: 8
+  bond_separator: "|"
+  gate_mode: govern
+  language: any

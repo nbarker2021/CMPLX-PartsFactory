@@ -1,0 +1,314 @@
+{
+  "manifold_version": "3.0.0",
+  "description": "30 CMPLX novel scientific tools mapped to the Enhanced Manifold v2 architecture",
+  "note": "Each tool specifies which of the 24 axes (3 rails × 8 roots) it requires. Tools sharing axes blend through those shared dimensions, enabling structural coupling and cross-domain insights.",
+
+  "rails": {
+    "alpha":  {"dims": [0,1,2,3,4,5,6,7],     "role": "primary_structure"},
+    "beta":   {"dims": [8,9,10,11,12,13,14,15], "role": "interaction_context"},
+    "gamma":  {"dims": [16,17,18,19,20,21,22,23], "role": "temporal_dynamics_or_derivatives"}
+  },
+
+  "tools": [
+    {
+      "tool_id": "T01_protein_fold_morphon",
+      "name": "ProteinFoldMorphon",
+      "field": "Biochemistry",
+      "layer": "1_local",
+      "required_axes": [0,1,2,3, 8,9, 16],
+      "lane_weights": {"local": 0.7, "meso": 0.2, "global": 0.1},
+      "wolfram_class": "I",
+      "rail_rationale": "α₀₋₃: dihedral angle E8 projection, β₀₋₁: residue pair interactions, γ₀: fold rate temporal"
+    },
+    {
+      "tool_id": "T02_quantum_circuit_lambda",
+      "name": "QuantumCircuitLambdaReducer",
+      "field": "Quantum Computing",
+      "layer": "1_local",
+      "required_axes": [0,1,2,3,4,5,6,7],
+      "lane_weights": {"local": 0.9, "meso": 0.1, "global": 0.0},
+      "wolfram_class": "IV",
+      "rail_rationale": "Full α rail: gate encodings need all 8 independent axes for lambda normal form equivalence"
+    },
+    {
+      "tool_id": "T03_economic_phase_boundary",
+      "name": "EconomicPhaseBoundaryDetector",
+      "field": "Economics",
+      "layer": "1_local",
+      "required_axes": [0,2,4,6, 8,10,12,14, 16,18,20,22],
+      "lane_weights": {"local": 0.3, "meso": 0.3, "global": 0.4},
+      "wolfram_class": "IV",
+      "rail_rationale": "Even axes across all three rails: captures phase structure at multiple scales simultaneously"
+    },
+    {
+      "tool_id": "T04_morphon_collision_drug",
+      "name": "MorphonCollisionDrugInteraction",
+      "field": "Pharmacology",
+      "layer": "2_local_meso",
+      "required_axes": [0,1,2,3, 8,9,10,11],
+      "lane_weights": {"local": 0.4, "meso": 0.5, "global": 0.1},
+      "wolfram_class": "II",
+      "rail_rationale": "α₀₋₃: molecule A encoding, β₀₋₃: molecule B encoding. Collision morphon at the rail boundary"
+    },
+    {
+      "tool_id": "T05_niemeier_genomic_aligner",
+      "name": "NiemeierLatticeGenomicAligner",
+      "field": "Genomics",
+      "layer": "3_meso",
+      "required_axes": [0,1,2,3,4,5,6,7, 8,9,10,11,12,13,14,15],
+      "lane_weights": {"local": 0.2, "meso": 0.6, "global": 0.2},
+      "wolfram_class": "II",
+      "rail_rationale": "Full α+β: sequence A on α, sequence B on β. Niemeier composition score from the 16D subspace"
+    },
+    {
+      "tool_id": "T06_multiscale_entropy_materials",
+      "name": "MultiScaleEntropyMaterialsClassifier",
+      "field": "Materials Science",
+      "layer": "4_meso_global",
+      "required_axes": [0,1,2, 8,9,10, 16,17,18],
+      "lane_weights": {"local": 0.3, "meso": 0.4, "global": 0.3},
+      "wolfram_class": "II",
+      "rail_rationale": "First 3 axes per rail: captures atomic environment at three scales (local, neighbor shell, bulk)"
+    },
+    {
+      "tool_id": "T07_triadic_bond_neural",
+      "name": "TriadicBondNeuralTopologyDetector",
+      "field": "Neuroscience",
+      "layer": "5_global",
+      "required_axes": [0,3,6, 8,11,14, 16,19,22],
+      "lane_weights": {"local": 0.1, "meso": 0.3, "global": 0.6},
+      "wolfram_class": "IV",
+      "rail_rationale": "Every 3rd axis per rail: captures triadic structure (3-neuron motifs need exactly 3 axes per scale)"
+    },
+    {
+      "tool_id": "T08_leech_48d_climate",
+      "name": "Leech48DClimateStateEmbedder",
+      "field": "Climate Science",
+      "layer": "6_global_meta",
+      "required_axes": [0,1,2,3,4,5,6,7, 8,9,10,11,12,13,14,15, 16,17,18,19,20,21,22,23],
+      "lane_weights": {"local": 0.1, "meso": 0.2, "global": 0.7},
+      "wolfram_class": "III",
+      "rail_rationale": "ALL 24 axes: climate state requires full Leech embedding (24D state + 24D derivative for 48D)"
+    },
+    {
+      "tool_id": "T09_rule30_lambda_shortcut",
+      "name": "Rule30LambdaShortcutEngine",
+      "field": "Complexity Theory",
+      "layer": "7_meta",
+      "required_axes": [0,1,2, 8, 16],
+      "lane_weights": {"local": 0.6, "meso": 0.1, "global": 0.3},
+      "wolfram_class": "IV",
+      "rail_rationale": "α₀₋₂: three reduction paths, β₀: rule encoding, γ₀: temporal step. Minimal footprint, maximal complexity"
+    },
+    {
+      "tool_id": "T10_emergent_stability_classifier",
+      "name": "EmergentStabilityClassifier",
+      "field": "Complex Systems",
+      "layer": "9_transcendent",
+      "required_axes": [0,1,2,3,4,5,6,7, 8,9,10,11,12,13,14,15, 16,17,18,19,20,21,22,23],
+      "lane_weights": {"local": 0.33, "meso": 0.33, "global": 0.34},
+      "wolfram_class": "IV",
+      "rail_rationale": "ALL 24 axes with equal lane weights: ESS requires uniform coverage across all stratification layers"
+    },
+    {
+      "tool_id": "T11_gravitational_wave_morphon",
+      "name": "GravitationalWaveMorphon",
+      "field": "Astrophysics",
+      "layer": "5_global",
+      "required_axes": [0,1,2,3, 16,17,18,19],
+      "lane_weights": {"local": 0.3, "meso": 0.3, "global": 0.4},
+      "wolfram_class": "III",
+      "rail_rationale": "α₀₋₃: strain signal E8 projection, γ₀₋₃: temporal frequency structure. No β needed (single source)"
+    },
+    {
+      "tool_id": "T12_viral_mutation_pathway",
+      "name": "ViralMutationPathwayPredictor",
+      "field": "Virology",
+      "layer": "6_global_meta",
+      "required_axes": [0,1,2, 8,9,10, 16,17],
+      "lane_weights": {"local": 0.4, "meso": 0.4, "global": 0.2},
+      "wolfram_class": "III",
+      "rail_rationale": "α₀₋₂: codon encoding, β₀₋₂: protein structure impact, γ₀₋₁: evolutionary rate"
+    },
+    {
+      "tool_id": "T13_cryptographic_hash_geometer",
+      "name": "CryptographicHashGeometer",
+      "field": "Cryptography",
+      "layer": "7_meta",
+      "required_axes": [0,1,2,3,4,5,6,7, 8,9,10,11,12,13,14,15],
+      "lane_weights": {"local": 0.5, "meso": 0.5, "global": 0.0},
+      "wolfram_class": "IV",
+      "rail_rationale": "α: input block encoding, β: output block encoding. Geometric structure detection in the α→β mapping"
+    },
+    {
+      "tool_id": "T14_knot_invariant_morphon",
+      "name": "KnotInvariantMorphonClassifier",
+      "field": "Topology",
+      "layer": "5_global",
+      "required_axes": [0,1,2,3, 8,9],
+      "lane_weights": {"local": 0.5, "meso": 0.4, "global": 0.1},
+      "wolfram_class": "II",
+      "rail_rationale": "α₀₋₃: Gauss code writhe encoding, β₀₋₁: crossing sign pairs"
+    },
+    {
+      "tool_id": "T15_semantic_drift_tracker",
+      "name": "SemanticDriftMorphonTracker",
+      "field": "Linguistics",
+      "layer": "5_global",
+      "required_axes": [0,1,2,3, 16,17,18,19,20,21,22,23],
+      "lane_weights": {"local": 0.2, "meso": 0.2, "global": 0.6},
+      "wolfram_class": "II",
+      "rail_rationale": "α₀₋₃: word context encoding, γ₀₋₇: full temporal rail for drift measurement over time"
+    },
+    {
+      "tool_id": "T16_ecosystem_cascade_predictor",
+      "name": "EcosystemCascadePredictor",
+      "field": "Ecology",
+      "layer": "5+9_global_transcendent",
+      "required_axes": [0,1,2,3,4,5, 8,9,10,11, 16,17,18,19],
+      "lane_weights": {"local": 0.2, "meso": 0.3, "global": 0.5},
+      "wolfram_class": "III",
+      "rail_rationale": "α₀₋₅: species interaction matrix, β₀₋₃: resource flow encoding, γ₀₋₃: seasonal dynamics"
+    },
+    {
+      "tool_id": "T17_turbulence_onset_detector",
+      "name": "TurbulenceOnsetDetector",
+      "field": "Fluid Dynamics",
+      "layer": "5_global",
+      "required_axes": [0,1,2, 4,5,6, 16,17,18, 20,21,22],
+      "lane_weights": {"local": 0.3, "meso": 0.4, "global": 0.3},
+      "wolfram_class": "III",
+      "rail_rationale": "α₀₋₂+α₄₋₆: velocity gradient (2 triads), γ₀₋₂+γ₄₋₆: temporal derivative (2 triads). Paired triads for cascade detection"
+    },
+    {
+      "tool_id": "T18_prime_gap_morphon",
+      "name": "PrimeGapMorphonPredictor",
+      "field": "Number Theory",
+      "layer": "5_global",
+      "required_axes": [0,1,2,3,4,5,6,7],
+      "lane_weights": {"local": 0.8, "meso": 0.2, "global": 0.0},
+      "wolfram_class": "IV",
+      "rail_rationale": "Full α rail only: prime sequences are purely structural, no interaction or temporal context needed"
+    },
+    {
+      "tool_id": "T19_superconductor_phase",
+      "name": "SuperconductorPhaseClassifier",
+      "field": "Condensed Matter",
+      "layer": "5+8_global_leech",
+      "required_axes": [0,1,2,3, 8,9,10,11, 16,17,18,19,20,21,22,23],
+      "lane_weights": {"local": 0.3, "meso": 0.3, "global": 0.4},
+      "wolfram_class": "II",
+      "rail_rationale": "α₀₋₃: order parameter E8 encoding, β₀₋₃: crystal structure, γ₀₋₇: full temperature/field dynamics"
+    },
+    {
+      "tool_id": "T20_cross_domain_emergence",
+      "name": "CrossDomainEmergenceDetector",
+      "field": "Meta-Science",
+      "layer": "ALL",
+      "required_axes": [0,1,2,3,4,5,6,7, 8,9,10,11,12,13,14,15, 16,17,18,19,20,21,22,23],
+      "lane_weights": {"local": 0.1, "meso": 0.1, "global": 0.8},
+      "wolfram_class": "IV",
+      "rail_rationale": "ALL 24 axes: cross-domain comparison requires full geometric fingerprint to detect universality classes"
+    },
+    {
+      "tool_id": "T21_quantum_biology_coherence",
+      "name": "QuantumBiologyCoherence",
+      "field": "Quantum Biology",
+      "layer": "2_local_meso",
+      "required_axes": [0,1,2,3, 8,9, 16,17],
+      "lane_weights": {"local": 0.5, "meso": 0.4, "global": 0.1},
+      "wolfram_class": "II",
+      "rail_rationale": "α₀₋₃: quantum state vector, β₀₋₁: biological environment coupling, γ₀₋₁: decoherence dynamics"
+    },
+    {
+      "tool_id": "T22_social_network_polarization",
+      "name": "SocialNetworkPolarization",
+      "field": "Sociology",
+      "layer": "4_meso_global",
+      "required_axes": [0,1,2,3, 8,9,10,11, 16,17,18,19],
+      "lane_weights": {"local": 0.2, "meso": 0.5, "global": 0.3},
+      "wolfram_class": "III",
+      "rail_rationale": "α₀₋₃: agent opinion vectors, β₀₋₃: network adjacency structure, γ₀₋₃: opinion dynamics over time"
+    },
+    {
+      "tool_id": "T23_hea_design",
+      "name": "HighEntropyAlloyDesigner",
+      "field": "Materials Science",
+      "layer": "3_meso",
+      "required_axes": [0,1,2,3,4, 8,9,10, 16,17],
+      "lane_weights": {"local": 0.4, "meso": 0.5, "global": 0.1},
+      "wolfram_class": "II",
+      "rail_rationale": "α₀₋₄: elemental composition vector (5+ elements), β₀₋₂: lattice configuration, γ₀₋₁: thermodynamic stability score"
+    },
+    {
+      "tool_id": "T24_consciousness_integration",
+      "name": "ConsciousnessIntegrationMapper",
+      "field": "Neuroscience",
+      "layer": "8_meta_universe",
+      "required_axes": [0,1,2,3,4,5,6,7, 8,9,10,11,12,13,14,15],
+      "lane_weights": {"local": 0.1, "meso": 0.3, "global": 0.6},
+      "wolfram_class": "IV",
+      "rail_rationale": "α: neural synchrony patterns, β: information integration complexity (Phi). Full 16D space needed for high-dimensional consciousness state."
+    },
+    {
+      "tool_id": "T25_earthquake_precursors",
+      "name": "EarthquakePrecursorDetector",
+      "field": "Seismology",
+      "layer": "5_global",
+      "required_axes": [0,1,2,3, 8,9,10, 16,17,18,19,20],
+      "lane_weights": {"local": 0.2, "meso": 0.3, "global": 0.5},
+      "wolfram_class": "III",
+      "rail_rationale": "α₀₋₃: seismic wave features, β₀₋₂: geodetic strain tensor, γ₀₋₄: long-term temporal patterns"
+    },
+    {
+      "tool_id": "T26_dark_matter_detection",
+      "name": "DarkMatterHaloClassifier",
+      "field": "Astrophysics",
+      "layer": "8_meta_universe",
+      "required_axes": [0,1,2,3, 8,9,10,11, 16,17,18,19],
+      "lane_weights": {"local": 0.1, "meso": 0.2, "global": 0.7},
+      "wolfram_class": "IV",
+      "rail_rationale": "α₀₋₃: halo density profile, β₀₋₃: particle interaction model, γ₀₋₃: observational signatures (e.g., gamma-ray flux)"
+    },
+    {
+      "tool_id": "T27_ocean_acidification",
+      "name": "OceanAcidificationRegimeDetector",
+      "field": "Oceanography",
+      "layer": "5_global",
+      "required_axes": [0,1,2, 8,9,10, 16,17,18,19,20,21,22,23],
+      "lane_weights": {"local": 0.2, "meso": 0.3, "global": 0.5},
+      "wolfram_class": "III",
+      "rail_rationale": "α₀₋₂: chemical state (pH, pCO2), β₀₋₂: biological impact (calcification), γ: full temporal rail for long-term trend analysis"
+    },
+    {
+      "tool_id": "T28_immune_repertoire_analysis",
+      "name": "ImmuneRepertoireClassifier",
+      "field": "Immunology",
+      "layer": "3_meso",
+      "required_axes": [0,1,2,3,4,5,6,7, 8,9,10,11, 16,17],
+      "lane_weights": {"local": 0.5, "meso": 0.4, "global": 0.1},
+      "wolfram_class": "II",
+      "rail_rationale": "α: V(D)J segment usage frequencies, β₀₋₃: clonal diversity and entropy metrics, γ₀₋₁: temporal response dynamics"
+    },
+    {
+      "tool_id": "T29_financial_systemic_risk",
+      "name": "FinancialSystemicRiskDetector",
+      "field": "Finance",
+      "layer": "6_global_meta",
+      "required_axes": [0,1,2,3,4,5, 8,9,10,11,12, 16,17,18,19],
+      "lane_weights": {"local": 0.1, "meso": 0.4, "global": 0.5},
+      "wolfram_class": "III",
+      "rail_rationale": "α₀₋₅: inter-bank network topology, β₀₋₄: asset correlation matrix, γ₀₋₃: contagion dynamics over time"
+    },
+    {
+      "tool_id": "T30_universal_attractor_mapping",
+      "name": "UniversalAttractorMapper",
+      "field": "Meta-Science",
+      "layer": "ALL",
+      "required_axes": [0,1,2,3,4,5,6,7, 8,9,10,11,12,13,14,15, 16,17,18,19,20,21,22,23],
+      "lane_weights": {"local": 0.33, "meso": 0.33, "global": 0.34},
+      "wolfram_class": "IV",
+      "rail_rationale": "ALL 24 axes with equal lane weights: required to find universal geometric signatures and attractors across all domains without bias"
+    }
+  ]
+}

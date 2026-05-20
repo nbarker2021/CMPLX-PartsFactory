@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Self-compose helper for in-container docker compose calls
+# Usage: self-compose <args...>
+# Runs docker compose from the project's own compose files.
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "${SCRIPT_DIR}")"
+
+cd "${PROJECT_DIR}"
+
+exec docker compose \
+  --env-file .env \
+  -f docker-compose.yml \
+  "$@"

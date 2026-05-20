@@ -1,0 +1,781 @@
+LATTICE / CMPLX
+
+INVENTION DISCLOSURE DOCUMENTS
+
+Complete Pre-Patent Filing Disclosure Package
+8 Claim Sets  —  IDD-001-A through IDD-001-H
+
+CONFIDENTIAL TRADE SECRET — DO NOT DISTRIBUTE
+Prepared for Patent Counsel Engagement
+Date of Preparation: April 19, 2026
+
+Document ID
+Title
+Patent Priority
+IDD-001-A
+Named Persistent Agent Architecture
+CRITICAL
+IDD-001-B
+Containerized Local Swarm Partition (Venn Adjacency)
+CRITICAL
+IDD-001-C
+Stateless Aerial Companion with Context Inheritance
+CRITICAL
+IDD-001-D
+Fractal Geometry Routing Projection (Mandelbrot Bulb)
+HIGH
+IDD-001-E
+Predictive Cross-Partition Handoff Scheduling
+HIGH
+IDD-001-F
+Multi-Layer Dynamic Vector Routing Road Surface
+CRITICAL
+IDD-001-G
+Modality-Agnostic Corridor Pre-Clearance Framework
+HIGH
+IDD-001-H
+Community Participation &amp; Personal Bot Ownership
+HIGH
+
+How to Use These Documents
+Each document in this package is a formal invention disclosure for one claim set or cluster of related claims. These documents: (1) establish a dated record of conception for each invention, (2) provide the technical disclosure required by 35 U.S.C. §112 for patent prosecution, (3) serve as the primary briefing documents for patent counsel, and (4) constitute trade secret documentation for all inventions that are not ultimately patented. Sign and witness each document immediately. Store originals in a secure controlled repository. Provide copies to patent counsel under attorney-client privilege.
+
+INVENTION DISCLOSURE DOCUMENT
+IDD-001-A
+CONFIDENTIAL — TRADE SECRET — PRIVILEGED
+
+Disclosure ID
+IDD-001-A
+Title
+Named Persistent Agent Architecture for Autonomous Physical Delivery Systems
+Alternative Title
+Compose-File-Based Durable Agent Identity in Physical Robotics Networks
+Inventor(s)
+[INVENTOR NAME] — sole inventor
+Date of Conception
+April 19, 2026
+Date of First Reduction to Practice
+To be completed
+Date of This Document
+April 19, 2026
+Organization
+CMPLX / LATTICE (pre-formation)
+Classification
+CONFIDENTIAL — DO NOT DISTRIBUTE
+
+1. Field of Invention
+This invention relates to autonomous ground delivery robotics, distributed systems architecture, and persistent identity management in physical agent networks. More specifically, it relates to a method and system for defining autonomous delivery unit identity, operational state, and local knowledge as a portable persistent specification — analogous to a container compose file — such that the named agent is the durable entity and the physical hardware is interchangeable infrastructure.
+
+2. Background and Problem Statement
+Current autonomous delivery robot systems treat the physical hardware unit as the primary operational entity. Each robot carries a device identifier, and operational assignments — delivery routes, service areas, network relationships — are managed by a central dispatch system that references the hardware device ID. When a hardware unit fails, is serviced, or is replaced, the replacement unit begins operation with no knowledge of the prior unit&apos;s operational history, local learned knowledge, or network relationships. The prior unit&apos;s experiential data — accumulated through weeks or months of operation in a specific geographic area — is lost.
+This architecture creates compounding operational inefficiencies. The replacement unit must rebuild local knowledge from scratch: which building access points are faster, which route segments have recurring obstacles, which delivery addresses have specific handling requirements. This rebuild period degrades service quality for every replacement event. At network scale, where hardware failures are frequent, this represents a systematic and perpetual degradation mechanism.
+Additionally, current systems cannot separate the concept of &apos;the agent responsible for this service area&apos; from &apos;the physical hardware unit currently operating in this area.&apos; This conflation prevents transferring ownership of a service area from one hardware unit to another without central dispatch intervention, prevents modeling service area performance as an asset independent of hardware, and prevents community ownership models in which the service area itself — not any specific hardware unit — is the owned and valued entity.
+
+3. Prior Art
+The following prior art has been identified and reviewed. The claimed invention is distinguished from each as described below.
+
+US20220176976A1 (smart road RF tag infrastructure): covers roadside infrastructure, not agent identity architecture. Does not address persistent agent state.
+US10955855B1 (smart vehicle HD map navigation): covers vehicle-side navigation computation. Does not address agent identity persistence across hardware replacement.
+Kubernetes/Docker container orchestration (software prior art): covers software container identity in computing infrastructure. Does not address physical robotics agents, geographic polygon assignment, or local learned operational knowledge as persistent state.
+Amazon Robotics warehouse systems (known art): covers warehouse robot assignment and routing. Does not address outdoor urban delivery agents, persistent geographic identity, or community ownership models.
+General autonomous vehicle fleet management patents: cover vehicle assignment and routing. None address the specific combination of named persistent agent identity, portable compose-file specification, geographic polygon assignment, local learned knowledge persistence, and hardware-as-interchangeable-substrate that defines this invention.
+
+4. Detailed Description of the Invention
+4.1  The Named Agent as Durable Entity
+The invention defines each autonomous delivery unit as a named persistent agent whose identity and operational state are encoded in a portable specification document — herein called a compose file by analogy to container orchestration specifications. The agent&apos;s name (e.g., &apos;Manny&apos;) is not a device identifier assigned to hardware. It is an identity assigned to a service area and its operational role within the network.
+
+The compose file for each named agent contains, at minimum: the agent&apos;s unique network identity; the geographic polygon defining the agent&apos;s service area (defined as a dynamic Voronoi cell bounded by Venn adjacency with immediate neighbor agents); the current state of all Venn-adjacent neighbor agents; the agent&apos;s accumulated local learned knowledge of its service area; the agent&apos;s historical handoff schedule and relationship records with adjacent agents; and the current status and docking history of any aerial companion units associated with the agent.
+
+4.2  Hardware as Disposable Infrastructure
+Physical hardware units are provisioned as generic compute-and-locomotion platforms with no inherent operational identity. On activation in the network, a hardware unit receives an agent compose file assignment. It boots as that named agent, inheriting the full operational context encoded in the compose file. The hardware unit is not &apos;Manny.&apos; It is running &apos;Manny.&apos;
+
+On hardware failure, the compose file is reassigned to a replacement hardware unit. The replacement unit boots as the same named agent with complete operational continuity. No central dispatch intervention is required for the service area continuity. The service area&apos;s accumulated knowledge, Venn relationships, and operational history are fully preserved.
+
+4.3  Local Learned Knowledge as Persistent State
+The compose file includes a local knowledge layer that accumulates operational observations specific to the service area. This layer records empirically discovered information that is not present in any map or database: recurring obstacle patterns, building-specific access optimizations, time-of-day routing variations, address-specific handling requirements, and similar operational intelligence. This knowledge is retained across hardware replacement events, software updates, and network reconfiguration. It represents the experiential capital of the named agent and constitutes a compounding operational asset.
+
+4.4  Service Area as Transferable Asset
+Because the named agent identity is decoupled from hardware, the service area and its accumulated operational state can be transferred between owners without hardware transfer. A community member who owns the rights to named agent &apos;Manny&apos; and its associated polygon owns the operational identity, the accumulated local knowledge, and the income-generating capacity of that service area. This is distinct from owning a specific physical robot. The physical hardware is leased infrastructure. The named agent is the owned asset.
+
+5. Novelty and Distinguishing Features
+The invention is distinguished from the prior art in the following specific ways:
+
+No prior art addresses the specific architecture in which an autonomous physical delivery agent is defined as a named persistent identity encoded in a portable compose-file specification, such that hardware is interchangeable substrate and the agent identity survives hardware replacement with full operational continuity.
+No prior art addresses local learned operational knowledge as a persistent state layer within a named agent compose specification, accumulating across hardware generations.
+No prior art decouples service area ownership from hardware ownership in the manner described, enabling community ownership of a geographic service area as an asset independent of the physical hardware operating within it.
+The combination of named persistent identity, portable compose specification, geographic polygon assignment, local knowledge persistence, and hardware interchangeability is a novel combination with no direct prior art in robotics, autonomous vehicle, or delivery system patents.
+
+6. Potential Claims (Non-Final — For Attorney Review)
+The following claim language is provided for attorney review and refinement. These are not final claims and require professional prosecution.
+
+A system for operating autonomous ground delivery agents comprising: a named persistent agent identity assigned to a defined geographic service area; a portable compose specification encoding said agent identity, service area definition, Venn-adjacent neighbor states, and accumulated local operational knowledge; one or more interchangeable hardware units configured to receive and execute said compose specification; and wherein hardware unit replacement results in complete operational continuity without central dispatch intervention.
+The system of claim 1, wherein the portable compose specification further comprises a local learned knowledge layer accumulating empirically discovered operational information specific to the geographic service area, persisting across hardware replacement events.
+The system of claim 1, wherein ownership of the named agent identity and associated compose specification is transferable independently of any physical hardware unit, enabling community ownership of geographic service areas as assets separate from hardware.
+A method for maintaining operational continuity in an autonomous delivery network comprising: encoding agent identity in a portable specification; assigning said specification to interchangeable hardware; on hardware failure, reassigning said specification to replacement hardware; booting replacement hardware as the named agent with full inherited operational context.
+The method of claim 4, wherein local learned operational knowledge accumulated by the named agent is preserved through hardware replacement by encoding said knowledge in the portable specification prior to reassignment.
+
+7. Best Mode of Implementation
+Best mode implementation uses a containerized specification format (JSON or YAML) stored in a distributed ledger accessible to network operations. Hardware units are generic autonomous ground vehicles with standardized compute architecture. On power-up, a hardware unit queries the network for its current agent assignment, pulls the compose file, and boots into the operational context defined therein. The compose file is updated continuously during operation; a write-ahead log ensures no operational data is lost in the event of sudden hardware failure. The specification format is publicly documented as an open standard to enable hardware interoperability across manufacturers.
+
+8. Drawings and Diagrams
+The following diagrams are described in text form. Formal patent drawings to be prepared by a registered patent draftsman prior to utility application filing.
+
+Figure 1: Diagram showing the separation between named agent identity layer and physical hardware layer, with compose file as the interface between them.
+Figure 2: Sequence diagram showing hardware replacement event — compose file reassignment, boot sequence, and operational continuity verification.
+Figure 3: Example compose file structure showing required fields: agent identity, polygon definition, neighbor state table, local knowledge layer, aerial companion status.
+Figure 4: Network diagram showing multiple named agents operating in adjacent Voronoi polygons with Venn overlap zones, each as a separate named persistent identity.
+
+Conception Attestation
+I hereby attest that I conceived the invention described in this document on or before the date indicated above, and that this document accurately and completely describes the invention to the best of my knowledge and belief. I understand that this document will be used to establish the date of conception for patent priority purposes.
+
+Inventor Signature
+
+Date of Signature
+
+Witness Signature
+
+Witness Date
+
+INVENTION DISCLOSURE DOCUMENT
+IDD-001-B
+CONFIDENTIAL — TRADE SECRET — PRIVILEGED
+
+Disclosure ID
+IDD-001-B
+Title
+Containerized Local Swarm Partition Bounded by Venn Adjacency in Autonomous Delivery Networks
+Alternative Title
+Partition-Scoped Swarm State for Scalable Autonomous Ground Agent Coordination
+Inventor(s)
+[INVENTOR NAME] — sole inventor
+Date of Conception
+April 19, 2026
+Date of First Reduction to Practice
+To be completed
+Date of This Document
+April 19, 2026
+Organization
+CMPLX / LATTICE (pre-formation)
+Classification
+CONFIDENTIAL — DO NOT DISTRIBUTE
+
+1. Field of Invention
+This invention relates to distributed swarm coordination for autonomous physical delivery agents. Specifically, it relates to a method and system for partitioning swarm state such that each autonomous agent maintains only the state of its immediate Venn-adjacent neighbors, enabling O(1) per-agent coordination complexity regardless of total network size.
+
+2. Background and Problem Statement
+Autonomous delivery swarm systems require coordination between units to allocate service areas, balance load, and handle handoffs. Current approaches fall into two categories, both with critical limitations.
+Centralized dispatch: A central system maintains global state of all units and makes assignment decisions for the entire network. This approach scales poorly — coordination complexity grows with fleet size, and the central system becomes a single point of failure and a computational bottleneck. At large fleet sizes (thousands of units across a city), centralized dispatch cannot maintain sub-second assignment latency.
+Fully distributed gossip: Each unit maintains state of all other units through network-wide gossip propagation. This eliminates the central bottleneck but creates untenable per-unit state size and network traffic at scale. A unit in a 10,000-robot fleet maintaining state for 9,999 others requires impractical memory and bandwidth.
+
+3. Prior Art
+The following prior art has been identified and reviewed. The claimed invention is distinguished from each as described below.
+
+Apache Cassandra / distributed database partitioning (software prior art): covers data partitioning by hash key in computing infrastructure. Does not address physical robotics, geographic adjacency-defined partition boundaries, or swarm coordination.
+Ant colony optimization algorithms (academic prior art): covers pheromone-based path optimization. Does not address partitioned state containers or geographic Venn adjacency as partition boundary definition.
+Amazon Robotics warehouse coordination: covers warehouse robot coordination. Does not address outdoor urban delivery, Venn adjacency partition boundaries, or containerized local state.
+Multi-agent systems literature (academic): addresses agent coordination generally. No specific prior art covers the Venn adjacency partition boundary definition with containerized local state as described here.
+
+4. Detailed Description of the Invention
+4.1  The Venn Adjacency Partition
+Each named autonomous agent maintains a containerized local swarm partition containing only the operational state of its immediate Venn-adjacent neighbors — those agents whose service area polygons share a boundary or overlap zone with the agent&apos;s own polygon. The partition contains no state about any non-adjacent agent. The partition boundary is defined entirely by geographic Venn adjacency.
+
+A typical urban delivery agent has 4 to 8 immediate Venn neighbors depending on polygon geometry. The per-agent state container therefore holds state for a constant number of units regardless of total fleet size. This produces O(1) per-agent coordination complexity: adding the 10,000th unit to the network does not increase the coordination load of any existing unit.
+
+4.2  State Propagation via Bounded Gossip
+State updates propagate between agents via bounded gossip: each agent broadcasts state changes only to its immediate Venn neighbors, which broadcast to their immediate neighbors, and so on. Changes propagate outward from origin at one hop per gossip cycle. No agent needs to maintain a global subscription. Consistency is eventual within the local neighborhood, which is the operationally relevant scope for all delivery coordination decisions.
+
+4.3  Load Balancing via Overlap Zones
+The Venn overlap zones between adjacent polygons are shared-claim zones. A package in an overlap zone is claimable by either adjacent agent. Claim priority is determined by current load state as encoded in the local partition. An agent with below-threshold load claims overlap zone packages from an adjacent overloaded agent without central dispatch intervention. The load balancing is a direct output of local state reading, not a scheduled optimization pass.
+
+4.4  Fault Isolation by Partition Boundary
+Because no agent holds state about non-adjacent agents, a hardware failure in one polygon affects only that polygon and its immediate Venn neighbors. The failed agent&apos;s polygon is absorbed by adjacent polygons via Voronoi recomputation — each neighbor&apos;s polygon expands to cover the gap — and only those neighbors&apos; state containers are updated. The failure domain is strictly bounded by the Venn adjacency partition. Cascading failures across non-adjacent partitions are structurally impossible.
+
+5. Novelty and Distinguishing Features
+The invention is distinguished from the prior art in the following specific ways:
+
+The use of geographic Venn adjacency as the partition boundary definition for physical swarm agent state containers has no direct prior art in robotics or autonomous vehicle systems.
+The combination of containerized local state, Venn-adjacency partition boundary, overlap-zone load balancing without central dispatch, and O(1) per-agent coordination complexity is novel as a unified architecture.
+Fault isolation bounded by Venn adjacency partition boundary — such that hardware failure cannot cascade beyond immediate neighbors — is a structural property not present in any identified prior art system.
+
+6. Potential Claims (Non-Final — For Attorney Review)
+The following claim language is provided for attorney review and refinement. These are not final claims and require professional prosecution.
+
+A distributed coordination system for autonomous ground delivery agents comprising: a containerized local swarm partition per agent containing operational state for Venn-adjacent neighbor agents only; wherein partition boundaries are defined by geographic polygon adjacency; and wherein per-agent coordination complexity is O(1) regardless of total network fleet size.
+The system of claim 1, wherein load balancing between adjacent agents is performed by direct local state reading of the Venn-adjacent partition without central dispatch intervention.
+The system of claim 1, wherein hardware failure of one agent causes Voronoi polygon recomputation in immediately adjacent agents only, such that failure cascading to non-adjacent agents is structurally prevented.
+A method for coordinating a fleet of autonomous delivery agents comprising: partitioning swarm state by geographic Venn adjacency; maintaining per-agent state containers of constant size independent of fleet size; propagating state updates via bounded gossip to immediate neighbors only; and resolving load imbalances via direct partition state reading without central assignment.
+
+7. Best Mode of Implementation
+Best mode implementation uses a lightweight state container (under 50KB for typical 6-neighbor configuration) updated at 100ms intervals via UDP broadcast to Venn-adjacent units. Container format is versioned to enable rolling software updates without state loss. Voronoi recomputation on neighbor failure is triggered by missed heartbeat after 3-cycle timeout (300ms), initiating polygon boundary renegotiation with remaining neighbors using a distributed consensus algorithm requiring only local neighbor participation.
+
+8. Drawings and Diagrams
+The following diagrams are described in text form. Formal patent drawings to be prepared by a registered patent draftsman prior to utility application filing.
+
+Figure 1: City-scale diagram showing multiple named agent polygons with Venn overlap zones highlighted, illustrating the partition boundary structure.
+Figure 2: Container contents schematic — showing own polygon definition, neighbor state table (6 neighbors), overlap zone assignments, load threshold parameters.
+Figure 3: Fault isolation diagram — showing hardware failure event, Voronoi recomputation, and polygon absorption by adjacent agents, with failure domain boundary indicated.
+Figure 4: Load balancing sequence — agent above threshold, overlap zone claim by adjacent below-threshold agent, state update propagation.
+
+Conception Attestation
+I hereby attest that I conceived the invention described in this document on or before the date indicated above, and that this document accurately and completely describes the invention to the best of my knowledge and belief. I understand that this document will be used to establish the date of conception for patent priority purposes.
+
+Inventor Signature
+
+Date of Signature
+
+Witness Signature
+
+Witness Date
+
+INVENTION DISCLOSURE DOCUMENT
+IDD-001-C
+CONFIDENTIAL — TRADE SECRET — PRIVILEGED
+
+Disclosure ID
+IDD-001-C
+Title
+Stateless Mobile Aerial Companion Unit with Context Inheritance via Host Agent Docking
+Alternative Title
+Shared-Pool Aerial Delivery Companion Recalibrating from Host Container on Dock
+Inventor(s)
+[INVENTOR NAME] — sole inventor
+Date of Conception
+April 19, 2026
+Date of First Reduction to Practice
+To be completed
+Date of This Document
+April 19, 2026
+Organization
+CMPLX / LATTICE (pre-formation)
+Classification
+CONFIDENTIAL — DO NOT DISTRIBUTE
+
+1. Field of Invention
+This invention relates to aerial autonomous delivery units operating as shared-pool mobile companions to ground autonomous delivery agents. Specifically, it relates to a method and system for operating a mobile aerial unit that carries no persistent operational state between docking events, instead inheriting its complete operational context from the host ground agent&apos;s local swarm partition on each dock, such that any aerial companion unit can operate effectively anywhere in the network without pre-configuration or central assignment.
+
+2. Background and Problem Statement
+Autonomous aerial delivery systems currently require either dedicated assignment of aerial units to specific ground units or geographic zones (limiting flexibility and creating idle capacity), or central coordination systems that assign aerial units to tasks on demand (creating latency and connectivity dependency).
+A shared-pool aerial unit — one that operates with any ground unit in any zone — requires a mechanism to acquire local operational context quickly on pairing. If the aerial unit carries full network state, it faces the same scaling problems as fully distributed swarm systems. If it carries no state, it cannot make informed operational decisions in flight.
+Additionally, the flush timing of state transitions between host units is critical: flushing state on departure creates a gap during which the unit holds neither old context nor new context, making in-flight routing decisions impossible without central coordination. No existing system addresses this specific architectural challenge.
+
+3. Prior Art
+The following prior art has been identified and reviewed. The claimed invention is distinguished from each as described below.
+
+Zipline P2 autonomous drone delivery (commercial art): covers fixed-station drone operations. Does not address shared-pool mobile companions or context inheritance from host ground agents.
+Wing Aviation delivery drones (commercial art): covers fixed-route drone operations. Does not address ground-agent companion architecture or stateless context inheritance.
+US20220176976A1 (smart road infrastructure): covers road-side navigation infrastructure. Does not address aerial unit state management.
+Amazon Prime Air patents: cover fixed aerial delivery from distribution centers. Do not address shared-pool companions or context inheritance.
+Kubernetes stateless pod architecture (software prior art): covers stateless compute instances in software infrastructure. Does not address physical aerial robotics, geographic operational context, or physical handshake as commit point.
+
+4. Detailed Description of the Invention
+4.1  The Stateless Companion Architecture
+The aerial companion unit is designed as a stateless operational entity: it carries no persistent operational state between docking events. Its operational parameters — flight envelope, valid approach vectors, vertical node locations, return beacon priority list — are derived entirely from the host ground agent&apos;s local swarm partition on each docking event. On undocking, these parameters are retained until the next docking handshake completes.
+
+4.2  Context Inheritance on Dock
+On physical docking with a host ground agent, the aerial companion executes a context inheritance sequence: authentication handshake verifying both units are valid network members; read of the host agent&apos;s local swarm partition (read-only access to neighbor states, polygon boundary, DAV boundaries within polygon, vertical node locations, return beacon priority list); recalibration of operational parameters to the inherited local context; and ready signal broadcast to host and Venn neighbors indicating aerial capability now available at this location.
+
+The full context inheritance sequence targets completion within three seconds for a typical neighborhood-scope partition (under 50KB). This latency is operationally negligible relative to delivery cycle times.
+
+4.3  Atomic State Transition: Flush on Handshake Confirmation
+State flush — the release of the prior host&apos;s operational context — is triggered by confirmed handshake completion at the landing pad or new host unit, not by departure from the prior host. This atomic transaction model ensures the companion always holds valid operational context: either the prior host&apos;s context (during flight and until new handshake confirms) or the new host&apos;s context (after handshake confirmation). No operational state gap exists at any point in the transfer cycle.
+
+If the landing handshake fails, the companion retains the prior host&apos;s context and can return to the prior host or to any unit whose beacon is visible in the prior context&apos;s return priority list. The atomic flush-on-handshake model makes all failure modes recoverable.
+
+4.4  Shared Pool Operation
+Because any companion unit can inherit context from any ground agent&apos;s partition, companions operate as a shared pool: they route to wherever aerial capability is needed rather than being dedicated to specific ground units. Pre-staging of companions at locations where metadata indicates upcoming vertical access need is enabled by the predictive cross-partition handoff projection (see IDD-001-F). A companion completing a vertical transfer routes to the nearest ground unit with an open port and a pending vertical-flagged package in its metadata queue.
+
+5. Novelty and Distinguishing Features
+The invention is distinguished from the prior art in the following specific ways:
+
+The stateless aerial companion architecture — wherein the unit carries no persistent state between docking events and inherits full operational context from the host ground agent&apos;s partition on dock — has no identified prior art in aerial robotics or delivery systems.
+The atomic state transition model — flush on confirmed handshake rather than on departure — as applied to physical aerial robotics units transitioning between host ground agents is novel.
+The shared-pool operation model — aerial companions routing to wherever aerial need is indicated by metadata rather than being dedicated to specific ground units — combined with context inheritance is a novel operational architecture.
+
+6. Potential Claims (Non-Final — For Attorney Review)
+The following claim language is provided for attorney review and refinement. These are not final claims and require professional prosecution.
+
+A shared-pool aerial delivery unit comprising: a mobile aerial platform with no persistent operational state between docking events; a context inheritance module reading operational parameters from a host ground agent&apos;s local swarm partition on physical docking; and wherein state flush is triggered by confirmed handshake completion at a new host or landing pad rather than by departure from prior host.
+The aerial unit of claim 1, wherein context inheritance includes: local geographic polygon boundary, defined aerial volume (DAV) boundaries, vertical node locations, and return beacon priority list of ground units with available ports.
+The aerial unit of claim 1, wherein failure of landing handshake causes retention of prior host context, enabling return to prior host or to any unit in prior context&apos;s return priority list.
+A method for operating shared-pool mobile aerial units in an autonomous delivery network comprising: maintaining aerial units as stateless entities between docking events; inheriting operational context from host ground agent&apos;s local partition on each dock; retaining prior host context until new handshake confirms; and routing to nearest ground unit with open port and pending vertical need after each vertical transfer completion.
+
+7. Best Mode of Implementation
+Best mode implementation: companion unit is a compact coaxial or ducted-fan design (300-800g airframe) with payload magnetic quick-release, inductive charging through port contact, IR homing beacon receiver for return docking, and embedded compute unit running the context inheritance module. Port interface is an open hardware standard enabling companions from multiple manufacturers to dock with any compliant ground unit. Companion firmware is update-capable over the docked charging connection.
+
+8. Drawings and Diagrams
+The following diagrams are described in text form. Formal patent drawings to be prepared by a registered patent draftsman prior to utility application filing.
+
+Figure 1: Companion unit physical design — showing payload port interface, magnetic quick-release, IR beacon receiver, inductive charging contacts.
+Figure 2: Context inheritance sequence diagram — dock, authenticate, read partition, recalibrate, ready signal.
+Figure 3: Atomic state transition diagram — departure from prior host (context retained), flight (prior context active), new handshake confirmation (flush triggered), new context loaded.
+Figure 4: Shared pool routing diagram — companion completing vertical transfer, routing to nearest open-port ground unit with pending vertical-flagged metadata.
+
+Conception Attestation
+I hereby attest that I conceived the invention described in this document on or before the date indicated above, and that this document accurately and completely describes the invention to the best of my knowledge and belief. I understand that this document will be used to establish the date of conception for patent priority purposes.
+
+Inventor Signature
+
+Date of Signature
+
+Witness Signature
+
+Witness Date
+
+INVENTION DISCLOSURE DOCUMENT
+IDD-001-D
+CONFIDENTIAL — TRADE SECRET — PRIVILEGED
+
+Disclosure ID
+IDD-001-D
+Title
+Fractal Geometry Routing Projection for Autonomous Delivery Polygon Definition and Path Pre-computation
+Alternative Title
+Mandelbrot Bulb Applied to Urban Delivery Agent Service Area Coverage and Escape Trajectory Pre-computation
+Inventor(s)
+[INVENTOR NAME] — sole inventor
+Date of Conception
+April 19, 2026
+Date of First Reduction to Practice
+To be completed
+Date of This Document
+April 19, 2026
+Organization
+CMPLX / LATTICE (pre-formation)
+Classification
+CONFIDENTIAL — DO NOT DISTRIBUTE
+
+1. Field of Invention
+This invention relates to geometric methods for defining service area coverage density and pre-computing routing paths for autonomous ground and aerial delivery agents. Specifically, it relates to the application of Mandelbrot set bulb projection geometry to the definition of delivery agent service area polygons, such that interior coverage density, primary approach vectors, and escape trajectory paths are derived from fractal iteration of the polygon&apos;s geometric structure rather than computed reactively at runtime.
+
+2. Background and Problem Statement
+Current autonomous delivery routing systems compute optimal routes reactively: when a package assignment is made, the routing algorithm calculates the path from current position to destination using real-time network state. This approach has two fundamental limitations.
+First, reactive computation cannot anticipate demand concentration. Delivery demand is not uniformly distributed across a service area. Certain regions — building clusters, commercial corridors, high-density residential zones — consistently generate more demand than others. Reactive routing treats all regions equally until demand data accumulates, missing the optimization opportunities available from the geometric structure of the service area itself.
+Second, reactive routing cannot pre-negotiate path conflicts between adjacent agents. When two agents in adjacent service areas both compute routes simultaneously, their paths may conflict at boundary zones. Resolving these conflicts reactively creates latency and requires central arbitration.
+
+3. Prior Art
+The following prior art has been identified and reviewed. The claimed invention is distinguished from each as described below.
+
+Mandelbrot set mathematics (academic prior art): The Mandelbrot set and its bulb projection geometry are well-established mathematics. Prior art covers the mathematics itself. This invention covers a specific application of Mandelbrot bulb projection to autonomous delivery polygon routing — an application with no identified prior art.
+Fractal antenna design patents: cover application of fractal geometry to antenna design. Do not address delivery routing.
+Vehicle routing problem literature (academic): covers optimization of delivery routes. Does not address fractal geometry as the basis for pre-computed routing structure.
+Golden ratio urban planning (academic and practice): covers application of golden ratio proportions to urban design. Does not address autonomous delivery routing or fractal bulb projection for path pre-computation.
+
+4. Detailed Description of the Invention
+4.1  Mandelbrot Bulb Projection Applied to Service Area Polygon
+Each autonomous agent&apos;s service area polygon is overlaid with a Mandelbrot bulb projection scaled to the polygon&apos;s geometric dimensions and orientation. The Mandelbrot set&apos;s structure — primary bulb, child bulbs, Misiurewicz points, and escape trajectory patterns — is mapped onto the polygon geometry, producing a structured coverage density map with the following derived properties:
+
+Primary approach vectors: derived from the primary bulb neck orientation, indicating the dominant entry direction for the service area based on its geometric relationship to adjacent polygons
+Secondary approach vectors: derived from child bulb necks, indicating secondary valid approach directions
+Interior coverage density map: high iteration count regions map to high-density coverage requirements; fast-escape regions map to sparse coverage; the distribution of iteration counts within the polygon predicts demand concentration before empirical demand data exists
+Escape trajectory paths: pre-computed from the fractal escape trajectory patterns, defining valid exit paths from the polygon to each adjacent Venn neighbor boundary
+
+4.2  Pre-Computed Routing as Geometric Derivation
+Because the routing structure is derived from the polygon&apos;s geometry via Mandelbrot iteration, it is pre-computed once at polygon initialization rather than calculated reactively at runtime. The iteration is performed at high depth (billions of iterations for fine-grained path structure) during an offline computation phase. The resulting routing structure is stored as part of the named agent&apos;s compose file and is available to the agent without runtime computation overhead.
+
+Julia, the aerial companion unit, operates on a single escape trajectory slice of this pre-computed structure — her valid flight path within the polygon&apos;s DAV is a specific escape trajectory from the Mandelbrot projection, pre-computed through fractal iteration to billions of depth levels. She does not compute her path in flight. She executes a pre-computed trajectory that was derived from the geometry of the space she is entering.
+
+4.3  Golden Ratio City Geometry as Optimization
+In cities whose urban geometry exhibits approximate golden ratio scaling structure — a property of organically developed cities where block sizes, neighborhood sizes, and district sizes relate at approximately the golden ratio across scales — the Mandelbrot bulb projection aligns naturally with the existing spatial hierarchy. The polygon boundaries at each scale level correspond to natural bulb boundaries in the projection. This alignment reduces the computational depth required to achieve accurate routing structure, as the city&apos;s existing geometry pre-organizes the space in a manner consistent with the fractal projection.
+
+5. Novelty and Distinguishing Features
+The invention is distinguished from the prior art in the following specific ways:
+
+Application of Mandelbrot set bulb projection geometry to autonomous delivery agent service area polygon definition, with coverage density derived from iteration count distribution, has no identified prior art in robotics, delivery systems, or autonomous vehicle routing.
+Pre-computation of aerial companion flight paths as specific escape trajectories of the polygon&apos;s Mandelbrot projection — eliminating runtime path computation — is a novel application of fractal geometry to physical aerial navigation.
+The use of golden ratio urban geometry as an optimization condition for Mandelbrot bulb projection alignment in autonomous delivery routing has no identified prior art.
+
+6. Potential Claims (Non-Final — For Attorney Review)
+The following claim language is provided for attorney review and refinement. These are not final claims and require professional prosecution.
+
+A method for defining routing structure in an autonomous delivery service area comprising: overlaying a Mandelbrot bulb projection scaled to the service area polygon geometry; deriving interior coverage density from iteration count distribution within the projection; deriving primary and secondary approach vectors from bulb neck orientations; and deriving escape trajectory paths from fractal escape patterns for pre-computation of exit routes to adjacent service areas.
+The method of claim 1, wherein aerial companion unit flight paths are pre-computed as specific escape trajectory slices of the polygon&apos;s Mandelbrot projection, eliminating runtime flight path computation.
+The method of claim 1, wherein cities exhibiting golden ratio scaling structure between urban hierarchy levels are identified as providing natural alignment between polygon boundary levels and Mandelbrot bulb boundaries, reducing required iteration depth for accurate routing structure derivation.
+A system for pre-computing autonomous delivery routing structure comprising: a Mandelbrot projection module operating on service area polygon geometry; an iteration count density mapper producing coverage density predictions; a trajectory extractor producing pre-computed approach and exit path sets; and a compose file writer encoding said pre-computed routing structure in the named agent&apos;s persistent specification.
+
+7. Best Mode of Implementation
+Best mode: polygon geometry is input as a GeoJSON polygon. Mandelbrot projection is computed using GPU-accelerated iteration to a depth of 10^9 iterations, producing a high-resolution density and trajectory map. Computation is performed once at polygon initialization on network infrastructure, not on the agent hardware. Output is a compact routing table (estimated 200-500KB per polygon at operational resolution) stored in the compose file. Recomputation is triggered only by polygon boundary changes, which occur only on network topology changes (new agent added, agent removed, district-level reconfiguration).
+
+8. Drawings and Diagrams
+The following diagrams are described in text form. Formal patent drawings to be prepared by a registered patent draftsman prior to utility application filing.
+
+Figure 1: Mandelbrot bulb projection overlaid on a representative urban delivery polygon — showing primary bulb, child bulbs, approach vector derivations, and escape trajectory paths.
+Figure 2: Iteration count density map for a sample polygon — showing high-density regions (predicted demand concentration) and fast-escape regions (sparse coverage).
+Figure 3: Aerial companion escape trajectory slice — showing the specific fractal path Julia executes within the polygon&apos;s DAV volume.
+Figure 4: Golden ratio city geometry alignment — showing correspondence between urban hierarchy levels and Mandelbrot bulb boundary levels in a candidate city.
+
+Conception Attestation
+I hereby attest that I conceived the invention described in this document on or before the date indicated above, and that this document accurately and completely describes the invention to the best of my knowledge and belief. I understand that this document will be used to establish the date of conception for patent priority purposes.
+
+Inventor Signature
+
+Date of Signature
+
+Witness Signature
+
+Witness Date
+
+INVENTION DISCLOSURE DOCUMENT
+IDD-001-E
+CONFIDENTIAL — TRADE SECRET — PRIVILEGED
+
+Disclosure ID
+IDD-001-E
+Title
+Predictive Cross-Partition Handoff Scheduling via Inter-Agent Fractal Exit Vector Projection
+Alternative Title
+Pre-Negotiated Autonomous Agent Handoffs Using Geometric Projection Across Venn Boundaries
+Inventor(s)
+[INVENTOR NAME] — sole inventor
+Date of Conception
+April 19, 2026
+Date of First Reduction to Practice
+To be completed
+Date of This Document
+April 19, 2026
+Organization
+CMPLX / LATTICE (pre-formation)
+Classification
+CONFIDENTIAL — DO NOT DISTRIBUTE
+
+1. Field of Invention
+This invention relates to coordination between adjacent autonomous delivery agents for pre-scheduling package and aerial companion handoffs across service area boundaries. Specifically, it relates to a method in which each agent projects its outbound traffic — packages and aerial companions expected to exit its polygon — onto adjacent agents&apos; entry vectors using geometric escape trajectory data, enabling pre-negotiated handoffs before execution rather than reactive coordination at the moment of boundary crossing.
+
+2. Background and Problem Statement
+Handoffs between adjacent autonomous delivery agents — transferring packages or aerial companions from one agent&apos;s service area to another — currently occur reactively: an agent approaches a boundary with a package or companion to transfer, broadcasts a transfer request, and waits for the adjacent agent to confirm availability and stage the handoff. This reactive sequence introduces latency, creates potential for handoff conflicts when multiple agents approach the same boundary simultaneously, and provides no mechanism for pre-staging resources at handoff points before they are needed.
+Without predictive handoff scheduling, vertical access nodes — locations where aerial companions are needed for building access — cannot be pre-staged. If an aerial companion is not available at a vertical node when a package arrives requiring vertical access, the ground agent must wait. At scale, this creates systematic queuing delays at all vertical access points.
+No existing autonomous delivery system implements predictive inter-agent handoff scheduling derived from geometric projection of outbound traffic across partition boundaries.
+
+3. Prior Art
+The following prior art has been identified and reviewed. The claimed invention is distinguished from each as described below.
+
+Multi-agent path planning literature: covers path coordination between agents. Does not address partition-boundary handoff pre-scheduling via fractal escape trajectory projection.
+Traffic signal coordination patents: cover vehicle flow coordination at intersections. Do not address autonomous delivery handoffs or fractal geometric projection.
+Amazon logistics optimization patents: cover package routing optimization. Do not address inter-agent geometric projection for handoff pre-scheduling.
+IDD-001-D (this inventor): covers fractal polygon routing structure. IDD-001-E covers the inter-agent application of that structure for cross-partition handoff scheduling — a distinct and separable invention.
+
+4. Detailed Description of the Invention
+4.1  Outbound Traffic Projection
+Each named agent continuously projects its expected outbound traffic — packages and aerial companions scheduled to exit the polygon — onto its Venn boundary escape vectors using the pre-computed Mandelbrot projection escape trajectory data (see IDD-001-D). This projection produces, for each boundary exit point: the expected arrival time of the exiting package or companion; the specific escape vector of departure; and the entry vector on the adjacent agent&apos;s boundary that the exiting unit will arrive at.
+
+4.2  Cross-Partition Entry Vector Pre-Notification
+The projection results are broadcast to Venn-adjacent neighbors as pre-notification messages: &apos;Unit/package approaching your entry vector φ at time T.&apos; Adjacent agents receive this pre-notification, record the incoming handoff in their local state, pre-clear the entry vector for the specified arrival window, and broadcast confirmation back. The handoff is negotiated before execution. When the exiting unit actually arrives, the entry is pre-cleared, the receiving agent is staged, and the transfer executes without real-time coordination.
+
+4.3  Vertical Access Pre-Staging
+When an agent&apos;s package queue contains packages with vertical-access flags, and those packages are projected to require aerial companion deployment at a specific time, the agent broadcasts pre-staging requests to the shared companion pool. The nearest available companion — one that has completed a vertical transfer and is routing to its next host — is redirected to the vertical node location before the vertical-flagged package arrives. The companion is staged and ready when the package reaches the vertical node, eliminating wait time.
+
+4.4  Network-Wide Hardware Specification Derivation
+When cross-partition projection is executed simultaneously by all agents in the network and the results are aggregated, the full forward schedule of handoffs across all boundaries becomes visible. The sum of projected companion deployment events at each node boundary, over a representative operating period, reveals the required companion pool size and distribution for each zone. This allows hardware procurement and deployment decisions to be made from geometric projection rather than from empirical measurement of failure states — the network knows what it needs before shortages occur.
+
+5. Novelty and Distinguishing Features
+The invention is distinguished from the prior art in the following specific ways:
+
+Pre-scheduling autonomous delivery handoffs across partition boundaries via fractal escape trajectory projection — deriving handoff timing and entry vectors from geometric computation rather than reactive broadcast — has no identified prior art.
+Using aggregated cross-partition projection results to derive network-wide hardware specifications (companion pool sizes and distributions) before operational deployment has no identified prior art.
+The specific combination of fractal polygon projection, cross-partition pre-notification, and vertical access pre-staging is novel as a unified handoff coordination architecture.
+
+6. Potential Claims (Non-Final — For Attorney Review)
+The following claim language is provided for attorney review and refinement. These are not final claims and require professional prosecution.
+
+A method for pre-scheduling handoffs between adjacent autonomous delivery agents comprising: projecting outbound package and companion traffic onto Venn boundary escape vectors using pre-computed fractal polygon routing data; broadcasting pre-notification of expected arrivals to adjacent agents with entry vector and timing; receiving pre-clearance confirmation from adjacent agents; and executing handoffs against pre-negotiated entries without real-time coordination.
+The method of claim 1, further comprising: broadcasting pre-staging requests to shared aerial companion pool based on vertical-access flagged package projections; redirecting available companions to vertical node locations before package arrival; and eliminating wait time at vertical access nodes.
+The method of claim 1, further comprising: aggregating cross-partition projection results across all network agents to derive required aerial companion pool sizes and distribution; and using said derivation for hardware procurement decisions before operational deployment.
+A system for predictive inter-agent handoff coordination comprising: a projection module computing outbound traffic timing and exit vectors from fractal polygon routing data; a pre-notification broadcast system communicating projected arrivals to Venn neighbors; a pre-staging request system for companion pool management; and a hardware specification derivation module aggregating network-wide projection results.
+
+7. Best Mode of Implementation
+Best mode: projection horizon is 15 minutes of forward traffic (sufficient for all realistic delivery cycles). Pre-notification messages are sent at 5-minute intervals and updated on significant queue changes. Adjacent agent confirmation is required within 30 seconds; timeout triggers fallback to reactive handoff. Pre-staging requests to companion pool are sent when vertical-flagged package is projected to arrive at vertical node within 8 minutes (one full companion deployment cycle). Network-wide aggregation for hardware specification is run on hub infrastructure weekly, with results informing monthly procurement decisions.
+
+8. Drawings and Diagrams
+The following diagrams are described in text form. Formal patent drawings to be prepared by a registered patent draftsman prior to utility application filing.
+
+Figure 1: Single-agent projection diagram — showing outbound traffic projected onto Venn boundary escape vectors with timing annotations.
+Figure 2: Cross-partition pre-notification sequence — agent projects exit, notifies neighbor, neighbor pre-clears entry, handoff executes.
+Figure 3: Vertical access pre-staging sequence — vertical-flagged package in queue, pre-staging request to companion pool, companion routes to vertical node, package arrives to staged companion.
+Figure 4: Network-wide aggregation diagram — all agents&apos; projections aggregated at hub, hardware specification derived, procurement decision output.
+
+Conception Attestation
+I hereby attest that I conceived the invention described in this document on or before the date indicated above, and that this document accurately and completely describes the invention to the best of my knowledge and belief. I understand that this document will be used to establish the date of conception for patent priority purposes.
+
+Inventor Signature
+
+Date of Signature
+
+Witness Signature
+
+Witness Date
+
+INVENTION DISCLOSURE DOCUMENT
+IDD-001-F
+CONFIDENTIAL — TRADE SECRET — PRIVILEGED
+
+Disclosure ID
+IDD-001-F
+Title
+Multi-Layer Dynamic Vector Routing Road Surface for Autonomous-Only Corridor Infrastructure
+Alternative Title
+Embedded Distributed State Computer in Autonomous-Only Corridor Road Surface Replacing Cloud-Round-Trip Navigation
+Inventor(s)
+[INVENTOR NAME] — sole inventor
+Date of Conception
+April 19, 2026
+Date of First Reduction to Practice
+To be completed
+Date of This Document
+April 19, 2026
+Organization
+CMPLX / LATTICE (pre-formation)
+Classification
+CONFIDENTIAL — DO NOT DISTRIBUTE
+
+1. Field of Invention
+This invention relates to road surface infrastructure for autonomous-only logistics corridors. Specifically, it relates to a multi-layer road surface structure that encodes and broadcasts a dynamic four-layer state vector to passing autonomous vehicles, functioning as a distributed physical routing computer that eliminates cloud-latency navigation dependency and operates with zero-latency state delivery to vehicles at the point of each routing decision.
+
+2. Background and Problem Statement
+Autonomous vehicle navigation currently relies on a combination of onboard sensor fusion, HD map databases, and cloud-connected routing engines. This architecture has three critical vulnerabilities: cloud round-trip latency (50-200ms) introduces staleness between network state change and vehicle response; connectivity dependency means that network outages degrade navigation capability; and map staleness means that events such as corridor closures, congestion changes, or emergency overrides may not reach vehicles for minutes to hours after they occur.
+Smart road infrastructure has been attempted using solar panels, embedded LEDs, piezoelectric harvesting, and RF tags. These efforts have uniformly failed on human roads due to the AASHTO fourth-power load equivalency effect: heavy vehicles (tractor-trailers generating 2-3 ESALs per pass, versus 0.0004 ESALs for passenger cars) physically destroy embedded road components. Autonomous-only corridors — where the maximum vehicle load is a ground AV at under 8,000 pounds — eliminate this failure mode.
+No existing road surface infrastructure encodes a dynamic multi-layer routing state vector to vehicles as their primary navigation input, updated sub-100ms from a network-wide conflict detection and resolution system.
+
+3. Prior Art
+The following prior art has been identified and reviewed. The claimed invention is distinguished from each as described below.
+
+Solar Roadways patents (Brusaw, various 2009-2018): cover hexagonal glass solar tile design. Distinguished by: LATTICE uses polymer composite surface (not glass), functional layer separation (not integrated solar/LED/structural in one tile), and AV-only load class specification.
+US20220176976A1 (RF tags along lane borders): cover roadside RF tag arrays. Distinguished by: LATTICE&apos;s signal-bearing layer is embedded in the road surface (not border-adjacent), and encodes a dynamic multi-layer state vector (not static position/ID data).
+US20240301637 (conductive marking paint): covers surface-applied conductive paint for vehicle radar detection. Distinguished by: LATTICE&apos;s system is a multi-layer structural stack (not surface paint), and encodes dynamic routing vectors (not static lane markings).
+PlasticRoad B.V. patents (various): cover hollow recycled plastic road section structure. Distinguished by: LATTICE&apos;s system adds LED/optical signal layer, RF/NFC layer, piezoelectric layer, and thermoelectric layer above the structural conduit layer — a specific multi-layer combination not covered by PlasticRoad patents.
+
+4. Detailed Description of the Invention
+4.1  The Multi-Layer Stack
+The road surface comprises five functional layers from top to bottom:
+
+Top surface (2-4mm): Translucent UV-stable recycled polymer composite, textured for AV wheel grip at the known load and speed class of the corridor. Optically clear over LED array zones.
+LED/Signal layer (4-8mm): High-brightness LED matrix readable by downward-facing cameras in any lighting condition. RFID/NFC antenna grid providing electromagnetic redundancy for the same signal data. Update rate sub-100ms on CDR hub push.
+Energy harvesting layer (10-20mm): Piezoelectric array tuned to AV wheel track spacing (known precisely on AV-only corridors). Thermoelectric film capturing road surface to subsurface temperature differential. Conductive power routing traces.
+Solar capture layer (integrated with top surface): Photovoltaic cells under translucent top surface. Target: system self-sufficiency for embedded electronics plus node charging contribution.
+Structural/conduit layer (hollow composite): Recycled plastic structural honeycomb rated for AV load class. Hollow channels carrying power distribution, fiber conduit, sensor wiring. Modular section replacement. End-of-life: 100% recyclable.
+
+4.2  The Four-Layer Dynamic State Vector
+At each intersection tile and decision point, the LED/signal layer encodes a four-layer state vector:
+
+Layer 1 — Positional (static): Absolute coordinate to centimeter precision; intersection ID in city manifold graph; modality designation; segment speed limit.
+Layer 2 — Directional (semi-static): Permitted outbound vectors per modality; prohibited vectors; priority routing preference.
+Layer 3 — Real-Time State (dynamic, sub-100ms update): Congestion level on each outbound segment; time-to-green on signalized directions; incident/closure flags; active TFR or emergency override; weather condition flag.
+Layer 4 — Reservation (transactional): Slot availability at next node; conflict alerts for converging vehicles; emergency priority override flags.
+
+4.3  Distributed Physical Routing Computer
+A vehicle reading the state vector at an intersection does not query a server. It reads current state from the road surface and executes the locally optimal next move toward its destination. The routing intelligence is distributed across every intersection tile simultaneously. Each tile is a node in a physical distributed computer whose state is maintained by the CDR hub and delivered to vehicles through the road surface. Global routing optimization emerges from local decisions at each intersection using always-current information.
+
+4.4  Graceful Degradation on Hub Outage
+If the CDR hub loses connectivity, each tile retains its last pushed state. Vehicles continue operating on cached-but-recent state rather than going dark. The Layer 3 real-time state becomes stale at the rate of network change, but Layers 1, 2, and 4 (slot availability from last push) remain valid for continued safe operation. The system degrades gracefully to a fixed-state mode rather than experiencing catastrophic navigation failure.
+
+5. Novelty and Distinguishing Features
+The invention is distinguished from the prior art in the following specific ways:
+
+The specific five-layer stack (polymer composite surface, LED/optical signal array, piezoelectric/thermoelectric harvest, solar PV, hollow structural conduit) applied to an autonomous-only corridor with AV-load-class specification has no identified prior art.
+Encoding a dynamic four-layer routing state vector in road surface infrastructure as the primary navigation input to autonomous vehicles — replacing cloud-round-trip routing — has no identified prior art.
+The graceful degradation architecture — cached state on hub outage enabling continued vehicle operation — as a designed property of road-embedded navigation infrastructure has no identified prior art.
+Energy self-sufficiency of corridor infrastructure through the combination of solar, piezoelectric, and thermoelectric harvest from the known-class AV traffic of an autonomous-only corridor has no identified prior art as a unified system.
+
+6. Potential Claims (Non-Final — For Attorney Review)
+The following claim language is provided for attorney review and refinement. These are not final claims and require professional prosecution.
+
+A road surface structure for autonomous vehicle corridor infrastructure comprising: a translucent polymer composite top layer; an LED and RF antenna signal layer below said top layer, configured to encode and broadcast a dynamic routing state vector; an energy harvesting layer comprising piezoelectric elements tuned to autonomous vehicle wheel track spacing; and a hollow recycled structural composite base layer with internal conduit channels.
+The road surface of claim 1, wherein the dynamic routing state vector comprises four layers: static positional data; semi-static directional data; real-time network state updated sub-100ms from a network operations system; and transactional reservation data.
+The road surface of claim 1, wherein piezoelectric element placement is optimized to autonomous vehicle wheel track spacing of the corridor&apos;s defined vehicle class, maximizing energy harvest from consistent and predictable AV traffic loads.
+The road surface of claim 1, wherein on loss of connectivity to the network operations system, each tile retains its last received state, enabling continued autonomous vehicle operation in a degraded-but-functional mode.
+A method for providing zero-latency routing guidance to autonomous vehicles comprising: encoding current network routing state in road surface signal elements at each intersection; updating said state sub-100ms from a conflict detection and resolution system; and vehicles reading said surface state as primary navigation input without cloud-round-trip query.
+
+7. Best Mode of Implementation
+Best mode: LED layer uses high-brightness RGB matrix at 50mm pitch, readable by standard downward-facing cameras at vehicle speeds up to 80mph. RFID operates at 13.56MHz (ISO 15693) for broad vehicle compatibility. State vector is encoded in both optical (LED pattern) and electromagnetic (RFID data field) simultaneously for dual-channel redundancy. Piezo elements use PZT-4 ceramics rated for AV load class (0-8,000lb). Tile modules are 500mm × 500mm for handling and replacement practicality. Hub-to-tile state push uses fiber in conduit layer at sub-10ms physical latency, leaving 90ms processing margin for the 100ms update target.
+
+8. Drawings and Diagrams
+The following diagrams are described in text form. Formal patent drawings to be prepared by a registered patent draftsman prior to utility application filing.
+
+Figure 1: Cross-section diagram of five-layer road surface stack with materials and dimensions labeled.
+Figure 2: Signal layer encoding diagram — showing four-layer state vector encoding in LED pattern and RFID data field simultaneously.
+Figure 3: Intersection tile layout — showing LED matrix zones, RFID antenna placement, piezo element locations, and power routing.
+Figure 4: Vehicle-road interaction diagram — showing downward camera reading LED state, RF reader reading RFID field, and routing decision execution.
+Figure 5: Graceful degradation sequence — hub outage event, tile state retention, vehicle continued operation on cached state.
+
+Conception Attestation
+I hereby attest that I conceived the invention described in this document on or before the date indicated above, and that this document accurately and completely describes the invention to the best of my knowledge and belief. I understand that this document will be used to establish the date of conception for patent priority purposes.
+
+Inventor Signature
+
+Date of Signature
+
+Witness Signature
+
+Witness Date
+
+INVENTION DISCLOSURE DOCUMENT
+IDD-001-G
+CONFIDENTIAL — TRADE SECRET — PRIVILEGED
+
+Disclosure ID
+IDD-001-G
+Title
+Modality-Agnostic Autonomous Corridor Pre-Clearance Utility Framework
+Alternative Title
+Open-Access Pre-Cleared Right-of-Way Infrastructure for Multi-Modal Autonomous Logistics Systems
+Inventor(s)
+[INVENTOR NAME] — sole inventor
+Date of Conception
+April 19, 2026
+Date of First Reduction to Practice
+To be completed
+Date of This Document
+April 19, 2026
+Organization
+CMPLX / LATTICE (pre-formation)
+Classification
+CONFIDENTIAL — DO NOT DISTRIBUTE
+
+1. Field of Invention
+This invention relates to the legal-technical architecture for pre-clearing autonomous logistics corridors as open-access utility infrastructure available to any certified operator across multiple autonomous vehicle modalities. Specifically, it relates to a system in which a single corridor filing grants regulatory clearance that any compliant operator inherits, rather than each operator negotiating individual clearance for each route, combined with a conflict detection and resolution system operating across all modalities simultaneously.
+
+2. Background and Problem Statement
+Autonomous logistics operators currently negotiate regulatory clearance individually for each route in each jurisdiction. A drone delivery company seeking to operate in a city must obtain FAA LAANC authorization, negotiate with municipal authorities, and secure liability coverage for each specific route it intends to fly. A ground AV operator in the same city must separately obtain state AV permits, municipal agreements, and insurance. A sidewalk robot operator must separately obtain city permits for each zone.
+This operator-by-operator approach creates massive regulatory friction, prevents smaller operators from accessing corridors that only well-resourced companies can afford to clear, and produces no coordinated conflict detection between different modalities sharing the same physical space at interchange points.
+No existing regulatory or technical framework pre-clears corridors as utility infrastructure that any certified operator across multiple modalities inherits through a standardized access agreement.
+
+3. Prior Art
+The following prior art has been identified and reviewed. The claimed invention is distinguished from each as described below.
+
+FAA LAANC system (regulatory): covers individual operator airspace authorization. Does not provide corridor clearance inheritable by multiple operators or cross-modal CDR.
+FAA UTM/USS framework: covers UAS traffic management. Does not cover ground AV or sidewalk robot modalities or unified cross-modal pre-clearance.
+Road utility easement law (legal prior art): covers surface right-of-way for utilities. Does not address autonomous vehicle operations or aerial corridors.
+Airport system (operational analogy): provides shared runway infrastructure to multiple operators. Does not address multi-modal autonomous logistics or provide the technical CDR architecture described.
+
+4. Detailed Description of the Invention
+4.1  The Pre-Clearance Utility Instrument
+The corridor pre-clearance framework defines each autonomous logistics corridor as a utility instrument with a specific legal and technical structure: a geographic definition (3D polygon for aerial, lane-level segment for ground, sidewalk segment for micro-mobility); a modality designation (aerial, ground AV, sidewalk, or multi-modal); a set of operating conditions (altitude layers, speed limits, time-of-day windows, weather minimums); and a CDR requirement (all operators must maintain telemetry integration with the corridor&apos;s CDR system).
+
+This instrument is filed once with all applicable regulatory authorities (FAA for aerial components, state DOT for ground AV components, municipal authority for sidewalk components). Once approved, any operator who meets the certification requirements inherits the clearance. No individual route negotiation is required.
+
+4.2  Operator Certification and Access
+Operators access pre-cleared corridors through a standardized certification and access agreement covering: regulatory compliance verification (valid FAA Part 107 cert or equivalent, state AV permit, Remote ID compliance); vehicle compliance verification (Remote ID broadcast capability, CDR telemetry integration, modality-specific safety requirements); liability insurance verification (minimum limits, corridor infrastructure named as additional insured); and flight/route plan submission per operation (enabling CDR conflict detection before each operation).
+
+4.3  Cross-Modal Conflict Detection and Resolution
+The corridor CDR system maintains real-time awareness of all active operators across all modalities simultaneously. At node interchange points — where aerial, ground AV, and sidewalk modalities share physical space — the CDR system implements slot scheduling rather than reactive conflict detection. Each modality is assigned time slots at interchange points based on projected traffic volume, with emergency override capability. Operators receive slot assignments as part of their pre-operation flight/route plan response.
+
+5. Novelty and Distinguishing Features
+The invention is distinguished from the prior art in the following specific ways:
+
+Pre-clearing autonomous logistics corridors as utility instruments inheritable by any certified operator across multiple modalities, with unified cross-modal CDR, has no identified prior art.
+The specific combination of single-filing multi-operator clearance inheritance, modality-agnostic certification framework, and cross-modal CDR at interchange points is novel.
+
+6. Potential Claims (Non-Final — For Attorney Review)
+The following claim language is provided for attorney review and refinement. These are not final claims and require professional prosecution.
+
+A system for autonomous logistics corridor infrastructure comprising: a pre-clearance utility instrument defining corridor geometry, modality designations, and operating conditions; a regulatory filing mechanism submitting said instrument to applicable authorities across all relevant modalities; an operator certification system enabling any compliant operator to inherit pre-cleared status through a standardized access agreement; and a cross-modal conflict detection and resolution system maintaining real-time awareness of all operators across all modalities.
+The system of claim 1, wherein node interchange points where multiple modalities share physical space are managed through slot scheduling pre-assigned per operation rather than reactive real-time conflict detection.
+A method for pre-clearing autonomous logistics infrastructure comprising: filing a unified corridor instrument with all applicable modality-specific regulatory authorities; certifying operators against standardized multi-modality requirements; granting corridor access to certified operators without individual route negotiation; and maintaining cross-modal CDR for all active operators simultaneously.
+
+7. Best Mode of Implementation
+Best mode: corridor instrument is filed as a GeoJSON specification with altitude properties, submitted to FAA via USS interface for aerial components, to state DOT via standard permit application for ground components, and to municipal authority via ordinance amendment for sidewalk components. Operator onboarding via API: submit credentials, receive access token, submit pre-operation flight/route plan, receive slot assignment and CDR integration parameters. CDR hub operates at sub-second telemetry ingestion for all active operators.
+
+8. Drawings and Diagrams
+The following diagrams are described in text form. Formal patent drawings to be prepared by a registered patent draftsman prior to utility application filing.
+
+Figure 1: Corridor instrument structure diagram — 3D aerial polygon, ground lane segment, sidewalk segment, with modality designations and operating conditions labeled.
+Figure 2: Operator certification flow — credential submission, verification, access token issuance, pre-operation plan submission, slot assignment.
+Figure 3: Cross-modal CDR architecture — aerial, ground AV, and sidewalk operator telemetry streams converging at CDR hub, interchange slot scheduling output.
+Figure 4: Regulatory filing map — FAA submission for aerial, state DOT for ground, municipal for sidewalk, single operator inheritance across all three.
+
+Conception Attestation
+I hereby attest that I conceived the invention described in this document on or before the date indicated above, and that this document accurately and completely describes the invention to the best of my knowledge and belief. I understand that this document will be used to establish the date of conception for patent priority purposes.
+
+Inventor Signature
+
+Date of Signature
+
+Witness Signature
+
+Witness Date
+
+INVENTION DISCLOSURE DOCUMENT
+IDD-001-H
+CONFIDENTIAL — TRADE SECRET — PRIVILEGED
+
+Disclosure ID
+IDD-001-H
+Title
+Community-Tiered Autonomous Logistics Infrastructure Participation with Personal Agent Ownership and Polygon Rights
+Alternative Title
+Grassroots Economic Participation Architecture for Autonomous Delivery Networks Including Personal Bot Ownership and Lease-Back Earnings
+Inventor(s)
+[INVENTOR NAME] — sole inventor
+Date of Conception
+April 19, 2026
+Date of First Reduction to Practice
+To be completed
+Date of This Document
+April 19, 2026
+Organization
+CMPLX / LATTICE (pre-formation)
+Classification
+CONFIDENTIAL — DO NOT DISTRIBUTE
+
+1. Field of Invention
+This invention relates to community economic participation structures for autonomous logistics infrastructure networks. Specifically, it relates to a tiered participation architecture in which infrastructure qualification criteria (not identity criteria) determine participation tier, combined with a personal autonomous vehicle ownership and lease-back model in which community members own named delivery agents, lease them to the network operator, and earn from deliveries within their defined polygon as a passive income stream.
+
+2. Background and Problem Statement
+Autonomous logistics deployments in urban areas have universally been structured as corporate-owned infrastructure serving the community as customers. Community members have no ownership stake in the infrastructure operating in their neighborhoods, no income from its use of local space, and no governance participation in its operation. This structure generates opposition from communities who perceive autonomous logistics as extractive and as a source of job displacement.
+Crowdshipping platforms (Amazon Hub Locker, UPS Access Point, similar) allow commercial establishments to serve as package pickup points. These models do not extend to residential participants, do not include any form of vehicle ownership, and do not provide polygon-level service area ownership with associated income rights.
+No existing autonomous logistics system combines infrastructure-qualification-based participation tiers, personal autonomous vehicle ownership, lease-back income from polygon service areas, and polygon rights as a transferable asset with secondary market potential.
+
+3. Prior Art
+The following prior art has been identified and reviewed. The claimed invention is distinguished from each as described below.
+
+Amazon Hub Locker / UPS Access Point: commercial pickup point participation. Does not include residential participation, vehicle ownership, or polygon rights.
+Airbnb model (operational analogy): asset ownership with platform operation and income sharing. Does not address physical autonomous vehicles, polygon service areas, or logistics infrastructure.
+Uber/Lyft driver model: personal vehicle operation on platform. Does not address autonomous vehicles, named agent identity, polygon rights, or passive income from autonomous operation.
+Franchise law / FTC Franchise Rule: covers franchise relationships. This invention may implicate franchise law and requires counsel review to determine registration requirements.
+
+4. Detailed Description of the Invention
+4.1  Infrastructure-Based Qualification Tiers
+Participation tiers are defined by infrastructure capability requirements, not by any characteristic of the property owner or their identity. Tier qualification criteria describe what a location must reliably provide. Any location meeting these criteria qualifies regardless of who owns or occupies it. Tiers range from Tier 0 (passive corridor consent, requiring no infrastructure, earning corridor transit fees) through Tier 4 (commercial franchise hub operator) with specific infrastructure requirements and corresponding income structures at each tier.
+
+4.2  Personal Autonomous Vehicle Ownership Model
+Community members may purchase autonomous delivery units from the network operator. The purchased unit is assigned a named agent identity (compose file) with a defined polygon service area. The owner leases the unit back to the network operator under a service agreement in which: the unit operates autonomously within its assigned polygon during operating hours; the owner earns per-delivery fees for all deliveries completed within the polygon; the owner earns per-handoff fees when the polygon is used as a transfer point; the owner earns corridor transit fees when other units pass through the polygon; and the owner has no operational responsibilities beyond maintaining the unit&apos;s charge and physical accessibility.
+
+4.3  Polygon Rights as Transferable Asset
+The named agent identity, its compose file, and the associated polygon service area rights are transferable property owned by the bot owner. Transfer of ownership transfers the polygon rights, accumulated local learned knowledge, and income-generating capacity of the service area to the new owner. Polygon rights in high-traffic corridors command premium value, creating a secondary market for polygon-attached named agents. This secondary market value accretes to bot owners rather than to the network operator.
+
+4.4  SLA-Based Tier Maintenance
+Each participation tier has a reliability score tracking uptime, transfer success rate, and response time. Scores below threshold trigger automated alerts and cure periods. Tier demotion is gradual (one tier at a time) and reversible on performance recovery. No participant is removed from the system without an alternative participation pathway being offered.
+
+5. Novelty and Distinguishing Features
+The invention is distinguished from the prior art in the following specific ways:
+
+The combination of infrastructure-qualification-based participation tiers, personal autonomous vehicle ownership, polygon-rights-as-transferable-asset, and lease-back passive income from autonomous operation has no identified prior art in autonomous logistics or delivery systems.
+Polygon service area rights as a transferable property asset with secondary market potential, in the context of autonomous delivery network participation, is a novel economic structure.
+
+6. Potential Claims (Non-Final — For Attorney Review)
+The following claim language is provided for attorney review and refinement. These are not final claims and require professional prosecution.
+
+A community participation system for autonomous logistics infrastructure comprising: a plurality of participation tiers defined by infrastructure capability requirements; qualification criteria based solely on location infrastructure capability without reference to owner identity; and a personal autonomous vehicle ownership and lease-back model in which owners earn per-delivery, per-handoff, and corridor transit fees from autonomous operation of their named agent unit within a defined polygon service area.
+The system of claim 1, wherein named agent polygon rights are transferable property assets independent of physical hardware, such that transfer of ownership transfers service area rights, accumulated operational knowledge, and income-generating capacity.
+The system of claim 1, wherein participation tier is maintained through an SLA-based reliability scoring system providing graduated demotion with cure periods and alternative participation pathways, such that no participant is excluded without alternative engagement options.
+A method for community economic participation in autonomous logistics networks comprising: defining participation tiers by infrastructure requirements; offering personal autonomous vehicle ownership with polygon service area assignment; executing lease-back agreements in which network operator manages autonomous operation and distributes per-delivery earnings to owners; and enabling secondary market transfer of polygon-attached named agent ownership.
+
+7. Best Mode of Implementation
+Best mode: bot ownership is documented by a digital asset registry entry associating owner identity with named agent ID and polygon assignment. Earnings are distributed daily via automated payment to registered owner account. Transfer of ownership is executed through registry update requiring both current and new owner authentication. Lease-back agreement is a standardized digital contract with defined revenue share percentages, maintenance obligations, and termination conditions. Franchise law compliance review required before public offering of ownership model.
+
+8. Drawings and Diagrams
+The following diagrams are described in text form. Formal patent drawings to be prepared by a registered patent draftsman prior to utility application filing.
+
+Figure 1: Participation tier spectrum diagram — Tier 0 through Tier 4 with infrastructure requirements and income structures at each level.
+Figure 2: Personal bot ownership flow — purchase, named agent assignment, polygon definition, lease-back agreement, earnings distribution.
+Figure 3: Polygon rights transfer diagram — current owner, transfer transaction, new owner, accumulated knowledge and income rights transferred.
+Figure 4: Secondary market value illustration — high-traffic polygon vs. low-traffic polygon, premium pricing mechanism.
+
+Conception Attestation
+I hereby attest that I conceived the invention described in this document on or before the date indicated above, and that this document accurately and completely describes the invention to the best of my knowledge and belief. I understand that this document will be used to establish the date of conception for patent priority purposes.
+
+Inventor Signature
+
+Date of Signature
+
+Witness Signature
+
+Witness Date

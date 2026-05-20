@@ -1,0 +1,122 @@
+{
+  "schema_version": "1.0",
+  "purpose": "first-push policy for historical repos that CMPLX-PartsFactory depends on as evidence, linked systems, or submodules",
+  "source_manifest": "repo_kernel/manifest/repos.json",
+  "content_rule": "Do not track imported repo file contents inside CMPLX-PartsFactory. Stable existing repos are tracked as git submodule pointers only; local-only or self-referential mirrors remain linked-local metadata.",
+  "default_mode": "submodule-for-stable-remote",
+  "submodule_promotion_rule": "Stable repo_kernel/repos checkouts with reviewed remotes and pinned commits are promoted to git submodules. The parent tracks only gitlink commits plus .gitmodules entries with ignore=dirty.",
+  "ignored_local_duplicate_roots": [
+    "CMPLX-1T",
+    "CMPLX-Manny",
+    "CMPLX-TMN-main",
+    "CMPLXMCP",
+    "CMPLXUNI"
+  ],
+  "repo_kernel_roots": [
+    "repo_kernel/repos/CMPLX",
+    "repo_kernel/repos/CMPLX-1T",
+    "repo_kernel/repos/CMPLX-Formalization",
+    "repo_kernel/repos/CMPLX-Manny",
+    "repo_kernel/repos/CMPLX-Monorepo",
+    "repo_kernel/repos/CMPLX-PartsFactory",
+    "repo_kernel/repos/CMPLX-TMN-main",
+    "repo_kernel/repos/CMPLX-TMN1",
+    "repo_kernel/repos/CMPLXDevKit",
+    "repo_kernel/repos/CMPLXMCP",
+    "repo_kernel/repos/CMPLXUNI",
+    "repo_kernel/repos/scout-demo-service"
+  ],
+  "active_submodules": [
+    {
+      "name": "CMPLX",
+      "path": "repo_kernel/repos/CMPLX",
+      "url": "https://github.com/nbarker2021/CMPLX",
+      "pinned_commit_short": "c33f057",
+      "role": "baseline_core"
+    },
+    {
+      "name": "CMPLX-1T",
+      "path": "repo_kernel/repos/CMPLX-1T",
+      "url": "https://github.com/nbarker2021/CMPLX-1T",
+      "pinned_commit_short": "01faad8a",
+      "role": "geometric_system_build"
+    },
+    {
+      "name": "CMPLX-Formalization",
+      "path": "repo_kernel/repos/CMPLX-Formalization",
+      "url": "https://github.com/nbarker2021/CMPLX-Formalization",
+      "pinned_commit_short": "1a6617b",
+      "role": "mathematical_doctrine"
+    },
+    {
+      "name": "CMPLX-Manny",
+      "path": "repo_kernel/repos/CMPLX-Manny",
+      "url": "https://github.com/nbarker2021/CMPLX-Manny",
+      "pinned_commit_short": "9ab37f5",
+      "role": "manny_identity_system"
+    },
+    {
+      "name": "CMPLX-Monorepo",
+      "path": "repo_kernel/repos/CMPLX-Monorepo",
+      "url": "https://github.com/nbarker2021/CMPLX-Monorepo",
+      "pinned_commit_short": "c56c785",
+      "role": "historical_monorepo_reference"
+    },
+    {
+      "name": "CMPLX-TMN-main",
+      "path": "repo_kernel/repos/CMPLX-TMN-main",
+      "url": "https://github.com/nbarker2021/CMPLX-TMN-main",
+      "pinned_commit_short": "d60dfa0",
+      "role": "tmn_primary"
+    },
+    {
+      "name": "CMPLX-TMN1",
+      "path": "repo_kernel/repos/CMPLX-TMN1",
+      "url": "https://github.com/nbarker2021/CMPLX-TMN1",
+      "pinned_commit_short": "bd9d52b",
+      "role": "tmn_historical_build"
+    },
+    {
+      "name": "CMPLXDevKit",
+      "path": "repo_kernel/repos/CMPLXDevKit",
+      "url": "https://github.com/nbarker2021/CMPLXDevKit",
+      "pinned_commit_short": "49ee0eb",
+      "role": "developer_toolkit"
+    },
+    {
+      "name": "CMPLXMCP",
+      "path": "repo_kernel/repos/CMPLXMCP",
+      "url": "https://github.com/nbarker2021/CMPLXMCP",
+      "pinned_commit_short": "80edb78",
+      "role": "mcp_layer"
+    },
+    {
+      "name": "CMPLXUNI",
+      "path": "repo_kernel/repos/CMPLXUNI",
+      "url": "https://github.com/nbarker2021/CMPLXUNI",
+      "pinned_commit_short": "559b13c",
+      "role": "unified_system_build"
+    },
+    {
+      "name": "scout-demo-service",
+      "path": "repo_kernel/repos/scout-demo-service",
+      "url": "https://github.com/nbarker2021/scout-demo-service",
+      "pinned_commit_short": "0de180b",
+      "role": "external_service_reference"
+    }
+  ],
+  "linked_local_only": [
+    {
+      "name": "CMPLX-PartsFactory",
+      "path": "repo_kernel/repos/CMPLX-PartsFactory",
+      "url": "https://github.com/nbarker2021/CMPLX-PartsFactory",
+      "role": "historical_upstream_placeholder",
+      "reason": "self-referential mirror for the parent repo; no checked-out commit was available during superproject conversion"
+    }
+  ],
+  "notes": [
+    "repo_kernel/repos/CMPLX-PartsFactory is the historical upstream mirror for this landing pad and stays linked-local until the new remote/first commit is settled.",
+    "The top-level duplicate roots are ignored because their contents are already tracked in their own repositories and should not be vendored into this first push.",
+    ".gitmodules now records active submodule pointers for the stable repo_kernel/repos checkouts. Submodule worktree dirt is ignored by the parent; commit movement is still visible."
+  ]
+}

@@ -1,0 +1,13 @@
+kind: notation
+version: "1"
+unicode_equiv:
+  "-":
+    - "\u2212"
+    - "\u2013"
+    - "\u2014"
+operators:
+  "\\cdot": "*"
+  "\\times": "*"
+latex_commands:
+  "\\alpha": "alpha"
+  "\\beta": "beta"

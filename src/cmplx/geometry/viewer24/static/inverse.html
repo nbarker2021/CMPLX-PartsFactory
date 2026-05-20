@@ -1,0 +1,22 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Inverse Residue Viewer</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>Inverse Residue Viewer</h1>
+    <div class="controls">
+      <button id="baseline">Capture Baseline</button>
+      <button id="step">Step CA</button>
+      <label>Alpha <input id="alpha" type="number" value="160" min="0" max="255" step="5"></label>
+      <span id="status"></span>
+    </div>
+  </header>
+  <main id="grid"></main>
+  <script src="/static/inverse.js"></script>
+</body>
+</html>

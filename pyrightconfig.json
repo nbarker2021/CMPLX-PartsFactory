@@ -1,0 +1,27 @@
+{
+  "include": ["src", "services", "repo_kernel", "tests", "scripts", "docs"],
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.venv",
+    "**/site-packages",
+    "CMPLX-1T",
+    "CMPLX-Manny",
+    "CMPLXUNI",
+    "CMPLX-TMN-main",
+    "CMPLXMCP",
+    "staging",
+    "data",
+    "work",
+    "corpus_extracted",
+    "catalog",
+    "projections_pending",
+    "src/cmplx_pending",
+    "docker-cache",
+    "reports"
+  ],
+  "ignore": [],
+  "typeCheckingMode": "basic",
+  "useLibraryCodeForTypes": true,
+  "reportMissingImports": "warning"
+}

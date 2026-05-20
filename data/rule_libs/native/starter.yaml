@@ -1,0 +1,7 @@
+kind: native
+version: "1"
+stream: native
+min_token_len: 4
+use_word_boundaries: true
+# Latin extended + digits; override per language pack
+token_pattern: "[A-Za-z0-9\u00C0-\u024F]+"

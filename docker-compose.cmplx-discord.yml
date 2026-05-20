@@ -1,0 +1,56 @@
+version: '3.9'
+
+# CMPLX Discord Bridge
+# Adds Discord bot integration to the existing CMPLX Docker stack.
+# This service connects to the existing 'backend' network used by
+# research-api, postgres, redis, and other CMPLX services.
+#
+# Usage:
+#   docker compose -f docker-compose.cmplx-discord.yml up -d
+#
+# Prerequisites:
+#   1. Create a Discord bot at https://discord.com/developers/applications
+#   2. Copy the bot token to .env
+#   3. Invite the bot to your server with Bot scope + Send Messages permission
+
+services:
+  cmplx-discord-bridge:
+    build:
+      context: ./services/discord-bridge
+      dockerfile: Dockerfile
+    container_name: cmplx-discord-bridge
+    environment:
+      DISCORD_BOT_TOKEN: ${DISCORD_BOT_TOKEN:?err}
+      DISCORD_CHANNELS: ${DISCORD_CHANNELS:-}
+      RESEARCH_API_URL: ${RESEARCH_API_URL:-http://research-api:3000}
+      MANNY_RUNTIME_URL: ${MANNY_RUNTIME_URL:-http://manny-runtime:8870}
+      DEFAULT_API: ${DEFAULT_API:-research}
+    networks:
+      - backend
+    restart: unless-stopped
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    depends_on:
+      research-api:
+        condition: service_healthy
+        required: false
+      manny-runtime:
+        condition: service_healthy
+        required: false
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Use the existing backend network from the main docker-compose
+networks:
+  backend:
+    external: true

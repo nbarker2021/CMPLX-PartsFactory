@@ -1,0 +1,9 @@
+kind: token
+version: "1"
+rules:
+  alphabet: abcdefghijklmnopqrstuvwxyz
+  max_level: 3
+  case_modes:
+    - lower
+    - upper
+    - palindrome

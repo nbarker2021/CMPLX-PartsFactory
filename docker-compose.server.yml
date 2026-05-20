@@ -1,0 +1,13 @@
+# OpenCode Server Mode Override
+# ==============================
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.server.yml up -d
+#
+# This switches the opencode-session from interactive shell to headless server mode.
+
+services:
+  opencode-session:
+    command: ["opencode", "serve", "--hostname", "0.0.0.0", "--port", "4096"]
+    ports:
+      - "${OPENCODE_PORT:-8080}:8080"
+      - "${OPENCODE_API_PORT:-4096}:4096"

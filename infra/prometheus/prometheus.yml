@@ -1,0 +1,71 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'cmplx-unified-api'
+    static_configs:
+      - targets: ['cmplx-unified-api:8851']
+    metrics_path: /metrics
+
+  - job_name: 'manny-runtime'
+    static_configs:
+      - targets: ['manny-runtime:8870']
+    metrics_path: /metrics
+
+  - job_name: 'speedlight-api'
+    static_configs:
+      - targets: ['speedlight-api:8843']
+    metrics_path: /metrics
+
+  - job_name: 'tarpit-api'
+    static_configs:
+      - targets: ['tarpit-api:8844']
+    metrics_path: /metrics
+
+  - job_name: 'snap-unified'
+    static_configs:
+      - targets: ['snap-unified:8083']
+    metrics_path: /metrics
+
+  - job_name: 'mmdb-unified'
+    static_configs:
+      - targets: ['mmdb-unified:8084']
+    metrics_path: /metrics
+
+  - job_name: 'mdhg-unified'
+    static_configs:
+      - targets: ['mdhg-unified:8085']
+    metrics_path: /metrics
+
+  - job_name: 'manny-manifold-api'
+    static_configs:
+      - targets: ['manny-manifold-api:8840']
+    metrics_path: /metrics
+
+  - job_name: 'discord-bridge'
+    static_configs:
+      - targets: ['discord-bridge:8080']
+    metrics_path: /metrics
+
+  - job_name: 'opencode-session'
+    static_configs:
+      - targets: ['opencode-session:8080']
+    metrics_path: /metrics
+
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+
+  - job_name: 'rabbitmq'
+    static_configs:
+      - targets: ['rabbitmq:15672']
+    metrics_path: /metrics

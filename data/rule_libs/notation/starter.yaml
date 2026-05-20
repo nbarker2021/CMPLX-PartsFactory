@@ -1,0 +1,15 @@
+kind: notation
+version: "1"
+unicode_equiv:
+  "-":
+    - "−"
+    - "–"
+    - "—"
+  "...":
+    - "…"
+operators:
+  "×": "*"
+  "÷": "/"
+latex_commands:
+  "\\alpha": "α"
+  "\\beta": "β"

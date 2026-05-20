@@ -1,0 +1,51 @@
+# ═══════════════════════════════════════════════════════════
+# cmplx/morphon:latest — Master Polyglot Image
+# ═══════════════════════════════════════════════════════════
+# Single image. All roles. Activation determines behavior.
+# ═══════════════════════════════════════════════════════════
+
+FROM python:3.12-slim AS base
+
+LABEL maintainer="CMPLX" \
+      version="2.1.0" \
+      description="Morphonic computing — one image, every role"
+
+# System dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        build-essential libffi-dev libsqlite3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Python dependencies
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Application code
+COPY cmplx_core_primitives.py /app/cmplx_core_primitives.py
+COPY cmplx_eversion_network.py /app/cmplx_eversion_network.py
+COPY cmplx_deployment.py /app/cmplx_deployment.py
+COPY cmplx_nanoclaw.py /app/cmplx_nanoclaw.py
+
+WORKDIR /app
+
+# Data volumes
+VOLUME ["/data/mmdb", "/data/mdhg", "/data/receipts", "/data/speedlight"]
+
+# Environment: activation determines role
+ENV NODE_ID="default" \
+    ROLE="compute" \
+    ACTIVE_AXES="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23" \
+    POSITION="[]" \
+    NEIGHBORS="" \
+    MDHG_FAST_CAPACITY="1000" \
+    MDHG_MED_CAPACITY="10000" \
+    MDHG_DIMENSIONS="24" \
+    SPEEDLIGHT_CACHE_SIZE="10000" \
+    LOG_LEVEL="INFO"
+
+# Health check: verify conservation + chain integrity
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD python3 -c "from cmplx_nanoclaw import health_check; health_check()"
+
+# Entrypoint: NanoClaw activation
+ENTRYPOINT ["python3", "cmplx_nanoclaw.py"]
+CMD ["--role", "compute"]

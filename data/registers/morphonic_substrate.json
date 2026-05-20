@@ -1,0 +1,35 @@
+{
+  "role": "morphonic_substrate",
+  "status": "operational_v1",
+  "updated": "2026-05-19",
+  "description": "Substrate-first geometric transformer: living token index, Morphon shell, reloadable crystal bundles.",
+  "canonical": {
+    "crystal_bundle": "crystals/identity_review.crystal",
+    "token_index_db": "data/token_index_identity_review.sqlite",
+    "ingest_stats": "data/ingest_identity_review_stats.json"
+  },
+  "doctrine": [
+    "docs/MORPHONIC_UNIFIED_DOCTRINE.md",
+    "docs/MORPHONIC_PRODUCTION_RUNBOOK.md",
+    "docs/MORPHONIC_TEST_REVIEW_2026-05-19.md"
+  ],
+  "pytest_gate": {
+    "command": "PYTHONPATH=src python -m pytest tests/transform/ tests/primitives/ -q",
+    "e2e": "PYTHONPATH=src python scripts/morphonic_e2e_smoke.py --quick"
+  },
+  "repo_kernel_read_routes": [
+    "GET /api/morphonic/status",
+    "GET /api/morphonic/template-stats",
+    "GET /api/morphonic/crystal-info"
+  ],
+  "unification_plan_hooks": {
+    "B4_genesis_superperm": "data/superpermutations/n4.json; src/cmplx/primitives/superperm.py",
+    "B5_promotion": "crystal schema 2.1.0; NHyperTower remains escrow"
+  },
+  "deferred": [
+    "SUPERPERM_N5 (n5.json status pending)",
+    "NHyperTower.py promotion (NHYPER_TOWER_ESCROW.md)",
+    "DeepL TranslateHub",
+    "full L3 build-index a-z Cartesian"
+  ]
+}

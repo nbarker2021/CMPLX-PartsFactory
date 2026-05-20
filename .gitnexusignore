@@ -1,0 +1,52 @@
+# CMPLX-PartsFactory root graph boundary.
+#
+# Keep the root GitNexus index focused on the active PartsFactory framework.
+# Imported systems and corpus dumps should be indexed as separate named targets
+# so variants remain distinct and archive sediment does not dominate the graph.
+
+# GitNexus / tool state
+.gitnexus/
+.opencode/
+.pytest_cache/
+docker-cache/
+
+# Local databases, generated indexes, and extracted corpora
+data/
+corpus_extracted/
+
+# Imported systems: index separately with explicit --name aliases
+CMPLX-1T/
+CMPLX-Manny/
+CMPLX-TMN-main/
+CMPLXMCP/
+CMPLXUNI/
+
+# Archives and binary/document blobs are evidence records, not graph parse input
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.rar
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+*.pdf
+*.docx
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
+*.bin
+*.onnx
+*.pt
+*.pth
+
+# Runtime output
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.tmp

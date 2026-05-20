@@ -1,0 +1,44 @@
+[submodule "repo_kernel/repos/CMPLX"]
+	path = repo_kernel/repos/CMPLX
+	url = https://github.com/nbarker2021/CMPLX.git
+	ignore = dirty
+[submodule "repo_kernel/repos/CMPLX-1T"]
+	path = repo_kernel/repos/CMPLX-1T
+	url = https://github.com/nbarker2021/CMPLX-1T.git
+	ignore = dirty
+[submodule "repo_kernel/repos/CMPLX-Formalization"]
+	path = repo_kernel/repos/CMPLX-Formalization
+	url = https://github.com/nbarker2021/CMPLX-Formalization.git
+	ignore = dirty
+[submodule "repo_kernel/repos/CMPLX-Manny"]
+	path = repo_kernel/repos/CMPLX-Manny
+	url = https://github.com/nbarker2021/CMPLX-Manny.git
+	ignore = dirty
+[submodule "repo_kernel/repos/CMPLX-Monorepo"]
+	path = repo_kernel/repos/CMPLX-Monorepo
+	url = https://github.com/nbarker2021/CMPLX-Monorepo.git
+	ignore = dirty
+[submodule "repo_kernel/repos/CMPLX-TMN-main"]
+	path = repo_kernel/repos/CMPLX-TMN-main
+	url = https://github.com/nbarker2021/CMPLX-TMN-main.git
+	ignore = dirty
+[submodule "repo_kernel/repos/CMPLX-TMN1"]
+	path = repo_kernel/repos/CMPLX-TMN1
+	url = https://github.com/nbarker2021/CMPLX-TMN1.git
+	ignore = dirty
+[submodule "repo_kernel/repos/CMPLXDevKit"]
+	path = repo_kernel/repos/CMPLXDevKit
+	url = https://github.com/nbarker2021/CMPLXDevKit.git
+	ignore = dirty
+[submodule "repo_kernel/repos/CMPLXMCP"]
+	path = repo_kernel/repos/CMPLXMCP
+	url = https://github.com/nbarker2021/CMPLXMCP.git
+	ignore = dirty
+[submodule "repo_kernel/repos/CMPLXUNI"]
+	path = repo_kernel/repos/CMPLXUNI
+	url = https://github.com/nbarker2021/CMPLXUNI.git
+	ignore = dirty
+[submodule "repo_kernel/repos/scout-demo-service"]
+	path = repo_kernel/repos/scout-demo-service
+	url = https://github.com/nbarker2021/scout-demo-service.git
+	ignore = dirty

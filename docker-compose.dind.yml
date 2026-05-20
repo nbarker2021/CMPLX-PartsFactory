@@ -1,0 +1,16 @@
+# Docker-in-Docker Mode Override (legacy compatibility)
+# =====================================================
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.dind.yml up -d
+#
+# The base docker-compose.yml now includes a rootless DinD service by default.
+# This override remains for backward compatibility with existing scripts.
+# It applies no changes because the secure defaults are already in the base file.
+#
+# Security notes:
+#   - Host /var/run/docker.sock is NO LONGER mounted (CR-1 fixed).
+#   - DinD runs rootless (docker:27-dind-rootless) without privileged (CR-2 fixed).
+#
+# No service overrides are required. If you need the legacy privileged DinD
+# mode for debugging, create a docker-compose.dind-privileged.yml with
+# docker:27-dind + privileged: true and understand the container-escape risk.

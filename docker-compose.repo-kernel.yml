@@ -1,0 +1,79 @@
+# Repo Kernel layer
+#
+# Draft compose layer for treating clean GitHub clones as one navigable module
+# substrate. This file is intentionally separate from the main compose so it can
+# be reviewed before startup.
+
+name: cmplx-repo-kernel
+
+services:
+  repo-kernel:
+    image: cmplx-repo-kernel:latest
+    container_name: repo-kernel
+    build:
+      context: ./services/repo-kernel
+      dockerfile: Dockerfile
+    init: true
+    restart: unless-stopped
+    environment:
+      REPO_KERNEL_ID: cmplx-repo-kernel
+      REPO_KERNEL_PORT: 8786
+      REPO_KERNEL_MANIFEST: /kernel/manifest/repos.json
+      REPO_KERNEL_REPOS: /kernel/repos
+      REPO_KERNEL_HOST_REPOS: D:/PartsFactory/CMPLX-PartsFactory/repo_kernel/repos
+      REPO_KERNEL_PROMOTION_LEDGER: /reports/repo_promotion_ledger_2026-05-13.json
+      REPO_KERNEL_PROTOTYPES_ROOT: /sources/PartsFactory/Unification Prototypes
+      CMPLXMCP_RUNTIME_SHIM_AVAILABLE: "1"
+      REPO_KERNEL_ALLOW_MUTATION: ${REPO_KERNEL_ALLOW_MUTATION:-0}
+      REPO_KERNEL_CORS_ORIGINS: "*"
+      FASTMCP_INSTANCE: cmplx-repo-kernel
+      CMPLX_PARTS_FACTORY_SRC: /sources/PartsFactory/CMPLX-PartsFactory/src
+      MORPHONIC_TOKEN_INDEX_DB: ${MORPHONIC_TOKEN_INDEX_DB:-/sources/PartsFactory/CMPLX-PartsFactory/data/token_index_identity_review.sqlite}
+      MORPHONIC_CRYSTAL_BUNDLE: ${MORPHONIC_CRYSTAL_BUNDLE:-/sources/PartsFactory/CMPLX-PartsFactory/crystals/identity_review.crystal}
+    ports:
+      - "${REPO_KERNEL_PORT:-8786}:8786"
+    volumes:
+      - type: bind
+        source: ./services/repo-kernel/server.py
+        target: /app/server.py
+        read_only: true
+      - type: bind
+        source: ./repo_kernel
+        target: /kernel
+      - type: bind
+        source: ./reports
+        target: /reports
+        read_only: true
+      - type: bind
+        source: D:/PartsFactory
+        target: /sources/PartsFactory
+        read_only: true
+      - type: bind
+        source: D:/Manny Unification 2
+        target: /sources/MannyUnification2
+        read_only: true
+      - type: bind
+        source: D:/OC build
+        target: /sources/OCbuild
+        read_only: true
+    networks:
+      - cmplx-backend
+      - backend
+    labels:
+      cmplx.layer: repo-kernel
+      cmplx.role: module-controller
+      cmplx.api: http://localhost:${REPO_KERNEL_PORT:-8786}
+      cmplx.mcp: http://localhost:${REPO_KERNEL_PORT:-8786}/mcp/sse
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  cmplx-backend:
+    external: true
+    name: cmplx-backend
+  backend:
+    external: true
+    name: backend
