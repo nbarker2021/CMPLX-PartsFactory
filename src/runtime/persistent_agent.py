@@ -119,17 +119,23 @@ class AgentProcess:
         # Register initial governance invariants
         self._register_core_invariants()
 
-        # Wave 0.2: register cmplx port providers (receipt, conservation,
-        # constraints, geometry, snap, memory, addressing, symbolic, transport,
-        # diagnostic, engine, cache). Wraps in try/except so a misconfigured
+        # Wave 0.2 / W0: register_all() wires every port in bootstrap_registry
+        # (receipt, conservation, diagnostic, geometry, constraints, engine,
+        # transport, embed, atlas, memory, addressing, routing, symbolic, snap,
+        # cache). Wraps in try/except so a misconfigured
         # cmplx tree never breaks agent boot — failures are logged but the
         # agent continues with whatever ports succeeded.
         try:
-            from .cmplx_bootstrap import register_all
-            self._cmplx_port_status = register_all(
-                mesh=self.config.get("mesh"),  # optional mesh handle
+            from .integration_profile import register_for_startup
+
+            boot = register_for_startup(
+                self.config.get("mesh"),
                 mmdb_path=self.config.get("cmplx_mmdb_path", ":memory:"),
+                health_check_timeout=float(self.config.get("cmplx_health_timeout", 3.0)),
+                config=self.config,
             )
+            self._cmplx_port_status = boot.get("port_status", boot)
+            self._cmplx_integration = boot.get("integration_profile", False)
             logger.info("cmplx ports registered: %s", self._cmplx_port_status)
         except Exception as exc:
             logger.warning("cmplx port registration failed: %s", exc)

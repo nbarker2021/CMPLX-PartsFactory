@@ -11,6 +11,7 @@ up the default in-process providers via `runtime.cmplx_bootstrap`.
 from __future__ import annotations
 
 import logging
+import os
 from typing import Any, Optional
 
 from cmplx.morphon import MorphonController
@@ -35,15 +36,23 @@ def ensure_bootstrapped(
     global _BOOTSTRAP_STATUS
     if _BOOTSTRAP_STATUS is not None:
         return _BOOTSTRAP_STATUS
-    # Local import keeps the transformer package import-cheap when the
-    # runtime layer is unavailable (e.g. minimal docker images).
-    from runtime.cmplx_bootstrap import register_all
+    if integration_profile_enabled():
+        from runtime.integration_profile import register_for_startup
 
-    _BOOTSTRAP_STATUS = register_all(
-        mesh=mesh,
-        mmdb_path=mmdb_path,
-        health_check_timeout=health_check_timeout,
-    )
+        boot = register_for_startup(
+            mesh,
+            mmdb_path=mmdb_path,
+            health_check_timeout=health_check_timeout,
+        )
+        _BOOTSTRAP_STATUS = boot.get("port_status", boot)
+    else:
+        from runtime.cmplx_bootstrap import register_all
+
+        _BOOTSTRAP_STATUS = register_all(
+            mesh=mesh,
+            mmdb_path=mmdb_path,
+            health_check_timeout=health_check_timeout,
+        )
     logger.info("transform: port registration %s", _BOOTSTRAP_STATUS)
     return _BOOTSTRAP_STATUS
 
