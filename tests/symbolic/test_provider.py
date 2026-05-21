@@ -169,7 +169,8 @@ def test_decode_from_etp_empty_ledger_returns_marker_morphon():
     provider = TarPitSymbolicProvider()
     m = provider.decode_from_etp([])
     assert isinstance(m, Morphon)
-    assert m.payload == {"etp_decode": "empty_ledger"}
+    assert m.payload["etp_decode"] == "empty_ledger"
+    assert m.payload.get("identity_kind") == "morphon"
 
 
 def test_decode_from_etp_captures_final_state():

@@ -205,7 +205,8 @@ def test_fallback_etp_parity_with_symbolic():
 def test_decode_from_etp_empty_returns_marker():
     provider = FourEmbedProvider()
     m = provider.decode_from_etp([])
-    assert m.payload == {"etp_decode": "empty_ledger"}
+    assert m.payload["etp_decode"] == "empty_ledger"
+    assert m.payload.get("identity_kind") == "morphon"
 
 
 # ---------------------------------------------------------------------------

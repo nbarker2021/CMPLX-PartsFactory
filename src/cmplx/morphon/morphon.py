@@ -101,7 +101,7 @@ class Morphon:
         compression) and from bare receipt ``atom_id`` strings.
         """
         body = dict(payload)
-        if body.get("etp_decode"):
+        if body.get("etp_decode") is True:
             body.setdefault("identity_kind", "morphon_etp_derived")
         else:
             body.setdefault("identity_kind", "morphon")

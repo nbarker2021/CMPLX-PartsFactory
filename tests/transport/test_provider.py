@@ -130,7 +130,8 @@ def test_fallback_etp_parity_with_symbolic(facade):
 
 def test_decode_from_etp_empty(facade):
     m = facade.decode_from_etp([])
-    assert m.payload == {"etp_decode": "empty_ledger"}
+    assert m.payload["etp_decode"] == "empty_ledger"
+    assert m.payload.get("identity_kind") == "morphon"
 
 
 def test_decode_from_etp_captures_final_row(facade):

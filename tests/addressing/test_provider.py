@@ -159,7 +159,8 @@ def test_encode_to_etp_fallback_matches_symbolic():
 def test_decode_from_etp_empty_returns_marker():
     provider = MDHGAddressingProvider()
     m = provider.decode_from_etp([])
-    assert m.payload == {"etp_decode": "empty_ledger"}
+    assert m.payload["etp_decode"] == "empty_ledger"
+    assert m.payload.get("identity_kind") == "morphon"
 
 
 def test_decode_from_etp_captures_final_row():
