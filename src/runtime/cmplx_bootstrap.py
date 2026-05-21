@@ -51,6 +51,9 @@ _PORTS_LOCAL_ONLY: tuple[str, ...] = (
     "transport",
     "embed",  # 4-Embed Model — view layer, no remote equivalent
     "atlas",  # Mandelbrot deployment boundary + Julia c-assignment
+    "routing",  # AGRM — in-process stub until mesh service exists
+    "crystal",  # CrystalRegistry — SNAP/MDHG/E8 composite
+    "hash_lanes",  # slot-16 lanes over MDHG + routing tours
 )
 
 
@@ -109,7 +112,19 @@ def register_all(
             status[port] = _register_or_skip(ctrl, port, factory)
 
     logger.info("cmplx port-provider registration complete: %s", status)
+    _warn_missing_registry_ports(status)
     return status
+
+
+def _warn_missing_registry_ports(status: dict[str, str]) -> None:
+    """Log when bootstrap_registry ports did not register (W0 guard)."""
+    try:
+        from runtime.bootstrap_registry import bootstrap_port_names
+    except ImportError:
+        return
+    missing = sorted(p for p in bootstrap_port_names() if not status.get(p, "").startswith("registered"))
+    if missing:
+        logger.warning("bootstrap ports not registered: %s", missing)
 
 
 # ─────────────────────────────────────────────────────────────────────
@@ -161,6 +176,9 @@ def _local_only_factories(mmdb_path: str) -> dict[str, Callable[[], Any]]:
     factories["embed"] = _factory("cmplx.embed", "FourEmbedProvider")
 
     factories["atlas"] = _factory("cmplx.atlas", "AtlasProvider")
+    factories["routing"] = _factory("cmplx.routing.provider", "AGRMRoutingProvider")
+    factories["crystal"] = _factory("cmplx.crystal", "CrystalRegistry")
+    factories["hash_lanes"] = _factory("cmplx.hash_lanes", "HashLanesProvider")
 
     return factories
 
@@ -178,7 +196,6 @@ def _with_remote_factories(mmdb_path: str) -> dict[str, Callable[[], Any]]:
 
     factories["memory"] = _factory("cmplx.memory.mmdb", "MMDBMemoryProvider", mmdb_path)
     factories["addressing"] = _factory("cmplx.addressing.mdhg", "MDHGAddressingProvider")
-    factories["routing"] = _factory("cmplx.routing.provider", "AGRMRoutingProvider")
     factories["symbolic"] = _factory("cmplx.symbolic.tarpit", "TarPitSymbolicProvider")
     factories["snap"] = _factory("cmplx.snap.provider", "SNAPEngine")
     factories["cache"] = _factory("cmplx.speedlight.provider", "SpeedLightProvider")

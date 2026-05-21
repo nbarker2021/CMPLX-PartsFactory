@@ -300,7 +300,8 @@ def test_cqeatom_to_dict_keys():
 
 def test_cqeatom_string_payload_wraps_in_dict():
     atom = CQEAtom.forge("hello world")
-    assert atom.morphon.payload == {"text": "hello world"}
+    assert atom.morphon.payload["text"] == "hello world"
+    assert atom.morphon.payload.get("identity_kind") == "morphon"
 
 
 # ---------------------------------------------------------------------------

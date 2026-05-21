@@ -2,7 +2,7 @@
 Wave 0.2 tests — cmplx bootstrap registration.
 
 Verifies:
-  1. All 12 expected ports are registered after register_all() with no mesh.
+  1. All bootstrap-registry ports are registered after register_all() with no mesh.
   2. Each registered provider satisfies its Protocol where applicable.
   3. With a FakeMesh whose services are all healthy, ports in
      _PORTS_WITH_REMOTE register the remote proxy instead of in-process.
@@ -24,23 +24,11 @@ from cmplx.morphon import (
     SymbolicProvider,
     TransportProvider,
 )
+from runtime.bootstrap_registry import bootstrap_port_names
 from runtime.cmplx_bootstrap import register_all
 
 
-_EXPECTED_PORTS = {
-    "receipt",
-    "conservation",
-    "diagnostic",
-    "geometry",
-    "constraints",
-    "engine",
-    "transport",
-    "memory",
-    "addressing",
-    "symbolic",
-    "snap",
-    "cache",
-}
+_EXPECTED_PORTS = bootstrap_port_names()
 
 
 class _HealthyFakeMesh:
@@ -152,7 +140,10 @@ def test_healthy_mesh_registers_remote_for_dual_ports():
 def test_healthy_mesh_leaves_local_only_ports_in_process():
     mesh = _HealthyFakeMesh()
     status = register_all(mesh=mesh)
-    for port in ("receipt", "conservation", "diagnostic", "geometry", "constraints", "engine", "transport"):
+    local_only = bootstrap_port_names() - frozenset(
+        ("memory", "addressing", "symbolic", "snap", "cache")
+    )
+    for port in local_only:
         assert status[port] == "registered (in-process)"
 
 
@@ -197,7 +188,8 @@ def test_aletheia_rejects_empty_payload():
     """The default PayloadNotEmptyLaw should reject empty-dict payloads."""
     register_all()
     constraints = MorphonController.get().get_provider("constraints")
-    m = Morphon.forge(payload={})
+    # forge() injects identity_kind; use a bare morphon for empty payload.
+    m = Morphon(payload={})
     admitted, reason = constraints.admit(m)
     assert admitted is False
     assert "empty" in reason.lower()

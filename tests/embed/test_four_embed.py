@@ -25,6 +25,12 @@ from cmplx.embed import FourEmbedProvider
 from cmplx.symbolic.tarpit import TarPitSymbolicProvider
 
 
+def _payload_without_forge_meta(payload):
+    if isinstance(payload, dict):
+        return {k: v for k, v in payload.items() if k != "identity_kind"}
+    return payload
+
+
 @pytest.fixture(autouse=True)
 def _reset_controller():
     MorphonController.reset_for_tests()
@@ -61,7 +67,7 @@ def test_implicit_decomposition_payload_becomes_state():
     m = Morphon.forge(payload={"some": "data", "value": 42})
     view = provider.decompose(m)
     assert isinstance(view, FourEmbedView)
-    assert view.state == {"some": "data", "value": 42}
+    assert _payload_without_forge_meta(view.state) == {"some": "data", "value": 42}
     assert view.constraint is None
     assert view.operator is None
     assert view.morphon_id == m.id
@@ -91,7 +97,7 @@ def test_explicit_decomposition_all_four_channels():
     })
     view = provider.decompose(m)
     assert view.constraint == {"max_value": 100}
-    assert view.state == {"current": 42}
+    assert view.state == {"current": 42, "_residual": {"identity_kind": "morphon"}}
     assert view.evidence == [{"source": "sensor_1", "reading": 42}]
     assert view.operator == ["increment", "decrement"]
 
@@ -104,7 +110,7 @@ def test_explicit_decomposition_partial_channels():
         "operator": ["transform"],
     })
     view = provider.decompose(m)
-    assert view.state == {"x": 1}
+    assert view.state == {"x": 1, "_residual": {"identity_kind": "morphon"}}
     assert view.operator == ["transform"]
     assert view.constraint is None
     assert view.evidence is None
@@ -124,7 +130,7 @@ def test_residual_keys_merge_into_state_when_state_is_dict():
     view = provider.decompose(m)
     assert view.state == {
         "x": 1,
-        "_residual": {"extra_key": "extra_value", "another": 99},
+        "_residual": {"extra_key": "extra_value", "another": 99, "identity_kind": "morphon"},
     }
 
 
@@ -139,7 +145,7 @@ def test_residual_becomes_state_when_state_missing():
     })
     view = provider.decompose(m)
     assert view.constraint == {"max": 100}
-    assert view.state == {"value": 42, "label": "test"}
+    assert _payload_without_forge_meta(view.state) == {"value": 42, "label": "test"}
 
 
 # ---------------------------------------------------------------------------

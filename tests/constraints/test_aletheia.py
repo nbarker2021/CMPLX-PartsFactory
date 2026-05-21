@@ -39,7 +39,7 @@ def test_default_aletheia_admits_well_formed_morphon():
 
 def test_empty_payload_is_refused():
     a = Aletheia()
-    m = Morphon.forge(payload={})
+    m = Morphon(payload={})
     ok, reason = a.admit(m)
     assert ok is False
     assert "payload_not_empty" in reason
@@ -128,7 +128,7 @@ def test_law_raising_exception_becomes_refusal():
 
 def test_admit_strict_raises():
     a = Aletheia()
-    m = Morphon.forge(payload={})  # empty payload — refused
+    m = Morphon(payload={})
     with pytest.raises(RejectionError) as ei:
         a.admit_strict(m)
     assert ei.value.law_name == "payload_not_empty"
@@ -174,7 +174,7 @@ def test_admit_and_store_with_real_aletheia():
         assert any(r.operation == "admit_and_store" for r in stored.receipts)
 
         # Rejection path — empty payload refused at constraints step.
-        bad = Morphon.forge(payload={})
+        bad = Morphon(payload={})
         with pytest.raises(PermissionError, match="payload_not_empty"):
             controller.admit_and_store(bad)
         # The rejected morphon is NOT in the store.
