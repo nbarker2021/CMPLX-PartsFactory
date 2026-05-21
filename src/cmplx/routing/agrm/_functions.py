@@ -5,6 +5,9 @@ Function canonicals for the `agrm` family.
 """
 from __future__ import annotations
 
+import json
+from typing import Any, Dict
+
 # --- function: fnv1a64 ---
 # composed_from=19 witness=D:\PartsFactory\CMPLX-PartsFactory\staging\by-family\agrm\mdhg_hierarchy\53e25b8d_AGRM_refactored.py
 def fnv1a64(data: bytes) -> int:

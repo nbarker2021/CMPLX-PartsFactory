@@ -5,6 +5,10 @@ Constant canonicals for the `agrm` family.
 """
 from __future__ import annotations
 
+import logging
+
+import numpy as np
+
 # --- assign: logger ---
 # composed_from=497 witness=D:\PartsFactory\CMPLX-PartsFactory\staging\by-family\agrm\mdhg_hierarchy\agrm_bridge.py
 logger = logging.getLogger(__name__)
