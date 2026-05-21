@@ -1,4 +1,8 @@
 """
+DO NOT IMPORT — composed merge artifact (broken: missing BaseController, invalid syntax).
+
+Use ``cmplx.routing.provider.AGRMRoutingProvider`` and ``cmplx.routing.staging_loader`` instead.
+
 Composed canonical: AGRMController
 
 Family: agrm

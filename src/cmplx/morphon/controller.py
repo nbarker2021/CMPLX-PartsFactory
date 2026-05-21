@@ -324,6 +324,7 @@ KNOWN_PORTS: frozenset[str] = frozenset({
     "receipt",
     "embed",  # 4-Embed Model — Constraint/State/Evidence/Operator decomposition
     "atlas",  # Mandelbrot deployment boundary + Julia c-assignment (Slots 26-27)
+    "hash_lanes",  # Slot-16 deterministic content-addressed lanes (MDHG + routing)
 })
 
 

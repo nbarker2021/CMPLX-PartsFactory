@@ -24,7 +24,19 @@ def test_routing_stub_uses_addressing_channel():
     assert routing.route_channel(m) == ctrl.get_provider("addressing").channel_for(m)
 
 
-def test_solve_returns_not_implemented():
+def test_solve_nearest_neighbor_tour():
     routing = AGRMRoutingProvider()
-    out = routing.solve([(0.0, 0.0), (1.0, 1.0)])
-    assert out["status"] == "not_implemented"
+    cities = [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0)]
+    out = routing.solve(cities)
+    assert out["status"] == "ok"
+    assert out["mode"] == "nearest_neighbor"
+    assert len(out["tour"]) == len(cities) + 1
+    assert out["tour"][0] == out["tour"][-1]
+    assert out["cost"] > 0
+
+
+def test_solve_staging_status_in_result():
+    routing = AGRMRoutingProvider()
+    out = routing.solve([(0.0, 0.0), (2.0, 0.0)])
+    assert "staging" in out
+    assert "loaded" in out["staging"]

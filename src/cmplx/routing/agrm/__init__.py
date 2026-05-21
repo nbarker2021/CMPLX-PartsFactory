@@ -1,23 +1,17 @@
 """
-`agrm` family — composed canonicals (slot-15 routing).
+`agrm` family — routing support (slot-15).
 
-``AGRMController`` is a place_canonicals merge stub; import may fail until
-recomposed against MDHG + morphon ports.
+Use ``cmplx.routing.provider.AGRMRoutingProvider`` on the ``routing`` port.
+Use ``cmplx.routing.staging_loader`` for the escrowed refactored MDHG build.
+
+The composed merge artifact lives in ``_composed_DO_NOT_IMPORT.py`` — do not import.
 """
 from __future__ import annotations
 
 from . import _constants
 from . import _functions
 
-AGRMController = None
-try:
-    from .AGRMController import AGRMController as _AGRMController
-    AGRMController = _AGRMController
-except Exception:  # noqa: BLE001 — stub missing BaseController stack
-    pass
-
 __all__ = [
-    "AGRMController",
     "_functions",
     "_constants",
 ]
