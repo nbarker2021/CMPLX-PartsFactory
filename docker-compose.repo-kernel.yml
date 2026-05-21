@@ -38,6 +38,10 @@ services:
         target: /app/server.py
         read_only: true
       - type: bind
+        source: ./services/repo-kernel/morphonic_bridge.py
+        target: /app/morphonic_bridge.py
+        read_only: true
+      - type: bind
         source: ./repo_kernel
         target: /kernel
       - type: bind

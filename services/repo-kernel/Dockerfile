@@ -11,7 +11,7 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-COPY server.py /app/server.py
+COPY server.py morphonic_bridge.py /app/
 
 EXPOSE 8786
 CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8786"]

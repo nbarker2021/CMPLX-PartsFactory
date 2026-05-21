@@ -13,12 +13,12 @@ services:
     restart: unless-stopped
     working_dir: /app
     command:
-      [
-        "sh",
-        "-c",
-        "pip install -q fastapi uvicorn pydantic psycopg2-binary 2>/dev/null; "
-        "python -m uvicorn cmplx.receipt._adapters.http_service:app --host 0.0.0.0 --port 8010",
-      ]
+      - sh
+      - -c
+      - >-
+        pip install -q fastapi uvicorn pydantic psycopg2-binary 2>/dev/null;
+        python -m uvicorn cmplx.receipt._adapters.http_service:app
+        --host 0.0.0.0 --port 8010
     environment:
       PORT: "8010"
       RECEIPT_STRICT_TYPES: ${RECEIPT_STRICT_TYPES:-0}
