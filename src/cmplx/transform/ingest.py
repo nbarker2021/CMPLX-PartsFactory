@@ -233,6 +233,7 @@ class CorpusIngester:
                 prev=prev_morphon,
                 store=self.register_ports,
                 bond_with_prev=self.register_ports and prev_morphon is not None,
+                snap_labeler=None,
             )
             morphon.e8_coordinates = tuple(float(c) for c in canonical["e8_coords"])
             if bond_m is not None:
@@ -331,6 +332,8 @@ class CorpusIngester:
                     prev=prev_morphon,
                     store=self.register_ports,
                     bond_with_prev=self.register_ports and prev_morphon is not None,
+                    snap_labeler=snap if self.register_ports else None,
+                    label_text=chunk,
                 )
                 morphon.e8_coordinates = tuple(float(c) for c in canonical["e8_coords"])
                 morphon.dr_channel = int(canonical["digital_root"])

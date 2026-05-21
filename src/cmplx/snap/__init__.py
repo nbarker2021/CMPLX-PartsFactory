@@ -17,6 +17,7 @@ from .label import LabelRule, SNAPLabel, SNAPRole
 from .labeler import SNAPLabeler
 from .ledger import SNAPLedger, SNAPTransaction
 from .lenses import BaseLens, LegalityLens, LensBank, NoveltyLens, SymmetryLens
+from .morphon_context import enrich_label_from_morphon, label_context_from_morphon
 from .provider import SNAPEngine
 
 __all__ = [
@@ -43,4 +44,6 @@ __all__ = [
     "SNAPTransaction",
     # provider
     "SNAPEngine",
+    "label_context_from_morphon",
+    "enrich_label_from_morphon",
 ]

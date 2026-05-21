@@ -49,16 +49,33 @@ class SNAPEngine:
 
     # ── Operations (with ledger receipts) ─────────────────────────────
 
-    def label(self, item: Any, key: str = "",
-              context: Optional[dict] = None) -> SNAPLabel:
-        result = self.labeler.label(item, key, context)
+    def label(
+        self,
+        item: Any,
+        key: str = "",
+        context: Optional[dict] = None,
+        *,
+        morphon: Any = None,
+    ) -> SNAPLabel:
+        ctx = dict(context or {})
+        if morphon is not None:
+            from .morphon_context import enrich_label_from_morphon, label_context_from_morphon
+
+            ctx = label_context_from_morphon(morphon, base=ctx)
+            result = self.labeler.label(item, key, ctx)
+            enrich_label_from_morphon(result, morphon)
+        else:
+            result = self.labeler.label(item, key, ctx)
         payload = {
             "item_key": result.item_key,
             "label_count": len(result.all_labels),
+            "morphon_id": getattr(morphon, "id", None) if morphon is not None else None,
+            "linkage_kind": ctx.get("linkage_kind"),
         }
         tx = self.ledger.append("label", payload)
+        atom = getattr(morphon, "id", None) or result.item_key
         mint_snap_operation(
-            "label", {**payload, "tx_hash": tx.hash}, atom_id=result.item_key
+            "label", {**payload, "tx_hash": tx.hash}, atom_id=str(atom)
         )
         return result
 
