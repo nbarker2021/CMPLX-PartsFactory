@@ -62,7 +62,19 @@ class MMDBMemoryProvider:
 
     def store(self, morphon: Morphon) -> None:
         """Persist the morphon."""
+        self._ensure_dr_channel(morphon)
         self._db.store(morphon)
+        from ._receipt_bridge import mint_mmdb_operation
+
+        mint_mmdb_operation(
+            "store",
+            {
+                "morphon_id": morphon.id,
+                "dr_channel": morphon.dr_channel,
+                "parent": morphon.parent,
+            },
+            atom_id=morphon.id,
+        )
 
     def fetch(self, morphon_id: str) -> Optional[Morphon]:
         """Retrieve a morphon by ID, or None if not present."""
@@ -211,6 +223,17 @@ class MMDBMemoryProvider:
         return f"<MMDBMemoryProvider path={self._db.path!r}>"
 
     # ── Internals ──────────────────────────────────────────────────
+
+    def _ensure_dr_channel(self, morphon: Morphon) -> None:
+        if morphon.dr_channel is not None:
+            return
+        try:
+            from cmplx.morphon import MorphonController
+
+            if MorphonController.get().has("addressing"):
+                morphon.project_to_channel()
+        except Exception:
+            return
 
     def _ensure_extensions(self) -> None:
         """Apply the extension schema (edges table) lazily on first use."""

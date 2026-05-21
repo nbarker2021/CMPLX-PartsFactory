@@ -523,6 +523,8 @@ class MorphonController:
 
     def store(self, morphon: Morphon) -> Morphon:
         """Persist via the registered ``memory`` provider."""
+        if self.has("addressing") and morphon.dr_channel is None:
+            morphon.project_to_channel()
         memory = self.get_provider("memory")
         memory.store(morphon)
         from ._receipt_bridge import mint_morphon_event

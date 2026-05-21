@@ -57,6 +57,14 @@ def test_channel_for_returns_1_to_9():
     assert 1 <= channel <= 9
 
 
+def test_hierarchical_address_returns_four_tuple():
+    provider = MDHGAddressingProvider()
+    m = Morphon.forge(payload={"k": "v"})
+    hx, ch, reg, triad = provider.hierarchical_address(m)
+    assert len(hx) == 64
+    assert provider.channel_for(m) == ch
+
+
 def test_channel_for_is_deterministic():
     provider = MDHGAddressingProvider()
     m = Morphon.forge(payload={"k": "v"})

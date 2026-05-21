@@ -59,7 +59,19 @@ class MDHGAddressingProvider:
 
     def channel_for(self, morphon: Morphon) -> int:
         """Return the digital-root channel (1-9) for this morphon."""
-        return self._mdhg.channel_for(morphon)
+        channel = self._mdhg.channel_for(morphon)
+        from ._receipt_bridge import mint_mdhg_operation
+
+        mint_mdhg_operation(
+            "channel",
+            {"morphon_id": morphon.id, "dr_channel": channel},
+            atom_id=morphon.id,
+        )
+        return channel
+
+    def hierarchical_address(self, morphon: Morphon) -> tuple[str, int, str, str]:
+        """Full address: (sha256_hex, channel, register, triad)."""
+        return self._mdhg.hierarchical_address(morphon)
 
     # ── Multi-scale extensions ──────────────────────────────────────
 

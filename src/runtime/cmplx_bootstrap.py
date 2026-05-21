@@ -178,6 +178,7 @@ def _with_remote_factories(mmdb_path: str) -> dict[str, Callable[[], Any]]:
 
     factories["memory"] = _factory("cmplx.memory.mmdb", "MMDBMemoryProvider", mmdb_path)
     factories["addressing"] = _factory("cmplx.addressing.mdhg", "MDHGAddressingProvider")
+    factories["routing"] = _factory("cmplx.routing.provider", "AGRMRoutingProvider")
     factories["symbolic"] = _factory("cmplx.symbolic.tarpit", "TarPitSymbolicProvider")
     factories["snap"] = _factory("cmplx.snap.provider", "SNAPEngine")
     factories["cache"] = _factory("cmplx.speedlight.provider", "SpeedLightProvider")
