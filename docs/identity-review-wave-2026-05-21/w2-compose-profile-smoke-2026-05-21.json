@@ -1,0 +1,240 @@
+{
+  "http_checks": [
+    {
+      "part_id": "receipt-chain",
+      "base": "http://localhost:8010",
+      "paths": {
+        "/health": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "ok": true,
+            "service": "opencmplx-receipt",
+            "chain_length": 2,
+            "head": "6620fc153d90a73a",
+            "pg": false,
+            "storage_mode": "memory"
+          }
+        },
+        "/stats": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "total_memory": 2,
+            "head": "6620fc153d90a73a",
+            "by_type": {
+              "PROCESS": 2
+            },
+            "by_operation": {
+              "W2_SMOKE": 2
+            },
+            "atoms_with_receipts": 0,
+            "agents_with_receipts": 0,
+            "chain_depth_histogram": {},
+            "pg": {},
+            "canonical_types": [
+              "MINT",
+              "POST",
+              "BOND",
+              "PROCESS",
+              "ASSIGN",
+              "VOTE",
+              "BIRTH",
+              "DEATH",
+              "GATE",
+              "CROSSING",
+              "TOOL_EXECUTION",
+              "CHECKPOINT"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "part_id": "speedlight-worldline",
+      "base": "http://localhost:8843",
+      "paths": {
+        "/health": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "ok": true,
+            "service": "speedlight-api",
+            "data_dir": "/data/speedlight",
+            "cache_pg": true,
+            "receipts": 35,
+            "cache_entries": 0
+          }
+        }
+      }
+    },
+    {
+      "part_id": "snap-stratification",
+      "base": "http://localhost:8823",
+      "paths": {
+        "/health": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "ok": true,
+            "service": "opencmplx-snap-engine",
+            "version": "2.0.0",
+            "families": 19,
+            "types": 0,
+            "gate_history": 0,
+            "lenses": [
+              "base",
+              "legality",
+              "novelty",
+              "symmetry"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "part_id": "tarpit-symbolic",
+      "base": "http://localhost:8844",
+      "paths": {
+        "/health": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "ok": true,
+            "service": "tarpit-api",
+            "data_dir": "/data/tarpit",
+            "atoms": 40,
+            "links": {
+              "snap": "http://snap-unified:8083",
+              "mdhg": "http://mdhg-unified:8085",
+              "mmdb": "http://mmdb-unified:8084",
+              "speedlight": "http://speedlight-api:8843"
+            }
+          }
+        },
+        "/stats": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "atoms": 40,
+            "sources": {
+              "cognitive-extended-smoke": 20,
+              "cognitive-extended-smoke-process": 3,
+              "manny-runtime": 16,
+              "inline": 1
+            },
+            "top_labels": {
+              "snap": 14,
+              "what": 9,
+              "mdhg": 8,
+              "speedlight": 7,
+              "tarpit": 7,
+              "mmdb": 7,
+              "receipts": 4,
+              "records": 4,
+              "atomizes": 4,
+              "content": 4,
+              "labels": 4,
+              "stratifies": 4,
+              "atoms": 4,
+              "links": 4,
+              "crystals": 4,
+              "stores": 4,
+              "test": 4,
+              "labeling": 4,
+              "layer": 4,
+              "best-effort": 3,
+              "handoffs": 3,
+              "performs": 3,
+              "process": 3,
+              "lenses": 3,
+              "describe": 3
+            }
+          }
+        }
+      }
+    },
+    {
+      "part_id": "mdhg-addressing",
+      "base": "http://localhost:8825",
+      "paths": {
+        "/health": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "status": "ok",
+            "service": "tmn2-mdhg-sandbox",
+            "sessions": 0,
+            "cache_pg": true,
+            "session_ttl": 1800,
+            "hierarchy_levels": [
+              "grain",
+              "dust",
+              "triad",
+              "block",
+              "cluster",
+              "domain",
+              "region",
+              "planet",
+              "universe"
+            ],
+            "coupling": 0.030076,
+            "ts": 1779336054.259023
+          }
+        }
+      }
+    },
+    {
+      "part_id": "mmdb-memory",
+      "base": "http://localhost:8824",
+      "paths": {
+        "/health": {
+          "ok": true,
+          "status": 200,
+          "sample": {
+            "status": "ok",
+            "service": "mmdb",
+            "morphon_id": "mmdb-001",
+            "snap_label": "morphon.mmdb-001",
+            "pg_layers": {
+              "master": true,
+              "cache": true
+            }
+          }
+        }
+      }
+    }
+  ],
+  "mutations": {
+    "receipt_mint": {
+      "ok": true,
+      "status": 200,
+      "sample": {
+        "receipt_id": "3f81c2ad37984a1f",
+        "receipt_hash": "79208d5e9d7b2b3726c8079964d97f8d86b626351af30313096ef9c00308e79b",
+        "prev_hash": "6620fc153d90a73ae994822c1a9596813311abebc4e741f2bb44e2113b2fe654",
+        "receipt_type": "PROCESS",
+        "agent_id": "",
+        "operator": "",
+        "atom_id": "",
+        "operation": "W2_SMOKE",
+        "delta_phi": 0.0,
+        "snap_labels": [],
+        "epoch": 0,
+        "chain_index": 2,
+        "source_tag": "@epoch0::receipt::3f81c2ad37984a1f",
+        "payload": {},
+        "created_at": 1779336054.2753332
+      }
+    },
+    "snap_gate_or_triad": {
+      "ok": true,
+      "status": 200,
+      "sample": {
+        "members": [],
+        "delta_u": 0
+      }
+    }
+  },
+  "all_get_ok": true
+}

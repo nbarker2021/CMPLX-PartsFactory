@@ -1,0 +1,58 @@
+{
+  "integration_profile": true,
+  "env": {
+    "CMPLX_INTEGRATION_PROFILE": "1",
+    "MDHG_MINT_RECEIPT": "1",
+    "MMDB_MINT_RECEIPT": "1",
+    "SNAP_MINT_RECEIPT": "1",
+    "SPEEDLIGHT_MINT_RECEIPT": "1",
+    "TARPIT_MINT_RECEIPT": "1",
+    "MORPHON_MINT_RECEIPT": "1"
+  },
+  "mesh": {
+    "mode": "host_mesh",
+    "services": [
+      "mdhg",
+      "mmdb",
+      "snap",
+      "speedlight",
+      "tarpit"
+    ],
+    "healthy": [
+      "mmdb",
+      "mdhg",
+      "snap",
+      "tarpit",
+      "speedlight"
+    ],
+    "count": 5,
+    "stack_up": true
+  },
+  "port_status": {
+    "receipt": "registered (in-process)",
+    "conservation": "registered (in-process)",
+    "diagnostic": "registered (in-process)",
+    "geometry": "registered (in-process)",
+    "constraints": "registered (in-process)",
+    "engine": "registered (in-process)",
+    "transport": "registered (in-process)",
+    "embed": "registered (in-process)",
+    "atlas": "registered (in-process)",
+    "routing": "registered (in-process)",
+    "crystal": "registered (in-process)",
+    "hash_lanes": "registered (in-process)",
+    "memory": "registered (remote: mmdb)",
+    "addressing": "registered (remote: mdhg)",
+    "symbolic": "registered (remote: tarpit)",
+    "snap": "registered (remote: snap)",
+    "cache": "registered (remote: speedlight)"
+  },
+  "remote_ports": [
+    "memory",
+    "addressing",
+    "symbolic",
+    "snap",
+    "cache"
+  ],
+  "all_ports_registered": true
+}
