@@ -9,6 +9,9 @@ ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
+FORGE_PKG_SRC = ROOT / "packages" / "lattice-forge" / "src"
+if FORGE_PKG_SRC.is_dir() and str(FORGE_PKG_SRC) not in sys.path:
+    sys.path.insert(0, str(FORGE_PKG_SRC))
 
 
 @pytest.fixture(scope="session")

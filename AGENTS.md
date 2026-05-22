@@ -67,6 +67,19 @@ curl http://localhost:8823/health
 
 Env: `SNAP_MINT_RECEIPT=1` (POST/GATE/PROCESS on receipt port), `SNAP_PORT=8823`.
 
+### Lattice Forge / worlds (slot-19, port 8845)
+
+Dev canonical: `D:\PartsFactory\work\lattice-forge`. Git package: `packages/lattice-forge` (sync via `scripts/sync_lattice_forge_package.ps1`).
+
+```powershell
+pip install -e .\packages\lattice-forge
+docker compose -f docker-compose.lattice-forge.yml up -d
+curl http://localhost:8845/health
+curl http://localhost:8845/rule30/proof-obligations/verify?max_depth=128&page_size=128
+```
+
+Port `worlds` via `cmplx.worlds.forge.WorldsForgeProvider`. Env: `FORGE_MINT_RECEIPT=1`, `LATTICE_FORGE_PORT=8845`, optional `FORGE_OVERLAY_ROOT`.
+
 ## Repo-Kernel Control Layer
 
 Use `repo-kernel` as the canonical control plane for repo unification work.

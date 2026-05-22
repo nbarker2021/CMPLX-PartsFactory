@@ -33,6 +33,7 @@
 *.db
 *.db-shm
 *.db-wal
+!packages/lattice-forge/src/lattice_forge/ledger/data/*.db
 data/*.sqlite
 data/*.sqlite-shm
 data/*.sqlite-wal

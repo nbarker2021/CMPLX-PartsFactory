@@ -79,9 +79,9 @@ what ports they consume, and what static cross-imports exist.
 | `cmplx.receipt` | ✓ | `receipt` | memory, conservation, addressing (optional) | stdlib only | 48 |
 | `cmplx.engine.cqe` | ✓ | `engine` | conservation, receipt, diagnostic, crystal, snap, cache, addressing, memory, constraints | `cmplx.morphon`, `cmplx.nsl`, `cmplx.receipt`, `cmplx.morsr` | 72 |
 | `cmplx.routing.agrm` | — | `routing` | addressing, geometry, memory, snap (lens bank) | (TBD) | — |
-| `cmplx.worlds.forge` (planned, from GVS) | — | `worlds` | geometry (alena), transport, crystal | `cmplx.geometry.alena.*` | — |
+| `cmplx.worlds.forge` | ✓ (slot-19) | `worlds` | receipt, geometry (optional symbolic, conservation) | `lattice_forge` package | `tests/worlds/` |
 
-**Total tests passing: 544/544.**
+**Total tests passing: 544/544** (+ worlds suite when `pip install -e packages/lattice-forge`).
 
 ## Ports landed across the build
 
@@ -94,7 +94,7 @@ what ports they consume, and what static cross-imports exist.
 - **`receipt`** — `ReceiptProvider` (Merkle-chained ops + DAG edges).
 - **`engine`** — `CQEProvider` (the orchestrator that wires everything).
 
-`KNOWN_PORTS` is now: `{addressing, geometry, memory, constraints, engine, transport, symbolic, routing, crystal, snap, cache, conservation, diagnostic, receipt}`.
+`KNOWN_PORTS` is now: `{addressing, geometry, memory, constraints, engine, transport, symbolic, routing, crystal, snap, cache, conservation, diagnostic, receipt, worlds}`.
 
 ## The bind-everything pipeline
 

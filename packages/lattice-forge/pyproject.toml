@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lattice-forge"
+version = "0.1.0"
+description = "Installable morphism-saturated lattice admissibility engine with bundled seed state."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{name = "Lattice Forge"}]
+license = "MIT"
+keywords = ["lattice", "morphism", "admissibility", "root-systems", "niemeier", "receipts"]
+dependencies = []
+
+[project.optional-dependencies]
+server = ["fastapi>=0.110", "uvicorn>=0.27"]
+test = ["pytest>=8", "httpx>=0.27"]
+
+[project.scripts]
+lattice-forge = "lattice_forge.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"lattice_forge" = ["py.typed"]
+"lattice_forge.ledger" = ["data/*.db"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

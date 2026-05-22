@@ -232,6 +232,18 @@ BOOTSTRAP_PORT_SPECS: tuple[BootstrapPortSpec, ...] = (
         "pytest_target": "tests/crystal/",
         "import_modules": ["cmplx.crystal", "cmplx.crystal.registry"],
     },
+    {
+        "port": "worlds",
+        "part_id": "lattice-forge",
+        "package": "cmplx.worlds.forge",
+        "module": "cmplx.worlds.forge.provider",
+        "provider_class": "WorldsForgeProvider",
+        "landing_path": "src/cmplx/worlds/forge",
+        "remote_service": "forge",
+        "depends_on": ["receipt-chain", "geometry-e8", "tarpit-symbolic"],
+        "pytest_target": "tests/worlds/",
+        "import_modules": ["cmplx.worlds.forge.provider", "lattice_forge"],
+    },
 )
 
 

@@ -1,0 +1,40 @@
+flowchart TB
+  subgraph foundation [Foundation]
+    poly[rule30_poly_ANF]
+    morphon[rule30_morphon_hardened]
+    vignettes[rule30_vignette_algebra]
+    moving[rule30_moving_frame]
+    chiral[rule30_color_chirality]
+    lagrangian[rule30_discrete_lagrangian]
+    trace[rule30_lagrangian_depth_trace]
+    mandelbrot[rule30_mandelbrot_scalar]
+    reduced[rule30_reduced_alphabet]
+    symmetry[rule30_symmetry_environment]
+    physics[rule30_physics_method_stack]
+  end
+
+  subgraph scale [Scale_1024_4096]
+    coverage[rule30_whole_integer_n_coverage]
+    ribbon[rule30_readout_ribbon_machine]
+    dihedral[rule30_dihedral_block_hypervisor]
+    extension[rule30_hypervisor_extension_tape]
+  end
+
+  subgraph prize [Prize_surfaces]
+    sheet[rule30_sheet_operator]
+    nth[rule30_nth_bit_expression]
+    ledger[rule30_proof_obligation_ledger]
+  end
+
+  poly --> morphon
+  vignettes --> moving --> chiral --> lagrangian --> trace
+  trace --> mandelbrot --> reduced --> symmetry --> physics
+  reduced --> coverage --> ribbon --> dihedral
+  ribbon --> extension --> sheet
+  extension --> nth
+  coverage --> ledger
+  ribbon --> ledger
+  dihedral --> ledger
+  extension --> ledger
+  sheet --> ledger
+  nth --> ledger

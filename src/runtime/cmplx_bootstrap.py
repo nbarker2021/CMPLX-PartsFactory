@@ -38,6 +38,7 @@ _PORTS_WITH_REMOTE: dict[str, str] = {
     "symbolic": "tarpit",
     "snap": "snap",
     "cache": "speedlight",
+    "worlds": "forge",
 }
 
 # Ports that are in-process-only (no remote equivalent today).
@@ -199,6 +200,7 @@ def _with_remote_factories(mmdb_path: str) -> dict[str, Callable[[], Any]]:
     factories["symbolic"] = _factory("cmplx.symbolic.tarpit", "TarPitSymbolicProvider")
     factories["snap"] = _factory("cmplx.snap.provider", "SNAPEngine")
     factories["cache"] = _factory("cmplx.speedlight.provider", "SpeedLightProvider")
+    factories["worlds"] = _factory("cmplx.worlds.forge.provider", "WorldsForgeProvider")
 
     return factories
 

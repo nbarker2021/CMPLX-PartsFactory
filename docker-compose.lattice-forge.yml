@@ -1,0 +1,50 @@
+# Lattice Forge worlds HTTP service (slot-19 local production)
+#
+#   docker compose -f docker-compose.lattice-forge.yml up -d
+#   curl http://localhost:8845/health
+#
+# Requires: pip install -e packages/lattice-forge (or image build with package)
+
+name: cmplx-lattice-forge
+
+services:
+  cmplx-lattice-forge:
+    image: python:3.12-slim
+    container_name: cmplx-lattice-forge
+    init: true
+    restart: unless-stopped
+    working_dir: /app
+    command:
+      [
+        "sh",
+        "-c",
+        "pip install -q -e ./packages/lattice-forge fastapi uvicorn pydantic 2>/dev/null; "
+        "python -m uvicorn cmplx.worlds.forge._adapters.http_service:app --host 0.0.0.0 --port 8845",
+      ]
+    environment:
+      PORT: "8845"
+      FORGE_MINT_RECEIPT: ${FORGE_MINT_RECEIPT:-1}
+      PYTHONPATH: /app/src
+      FORGE_OVERLAY_ROOT: /tmp/forge-overlay
+    ports:
+      - "${FORGE_PORT:-8845}:8845"
+    volumes:
+      - type: bind
+        source: ./src
+        target: /app/src
+        read_only: true
+      - type: bind
+        source: ./packages/lattice-forge
+        target: /app/packages/lattice-forge
+        read_only: true
+    labels:
+      cmplx.layer: worlds
+      cmplx.role: slot-19-lattice-forge
+      cmplx.api: http://localhost:${FORGE_PORT:-8845}
+    networks:
+      - cmplx-backend
+
+networks:
+  cmplx-backend:
+    external: true
+    name: cmplx-backend

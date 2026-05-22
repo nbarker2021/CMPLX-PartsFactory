@@ -32,13 +32,22 @@ PORT_MAP = {
     "snap": "cmplx.snap",
     "embed": "cmplx.embed",
     "transport": "cmplx.transport",
+    "worlds": "cmplx.worlds.forge",
 }
 
 EXTRA_PACKAGES = [
     "cmplx.primitives.superperm",
     "cmplx.engine.eversion.network",
     "cmplx.morphon",
+    "cmplx.worlds.forge",
     "runtime.cmplx_bootstrap",
+]
+
+# Worlds forge (slot-19) consumes bootstrap ports for witness + receipt wiring.
+WORLDS_FORGE_EDGES: list[tuple[str, str]] = [
+    ("worlds", "receipt"),
+    ("worlds", "geometry"),
+    ("worlds", "symbolic"),
 ]
 
 
@@ -102,6 +111,29 @@ def build_port_dag() -> dict:
         pid = f"pkg:{pkg}"
         nodes[pid] = {"id": pid, "type": "package", "label": pkg}
         edges.append({"from": "transform", "to": pid, "relation": "imports"})
+    worlds_nid = "port:worlds"
+    nodes[worlds_nid] = {
+        "id": worlds_nid,
+        "type": "port",
+        "label": "worlds",
+        "package": "cmplx.worlds.forge",
+    }
+    nodes["pkg:cmplx.worlds.forge"] = {
+        "id": "pkg:cmplx.worlds.forge",
+        "type": "package",
+        "label": "cmplx.worlds.forge",
+    }
+    edges.append({"from": worlds_nid, "to": "pkg:cmplx.worlds.forge", "relation": "resolves_to"})
+    for _from, consumes in WORLDS_FORGE_EDGES:
+        target = f"port:{consumes}"
+        if target not in nodes:
+            nodes[target] = {
+                "id": target,
+                "type": "port",
+                "label": consumes,
+                "package": PORT_MAP.get(consumes, consumes),
+            }
+        edges.append({"from": worlds_nid, "to": target, "relation": "consumes_port"})
     return {"nodes": list(nodes.values()), "edges": edges}
 
 

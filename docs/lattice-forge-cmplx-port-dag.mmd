@@ -1,0 +1,26 @@
+flowchart LR
+  subgraph dev [Development_canonical]
+    work["work/lattice-forge"]
+  end
+
+  subgraph git_pkg [Git_package_A]
+    pkg["packages/lattice-forge"]
+  end
+
+  subgraph git_slot [Git_slot_B_slot19]
+    worlds["cmplx.worlds.forge"]
+    http[":8845 HTTP optional"]
+  end
+
+  subgraph bootstrap [Bootstrap_ports]
+    receipt["receipt slot-01"]
+    geometry["geometry slot-05"]
+    symbolic["symbolic slot-18"]
+  end
+
+  work -->|"sync_lattice_forge_package.ps1"| pkg
+  pkg -->|"pip install -e"| worlds
+  worlds --> receipt
+  worlds --> geometry
+  worlds -.->|escrow| symbolic
+  worlds --> http

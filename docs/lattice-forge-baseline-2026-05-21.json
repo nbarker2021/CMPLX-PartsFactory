@@ -1,0 +1,54 @@
+{
+  "captured_at": "2026-05-21",
+  "source": "work/lattice-forge",
+  "query": {
+    "max_depth": 128,
+    "page_count": 2,
+    "page_size": 128,
+    "block_size": 8,
+    "max_order": 4
+  },
+  "envelope_status": "pass_with_open_gaps",
+  "result": {
+    "status": "pass_with_open_gaps",
+    "schema_status": "pass",
+    "errors": [],
+    "warnings": [
+      "submission blockers remain named in the ledger"
+    ],
+    "open_gap_count": 4,
+    "release_summary": {
+      "obligation_count": 9,
+      "status_counts": {
+        "BOUNDED_EXEC": 4,
+        "CONJ": 4,
+        "EXPRESSIBLE": 1
+      },
+      "blocking_obligations": [
+        "rule30.sheet_operator.power_law",
+        "rule30.prize.depth_only_shortcut",
+        "rule30.prize.nonperiodicity_density",
+        "rule30.turing_universality"
+      ],
+      "bounded_exec_obligations": [
+        "rule30.scalar_coverage.no_unassigned_tested_n",
+        "rule30.ribbon.feedback_closure",
+        "rule30.dihedral.block_closure",
+        "rule30.extension.relative_table_stability"
+      ]
+    },
+    "no_new_token_invariant": {
+      "status": "pass",
+      "source_vocabulary": [
+        "CR+",
+        "CR-",
+        "LC+",
+        "LC-",
+        "LR+",
+        "LR-",
+        "ZERO"
+      ],
+      "meaning": "the proof ledger uses the already-derived three binary pair tokens plus neutral zero; it does not add arbitrary symbols"
+    }
+  }
+}
