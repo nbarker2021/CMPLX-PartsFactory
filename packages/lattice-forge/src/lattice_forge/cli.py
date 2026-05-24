@@ -663,6 +663,24 @@ def cmd_empirical_run(args: argparse.Namespace) -> int:
     return 0 if report.get("overall_status") == "pass" else 1
 
 
+def _cmd_mckay_matrices(print_json_fn, *, verify_only: bool = False) -> int:
+    from lattice_forge.mckay_matrix_tables import verify_mckay_matrix_bootstrap
+
+    payload = verify_mckay_matrix_bootstrap()
+    print_json_fn(payload)
+    return 0 if payload.get("status") == "pass" else 1
+
+
+def _cmd_mckay_export(args: argparse.Namespace) -> int:
+    from lattice_forge.mckay_matrix_tables import export_matrix_catalog
+    from lattice_forge.paths import backwalk_data_dir
+
+    out = args.out or (backwalk_data_dir() / "mckay_matrix_catalog.json")
+    path = export_matrix_catalog(out)
+    print_json({"out": str(path), "status": "ok"})
+    return 0
+
+
 def cmd_falsify(args: argparse.Namespace) -> int:
     if args.tier_a:
         from lattice_forge.falsify import run_tier_a
@@ -1139,6 +1157,100 @@ def build_parser() -> argparse.ArgumentParser:
     fal.add_argument("--sample-depth", type=int, default=512, help="Tier B period sample depth")
     fal.add_argument("--density-max-depth", type=int, default=256, help="Tier B density window depth")
     fal.set_defaults(func=cmd_falsify)
+
+    bw = sub.add_parser("backwalk", help="Niemeier backward-category builder")
+    bw_sub = bw.add_subparsers(required=True, dest="backwalk_command")
+    bw_run = bw_sub.add_parser("run", help="Pilot, full24, or exceptional-only phase")
+    bw_run.add_argument("--phase", choices=("pilot", "full24", "exceptional-only"), default="pilot")
+    bw_run.add_argument("--terminals", default=None)
+    bw_run.add_argument("--work-db", type=Path, default=None)
+    bw_run.add_argument("--resume", action="store_true")
+    bw_run.add_argument("--include-exceptionals", default=None)
+    bw_run.add_argument("--involution-limit", type=int, default=None)
+
+    def _cmd_backwalk_run(args: argparse.Namespace) -> int:
+        from lattice_forge.backwalk.runner import run_backwalk
+
+        argv = ["--phase", args.phase]
+        if args.terminals:
+            argv.extend(["--terminals", args.terminals])
+        if args.work_db:
+            argv.extend(["--work-db", str(args.work_db)])
+        if args.resume:
+            argv.append("--resume")
+        if args.include_exceptionals:
+            argv.extend(["--include-exceptionals", args.include_exceptionals])
+        if args.involution_limit is not None:
+            argv.extend(["--involution-limit", str(args.involution_limit)])
+        return run_backwalk(argv)
+
+    bw_run.set_defaults(func=_cmd_backwalk_run)
+
+    wb = sub.add_parser("weyl-bond", help="Quadrant-sharded dual Weyl-bond orchestrator")
+    wb_sub = wb.add_subparsers(required=True, dest="weyl_command")
+    wb_run = wb_sub.add_parser("run", help="Run Weyl bond batches (default: all quadrants)")
+    wb_run.add_argument("--work-db", type=Path, default=None)
+    wb_run.add_argument("--resume", action="store_true")
+    wb_run.add_argument("--quadrant", type=int, default=None)
+    wb_run.add_argument("--all-quadrants", action="store_true")
+    wb_run.add_argument("--concat-only", action="store_true")
+    wb_run.add_argument("--dry-run", action="store_true")
+
+    def _cmd_weyl_run(args: argparse.Namespace) -> int:
+        from lattice_forge.backwalk.runner import run_weyl_orchestrate
+
+        argv: list[str] = []
+        if args.work_db:
+            argv.extend(["--work-db", str(args.work_db)])
+        if args.resume:
+            argv.append("--resume")
+        if args.quadrant is not None:
+            argv.extend(["--quadrant", str(args.quadrant)])
+        if args.all_quadrants:
+            argv.append("--all-quadrants")
+        if args.concat_only:
+            argv.append("--concat-only")
+        if args.dry_run:
+            argv.append("--dry-run")
+        return run_weyl_orchestrate(argv)
+
+    wb_run.set_defaults(func=_cmd_weyl_run)
+
+    ls = sub.add_parser("lattice-space", help="Lattice-space exhaustion job")
+    ls_sub = ls.add_subparsers(required=True, dest="lattice_space_command")
+    ls_run = ls_sub.add_parser("run", help="Catalog, Weyl shards, E8 pod index, proof capture")
+    ls_run.add_argument("--work-db", type=Path, default=None)
+    ls_run.add_argument("--resume", action="store_true")
+    ls_run.add_argument("--dry-run", action="store_true")
+
+    def _cmd_lattice_space_run(args: argparse.Namespace) -> int:
+        from lattice_forge.backwalk.runner import run_lattice_space
+
+        argv: list[str] = []
+        if args.work_db:
+            argv.extend(["--work-db", str(args.work_db)])
+        if args.resume:
+            argv.append("--resume")
+        if args.dry_run:
+            argv.append("--dry-run")
+        return run_lattice_space(argv)
+
+    ls_run.set_defaults(func=_cmd_lattice_space_run)
+
+    mck = sub.add_parser("mckay-matrices", help="McKay-Thompson j-matrix bootstrap tables (5/7/9)")
+    mck_sub = mck.add_subparsers(required=True, dest="mckay_command")
+    mck_verify = mck_sub.add_parser("verify", help="Run bootstrap matrix proof harness")
+    mck_verify.set_defaults(
+        func=lambda _a: _cmd_mckay_matrices(print_json, verify_only=True),
+    )
+    mck_export = mck_sub.add_parser("export", help="Write global JSON catalog")
+    mck_export.add_argument(
+        "--out",
+        type=Path,
+        default=None,
+        help="Output path (default: ./mckay_matrix_catalog.json)",
+    )
+    mck_export.set_defaults(func=_cmd_mckay_export)
 
     p = sub.add_parser("serve", help="Start optional FastAPI server")
     p.add_argument("--host", default="127.0.0.1")

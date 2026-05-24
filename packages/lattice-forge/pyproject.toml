@@ -4,14 +4,39 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lattice-forge"
-version = "0.2.0+family"
-description = "Installable morphism-saturated lattice admissibility engine with bundled seed state."
+version = "0.3.0"
+description = "Installable morphism-saturated lattice admissibility engine with bundled seed state and Niemeier backwalk jobs."
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{name = "Lattice Forge"}]
-license = "MIT"
-keywords = ["lattice", "morphism", "admissibility", "root-systems", "niemeier", "receipts"]
+license = {text = "MIT"}
+keywords = [
+    "lattice",
+    "morphism",
+    "admissibility",
+    "root-systems",
+    "niemeier",
+    "weyl-group",
+    "backwalk",
+    "receipts",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/nbarker2021/CMPLX-PartsFactory"
+Documentation = "https://github.com/nbarker2021/CMPLX-PartsFactory/tree/main/packages/lattice-forge"
+Repository = "https://github.com/nbarker2021/CMPLX-PartsFactory"
 
 [project.optional-dependencies]
 algebra = []
@@ -32,12 +57,16 @@ test = ["pytest>=8", "httpx>=0.27"]
 
 [project.scripts]
 lattice-forge = "lattice_forge.cli:main"
+lattice-forge-backwalk = "lattice_forge.backwalk.runner:main_backwalk"
+lattice-forge-weyl-bond = "lattice_forge.backwalk.runner:main_weyl_orchestrate"
+lattice-forge-lattice-space = "lattice_forge.backwalk.runner:main_lattice_space"
+lattice-forge-verify-algebra = "lattice_forge.algebra.verify_o1:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-"lattice_forge" = ["py.typed"]
+"lattice_forge" = ["py.typed", "data/*.json"]
 "lattice_forge.ledger" = ["data/*.db"]
 "lattice_forge.falsify" = ["py.typed"]
 

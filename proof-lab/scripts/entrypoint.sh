@@ -30,7 +30,8 @@ case "${PROOF_LAB_MODE:-serve}" in
     if [ "${BACKWALK_PHASE:-pilot}" = "full24" ] && [ -z "${BACKWALK_INVOLUTION_LIMIT:-}" ]; then
       export BACKWALK_INVOLUTION_LIMIT=50
     fi
-    set -- python packages/lattice-forge/scripts/run_niemeier_backwalk.py \
+    export LATTICE_FORGE_WORK_DB=/data/backwalk_work.db
+    set -- lattice-forge-backwalk \
       --phase "${BACKWALK_PHASE:-pilot}" \
       --work-db /data/backwalk_work.db \
       --progress-jsonl /data/progress.jsonl \
@@ -46,8 +47,8 @@ case "${PROOF_LAB_MODE:-serve}" in
     ;;
   lattice-space-exhaustion)
     pip install -q -e "./packages/lattice-forge[all]"
-    set -- python packages/lattice-forge/scripts/run_lattice_space_exhaustion.py \
-      --work-db /data/backwalk_work.db
+    export LATTICE_FORGE_WORK_DB=/data/backwalk_work.db
+    set -- lattice-forge-lattice-space --work-db /data/backwalk_work.db
     if [ -n "${BACKWALK_RESUME:-}" ] || [ -n "${LATTICE_SPACE_RESUME:-}" ]; then
       set -- "$@" --resume
     fi
@@ -55,9 +56,8 @@ case "${PROOF_LAB_MODE:-serve}" in
     ;;
   backwalk-weyl-orchestrate)
     pip install -q -e "./packages/lattice-forge[all]"
-    set -- python packages/lattice-forge/scripts/orchestrate_weyl_bond_waves.py \
-      --work-db /data/backwalk_work.db \
-      --resume
+    export LATTICE_FORGE_WORK_DB=/data/backwalk_work.db
+    set -- lattice-forge-weyl-bond --work-db /data/backwalk_work.db --resume
     if [ -n "${WEYL_BOND_MAX_ROWS_PER_BATCH:-}" ]; then
       set -- "$@" --max-rows-per-batch "${WEYL_BOND_MAX_ROWS_PER_BATCH}"
     fi

@@ -22,14 +22,38 @@ written to `.lattice_forge/overlay.sqlite`.
 
 ## Install
 
+Any Python 3.10+ environment (no runtime CAS dependencies):
+
 ```bash
 python -m pip install -e .
+# or from git:
+# pip install "git+https://github.com/nbarker2021/CMPLX-PartsFactory.git#subdirectory=packages/lattice-forge"
 ```
+
+Full install guide: [docs/INSTALL.md](docs/INSTALL.md).
+
+**Console tools** (on `PATH` after install):
+
+| Command | Purpose |
+|---------|---------|
+| `lattice-forge` | Admissibility queries, terminal trees, Rule 30 harness |
+| `lattice-forge-backwalk` | Niemeier backward-category builder |
+| `lattice-forge-weyl-bond` | Quadrant Weyl-bond orchestrator |
+| `lattice-forge-lattice-space` | Lattice-space exhaustion |
+| `lattice-forge-verify-algebra` | Optional O(1) constant verify (`[theory]` for SymPy) |
+
+```bash
+lattice-forge verify-seed
+lattice-forge-backwalk --phase pilot
+```
+
+Writable backwalk state defaults to `./.lattice_forge/backwalk/` (override with `LATTICE_FORGE_WORK_DB`).
 
 For the optional FastAPI server:
 
 ```bash
 python -m pip install -e ".[server]"
+lattice-forge serve
 ```
 
 ## Python API

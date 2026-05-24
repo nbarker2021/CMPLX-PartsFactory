@@ -40,58 +40,28 @@ from __future__ import annotations
 
 from typing import Any
 
+from .mckay_matrix_tables import get_j_matrix as _get_j_matrix_bootstrap
 from .octonion import Octonion
-from .voa_harness import T_2A_COEFFICIENTS, T_3A_COEFFICIENTS
 
-
-# ---------------------------------------------------------------------------
-# 9×9 j-modular matrices (q-series convolution truncated to length 9)
-# ---------------------------------------------------------------------------
-
-def _build_convolution_matrix(coefficients: tuple[int, ...], size: int = 9) -> list[list[int]]:
-    """Build the size×size matrix whose rows are shifted truncations of
-    `coefficients` (i.e., the q-multiplication-by-Σ a_n q^n operator
-    restricted to length `size`).
-
-    Entry [i][j] = coefficient at position (i - j) if i >= j, else 0
-    (q-multiplication is lower-triangular in this basis). The first
-    coefficient slot is implicitly the constant term, but T_g(τ) starts
-    at q^{-1}; we use the coefficients a_1, a_2, ... as supplied.
-    """
-    M = [[0] * size for _ in range(size)]
-    for i in range(size):
-        for j in range(i + 1):
-            k = i - j
-            if k == 0:
-                M[i][j] = 1  # identity diagonal contribution
-            elif k - 1 < len(coefficients):
-                M[i][j] = coefficients[k - 1]
-    return M
-
-
-# T_3A first 9 coefficients (a_1 .. a_9): 783, 8672, 65367, 371520, 1741655,
-# 7161696, 26567916, 90521472, 287891823
-J_MATRIX_3A: tuple[tuple[int, ...], ...] = tuple(
-    tuple(row) for row in _build_convolution_matrix(T_3A_COEFFICIENTS[:9])
-)
-
-# T_2A first 9 coefficients
-J_MATRIX_2A: tuple[tuple[int, ...], ...] = tuple(
-    tuple(row) for row in _build_convolution_matrix(T_2A_COEFFICIENTS[:9])
-)
-
+# Canonical 9×9 tables (shared builder with global McKay catalog)
+J_MATRIX_3A: tuple[tuple[int, ...], ...] = _get_j_matrix_bootstrap("3A", 9)
+J_MATRIX_2A: tuple[tuple[int, ...], ...] = _get_j_matrix_bootstrap("2A", 9)
+J_MATRIX_7A: tuple[tuple[int, ...], ...] = _get_j_matrix_bootstrap("7A", 7)
+J_MATRIX_5A: tuple[tuple[int, ...], ...] = _get_j_matrix_bootstrap("5A", 5)
 
 J_MATRICES: dict[str, tuple[tuple[int, ...], ...]] = {
     "2A": J_MATRIX_2A,
     "3A": J_MATRIX_3A,
+    "5A": J_MATRIX_5A,
+    "7A": J_MATRIX_7A,
 }
 
 
-def get_j_matrix(g: str) -> tuple[tuple[int, ...], ...]:
-    """Return the 9×9 j-modular matrix for Monster conjugacy class g."""
-    if g not in J_MATRICES:
-        raise ValueError(f"unknown class {g!r}; expected one of {sorted(J_MATRICES)}")
-    return J_MATRICES[g]
+def get_j_matrix(g: str, size: int = 9) -> tuple[tuple[int, ...], ...]:
+    """Return the bootstrap j-modular matrix for Monster class ``g`` (default 9×9)."""
+    if g in J_MATRICES and size == (7 if g == "7A" else 5 if g == "5A" else 9):
+        return J_MATRICES[g]
+    return _get_j_matrix_bootstrap(g, size)
 
 
 # ---------------------------------------------------------------------------

@@ -130,4 +130,12 @@ __all__ = [
     "rule30_proof_obligation_ledger",
     "verify_rule30_proof_obligation_ledger",
 ]
-__version__ = "0.1.0"
+try:
+    from importlib.metadata import PackageNotFoundError, version
+
+    try:
+        __version__ = version("lattice-forge")
+    except PackageNotFoundError:
+        __version__ = "0.3.0"
+except ImportError:
+    __version__ = "0.3.0"

@@ -14,6 +14,9 @@
 *.p12
 *.pfx
 
+# EQAI / snapeqai lane (separate agent work; do not mix with lattice-forge pushes)
+packages/snapeqai/
+
 # Proof lab machine-output bundles (regenerable)
 proof-lab/artifacts/bundles/
 proof-lab/artifacts/latest/

@@ -91,18 +91,14 @@ def mckay_thompson_coefficient_parity(
     conjugacy_class: str,
     k: int,
 ) -> int:
-    """Open Obligation O1': return parity of a_k in T_g(τ) for the named
-    Monster conjugacy class. NOT IMPLEMENTED — raises NotImplementedError.
+    """Parity of ``a_k`` in ``T_g(τ)`` for tabulated classes (delegates to harness).
 
-    Once provided, this primitive plus `rule90_linearization.lucas_bit`
-    composes to an O(log N) Rule 30 center-bit extractor.
+    Bounded to hardcoded coefficient tables in ``voa_harness``; for sizes
+    beyond the table use matrix bootstrap metadata or extend coefficients.
     """
-    raise NotImplementedError(
-        f"mckay_thompson_coefficient_parity({conjugacy_class!r}, {k}) "
-        "is the open computational obligation O1'. See "
-        "papers/05_monster_moonshine_d4.md and the mmdb-unified service "
-        "endpoints for the McKay-Thompson series data."
-    )
+    from .voa_harness import mckay_thompson_coefficient_parity as _parity
+
+    return _parity(conjugacy_class, k)
 
 
 def correction_via_voa(t: int, x_offset_from_center: int) -> int:
@@ -134,6 +130,7 @@ def verify_voa_lookup_harness(max_depth: int = 256) -> dict[str, Any]:
         "harness_honesty": promoted.get("harness_honesty"),
         "open_obligation": summary["open_obligation"],
         "mckay_thompson_implemented": True,
+        "mckay_matrix_bootstrap": "lattice_forge.mckay_matrix_tables",
         "correction_via_voa_implemented": False,
         "best_hypothesis": promoted.get("evidence", {}).get("best_hypothesis"),
         "best_min_rate": promoted.get("evidence", {}).get("best_min_rate"),

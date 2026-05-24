@@ -507,6 +507,23 @@ def run_proofs(max_depth: int = 4096) -> dict:
         failures.append("J_MODULAR_MATRIX")
     print(f"   matrix_dim=9x9, T_3A[a1]=783, T_2A[a1]=4372, status={jm_summary['status']}")
 
+    from lattice_forge.mckay_matrix_tables import verify_mckay_matrix_bootstrap
+
+    print("[MCKAY_MATRIX_BOOTSTRAP] 5/7/9 McKay-Thompson conjugate matrix tables...")
+    mck = verify_mckay_matrix_bootstrap()
+    mck_summary = {
+        "status": mck["status"],
+        "honesty_label": mck.get("honesty_label"),
+        "all_five_classes_have_9x9": mck.get("all_five_classes_have_9x9"),
+        "7A_has_7x7": mck.get("7A_has_7x7"),
+        "5A_has_5x5": mck.get("5A_has_5x5"),
+        "nesting_7_in_9": mck.get("nesting_7_in_9"),
+    }
+    report["proofs"]["MCKAY_MATRIX_BOOTSTRAP"] = mck_summary
+    if mck_summary["status"] != "pass":
+        failures.append("MCKAY_MATRIX_BOOTSTRAP")
+    print(f"   dims=5,7,9 classes=1A..7A status={mck_summary['status']}")
+
     # Gauss/Fourier spectrograph lift
     print("[GAUSS_FOURIER_LIFT] octonion Gauss reduction + 9-DFT + level-9 Gauss sum...")
     gf = verify_gauss_fourier_lift()
