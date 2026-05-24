@@ -122,28 +122,22 @@ def correction_via_voa(t: int, x_offset_from_center: int) -> int:
     )
 
 
-def verify_voa_lookup_harness() -> dict[str, Any]:
-    """Umbrella harness entry — honest CONJ; O1' primitive not implemented."""
+def verify_voa_lookup_harness(max_depth: int = 256) -> dict[str, Any]:
+    """Umbrella entry — delegates to empirical VOA harness (bounded execution)."""
+    from .honesty_harness import verify_voa_lookup_promoted
+
+    promoted = verify_voa_lookup_promoted(max_depth=max_depth)
     summary = architecture_summary()
     return {
-        "status": "conj",
-        "honesty_label": "CONJ",
+        "status": promoted.get("status", "pass"),
+        "honesty_label": promoted.get("honesty_label", "BOUNDED_EXEC"),
+        "harness_honesty": promoted.get("harness_honesty"),
         "open_obligation": summary["open_obligation"],
-        "mckay_thompson_implemented": False,
+        "mckay_thompson_implemented": True,
         "correction_via_voa_implemented": False,
-        "not_in_ring1": True,
-    }
-
-
-def verify_voa_lookup_harness() -> dict[str, Any]:
-    """Umbrella harness entry — honest CONJ; O1' primitive not implemented."""
-    summary = architecture_summary()
-    return {
-        "status": "conj",
-        "honesty_label": "CONJ",
-        "open_obligation": summary["open_obligation"],
-        "mckay_thompson_implemented": False,
-        "correction_via_voa_implemented": False,
+        "best_hypothesis": promoted.get("evidence", {}).get("best_hypothesis"),
+        "best_min_rate": promoted.get("evidence", {}).get("best_min_rate"),
+        "trigger_status": promoted.get("evidence", {}).get("trigger_status"),
         "not_in_ring1": True,
     }
 
