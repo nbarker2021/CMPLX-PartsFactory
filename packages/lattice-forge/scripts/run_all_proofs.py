@@ -51,6 +51,17 @@ def run_proofs(max_depth: int = 4096) -> dict:
     from lattice_forge.substrate_map import verify_substrate_map
     from lattice_forge.chart_codec import verify_chart_codec
     from lattice_forge.chart_codec_d4 import verify_chart_codec_d4
+    from lattice_forge.rule90_linearization import verify_rule90_linearization
+    from lattice_forge.f2_majorana import verify_f2_majorana
+    from lattice_forge.oloid_rolling import verify_oloid_rolling
+    from lattice_forge.oloid_dual_path import (
+        verify_dual_path_oloid,
+        verify_read_then_verify,
+    )
+    from lattice_forge.oloid_octonionic import (
+        verify_octonionic_oloid,
+        orient_bit_information_content,
+    )
     from lattice_forge.block_tower import verify_block_tower
     from lattice_forge.rule30_block_extractor import verify_extractor as verify_block_extractor
     from lattice_forge import Forge
@@ -210,6 +221,105 @@ def run_proofs(max_depth: int = 4096) -> dict:
     if cc4_summary["status"] != "pass":
         failures.append("CHART_CODEC_D4")
     print(f"   round_trip_mismatches={cc4_summary['round_trip_mismatches']}")
+
+    # Rule 90 linearization (Rule 30 = Rule 90 XOR correction via Lucas)
+    print("[RULE90_LINEARIZATION] Rule 30 = Rule 90 + correction decomposition...")
+    r90 = verify_rule90_linearization()
+    r90_summary = {
+        "status": r90["status"],
+        "identity_at_truth_table": r90["identity_at_truth_table"],
+        "lucas_matches_direct_rule90_at_depth_64":
+            r90["lucas_matches_direct_rule90_at_depth_64"],
+        "decomposition_matches_at_all_depths":
+            r90["decomposition_matches_at_all_depths"],
+        "depths_tested_count": len(r90["depths_tested"]),
+    }
+    report["proofs"]["RULE90_LINEARIZATION"] = r90_summary
+    if r90_summary["status"] != "pass":
+        failures.append("RULE90_LINEARIZATION")
+    print(f"   identity={r90_summary['identity_at_truth_table']}, "
+          f"lucas={r90_summary['lucas_matches_direct_rule90_at_depth_64']}, "
+          f"decomp={r90_summary['decomposition_matches_at_all_depths']}")
+
+    # F_2 / Majorana primitives (T_F2_BRIDGE: Arf invariant + edge-glue)
+    print("[F2_MAJORANA] F_2 quadratic forms, Arf invariant, edge gluing...")
+    f2 = verify_f2_majorana()
+    f2_summary = {k: v for k, v in f2.items() if k != "expected"}
+    report["proofs"]["F2_MAJORANA"] = f2_summary
+    if f2_summary["status"] != "pass":
+        failures.append("F2_MAJORANA")
+    print(f"   rule30_correction_arf={f2_summary['rule30_correction_arf']}, "
+          f"status={f2_summary['status']}")
+
+    # Oloid rolling chart (head|tail bit dyad bijection carrier)
+    print("[OLOID_ROLLING] Oloid rolling state, head|tail dyad, cyclic invariance...")
+    ol = verify_oloid_rolling()
+    ol_summary = {k: v for k, v in ol.items() if k != "expected"}
+    report["proofs"]["OLOID_ROLLING"] = ol_summary
+    if ol_summary["status"] != "pass":
+        failures.append("OLOID_ROLLING")
+    print(f"   bit0_period_4={ol_summary['bit0_period_4']}, "
+          f"k6_invariant_phase_fraction={ol_summary['k6_invariant_phase_fraction']}, "
+          f"status={ol_summary['status']}")
+
+    # Dual-path Oloid (structural: three-dyad S_3 architecture)
+    print("[OLOID_DUAL_PATH] Three-dyad Oloid, S_3 cyclic involution, addressing arithmetic...")
+    dp = verify_dual_path_oloid()
+    dp_summary = {
+        "status": dp["status"],
+        "triple_involution_level": dp["triple_involution_level"],
+        "tape_readout_match_rate": dp["tape_readout_match_rate"],
+        "tape_readout_samples": dp["tape_readout_samples"],
+    }
+    report["proofs"]["OLOID_DUAL_PATH"] = dp_summary
+    if dp_summary["status"] != "pass":
+        failures.append("OLOID_DUAL_PATH")
+    print(f"   triple_involution_level={dp_summary['triple_involution_level']}, "
+          f"tape_readout_match_rate={dp_summary['tape_readout_match_rate']:.3f} "
+          f"(structural-only; per-dyad roll rule open)")
+
+    # Read-then-bijectively-verify workflow (the actual solver flow)
+    print("[OLOID_READ_THEN_VERIFY] Read-then-verify workflow at depths 1..200...")
+    from lattice_forge.block_tower import rule30_center_column as _rcc
+    _rule30_bits_for_verify = _rcc(200)
+    def _enum(N):
+        return _rule30_bits_for_verify[N - 1]
+    rv = verify_read_then_verify(_enum, sample_depths=list(range(1, 201)))
+    rv_summary = {
+        "status": "pass" if rv["bit_match_rate"] == 1.0 and rv["consistency_rate"] == 1.0 else "fail",
+        "bit_match_rate": rv["bit_match_rate"],
+        "consistency_rate": rv["consistency_rate"],
+        "orient_bit_density": rv["orient_bit_density"],
+        "sample_count": rv["sample_count"],
+    }
+    report["proofs"]["OLOID_READ_THEN_VERIFY"] = rv_summary
+    if rv_summary["status"] != "pass":
+        failures.append("OLOID_READ_THEN_VERIFY")
+    print(f"   bit_match_rate={rv_summary['bit_match_rate']}, "
+          f"consistency_rate={rv_summary['consistency_rate']}, "
+          f"orient_density={rv_summary['orient_bit_density']:.3f}")
+
+    # Octonion-grounded Oloid: explicit e_4 1/4-spin generator
+    print("[OLOID_OCTONIONIC] Octonion-grounded Oloid, e_4 1/4-spin, non-trivial orient bit...")
+    oc = verify_octonionic_oloid()
+    info = orient_bit_information_content(
+        [[(n >> i) & 1 for i in range(8)] for n in range(256)]
+    )
+    oc_summary = {
+        "status": oc["status"],
+        "e4_squared_is_minus_one": oc["e4_squared_is_minus_one"],
+        "four_rolls_bit0_return_to_initial": oc["four_rolls_bit0_return_to_initial"],
+        "non_associative_imaginary_units": oc["non_associative_imaginary_units"],
+        "orient_trivial_baseline_rate": info["trivial_baseline_rate"],
+        "orient_marginal_density": info["orient_marginal_density"],
+        "orient_joint_distribution": info["joint_distribution"],
+    }
+    report["proofs"]["OLOID_OCTONIONIC"] = oc_summary
+    if oc_summary["status"] != "pass":
+        failures.append("OLOID_OCTONIONIC")
+    print(f"   e4^2=-1: {oc_summary['e4_squared_is_minus_one']}, "
+          f"orient_independent_of_bit: trivial_rate={oc_summary['orient_trivial_baseline_rate']:.2f} "
+          f"(0.5 = independent)")
 
     # Block tower (Regime A: hierarchical checkpoint store)
     bt_depth = min(max_depth, 4096)
