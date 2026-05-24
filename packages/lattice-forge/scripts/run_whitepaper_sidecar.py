@@ -38,10 +38,24 @@ def build_manifest(root: pathlib.Path) -> dict[str, Any]:
     handoffs_dir = root / "docs" / "agents" / "handoffs"
 
     ring1_proven = [
-        r["claim_id"] for r in registry if r.get("ring") == 1 and r.get("honesty_label") == "proven"
+        r["claim_id"]
+        for r in registry
+        if r.get("ring") == 1 and str(r.get("honesty_label", "")).upper() == "PROVEN"
     ]
     regime_claims = [r["claim_id"] for r in registry if str(r.get("claim_id", "")).startswith("regime.")]
-    decomp_claims = [r["claim_id"] for r in registry if str(r.get("claim_id", "")).startswith("decomposition.")]
+    decomp_claims = [
+        r["claim_id"]
+        for r in registry
+        if r.get("claim_id") == "DECOMP-PAPER"
+        or str(r.get("claim_id", "")).startswith("decomposition.")
+    ]
+    honest_claims = [
+        "rule30.prize.depth_only_shortcut",
+        "rule30.prize.nonperiodicity_density",
+        "P1",
+        "P2",
+        "P3",
+    ]
 
     manifest: dict[str, Any] = {
         "version": 1,
@@ -65,16 +79,10 @@ def build_manifest(root: pathlib.Path) -> dict[str, Any]:
                 "id": "WP-HONEST-03",
                 "type": "companion",
                 "subpackage": "prize-core",
-                "claims": [
-                    "rule30.prize.depth_only_shortcut",
-                    "rule30.prize.nonperiodicity_density",
-                    "rule30.prize.P1_transport_sheet_lift",
-                    "rule30.prize.P2_transport_torsor_functor",
-                    "rule30.prize.P3_transport_glue_O7",
-                ],
+                "claims": honest_claims,
                 "honesty": "conj_and_open_gaps",
                 "falsification": "docs/prize/FALSIFICATION.md",
-                "count": 5,
+                "count": len(honest_claims),
                 "not_in_ring1": False,
             },
             {
