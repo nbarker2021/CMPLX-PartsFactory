@@ -1,0 +1,55 @@
+# Podal/antipodal dual Weyl-bond enumeration (batched, middle-in / middle-out).
+#
+#   docker compose -f docker-compose.backwalk-weyl-bond.yml up --build
+#
+# Reuses niemeier-backwalk-data volume (same backwalk_work.db).
+# Resource-safe defaults: 512M RAM, 1 CPU, 64 rows/batch, 50ms pause between batches.
+
+name: cmplx-backwalk-weyl-bond
+
+services:
+  niemeier-weyl-bond-orchestrator:
+    image: cmplx-proof-lab:latest
+    build:
+      context: .
+      dockerfile: proof-lab/Dockerfile
+    container_name: niemeier-weyl-bond-orchestrator
+    init: true
+    restart: "no"
+    environment:
+      PROOF_LAB_ROOT: /workspace/CMPLX-PartsFactory
+      PROOF_LAB_MODE: backwalk-weyl-orchestrate
+      WEYL_BOND_MAX_ROWS_PER_BATCH: "64"
+      WEYL_BOND_BATCH_SLEEP_MS: "50"
+      WEYL_BOND_MIRROR_OLOID: "1"
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+      PYTHONPATH: /workspace/CMPLX-PartsFactory/packages/lattice-forge/src
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          memory: 128M
+    volumes:
+      - type: bind
+        source: .
+        target: /workspace/CMPLX-PartsFactory
+      - type: volume
+        source: niemeier-backwalk-data
+        target: /data
+    labels:
+      cmplx.layer: proof-lab
+      cmplx.role: niemeier-weyl-bond-orchestrator
+    networks:
+      - cmplx-backend
+
+volumes:
+  niemeier-backwalk-data:
+    external: true
+    name: niemeier-backwalk-data
+
+networks:
+  cmplx-backend:
+    external: true
+    name: cmplx-backend

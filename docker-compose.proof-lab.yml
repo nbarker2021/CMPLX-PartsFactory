@@ -1,0 +1,71 @@
+# Proof Lab — active clone formal validation + non-proven testkit MCP
+#
+#   docker compose -f docker-compose.proof-lab.yml up -d --build
+#   curl http://localhost:8871/health
+#   curl -X POST http://localhost:8871/api/formal/run
+#   curl http://localhost:8872/health
+#
+# Mounts the host repo (push-ready clone) at /workspace/CMPLX-PartsFactory.
+# Proven surface: pip install lattice-forge[all]. Testkit: MCP on :8872.
+
+name: cmplx-proof-lab
+
+services:
+  proof-lab:
+    build:
+      context: .
+      dockerfile: proof-lab/Dockerfile
+    image: cmplx-proof-lab:latest
+    container_name: cmplx-proof-lab
+    init: true
+    restart: unless-stopped
+    environment:
+      PROOF_LAB_ROOT: /workspace/CMPLX-PartsFactory
+      PROOF_LAB_MODE: serve
+      PROOF_LAB_PORT: "8871"
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+      PYTHONPATH: /workspace/CMPLX-PartsFactory/proof-lab:/workspace/CMPLX-PartsFactory/src:/workspace/CMPLX-PartsFactory/packages/lattice-forge/src
+    ports:
+      - "${PROOF_LAB_PORT:-8871}:8871"
+    volumes:
+      - type: bind
+        source: .
+        target: /workspace/CMPLX-PartsFactory
+    labels:
+      cmplx.layer: proof-lab
+      cmplx.role: formal-validation-runner
+      cmplx.api: http://localhost:${PROOF_LAB_PORT:-8871}
+    networks:
+      - cmplx-backend
+
+  lf-testkit-mcp:
+    image: cmplx-proof-lab:latest
+    container_name: lf-testkit-mcp
+    init: true
+    restart: unless-stopped
+    environment:
+      PROOF_LAB_ROOT: /workspace/CMPLX-PartsFactory
+      PROOF_LAB_MODE: testkit-mcp
+      TESTKIT_MCP_PORT: "8872"
+      FASTMCP_INSTANCE: lattice-forge-testkit
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+      PYTHONPATH: /workspace/CMPLX-PartsFactory/proof-lab:/workspace/CMPLX-PartsFactory/src:/workspace/CMPLX-PartsFactory/packages/lattice-forge/src
+    ports:
+      - "${TESTKIT_MCP_PORT:-8872}:8872"
+    volumes:
+      - type: bind
+        source: .
+        target: /workspace/CMPLX-PartsFactory
+    labels:
+      cmplx.layer: proof-lab
+      cmplx.role: lattice-forge-testkit-mcp
+      cmplx.mcp: http://localhost:${TESTKIT_MCP_PORT:-8872}/mcp/sse
+    networks:
+      - cmplx-backend
+    depends_on:
+      - proof-lab
+
+networks:
+  cmplx-backend:
+    external: true
+    name: cmplx-backend

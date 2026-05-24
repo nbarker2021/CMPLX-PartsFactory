@@ -1,0 +1,9 @@
+# Proof lab container — proven lib + repo worlds + MCP testkit
+fastapi>=0.110
+uvicorn[standard]>=0.27
+mcp>=1.3.0
+pydantic>=2
+httpx>=0.27
+pytest>=8
+setuptools>=75
+wheel

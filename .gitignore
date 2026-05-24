@@ -14,6 +14,11 @@
 *.p12
 *.pfx
 
+# Proof lab machine-output bundles (regenerable)
+proof-lab/artifacts/bundles/
+proof-lab/artifacts/latest/
+proof-lab/artifacts/presentation_export.zip
+
 # Archives and generated handoff/upload bundles
 *.zip
 *.7z

@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lattice-forge-testkit-mcp"
+version = "0.1.0"
+description = "MCP server for non-proven lattice-forge test and exploration toolkit"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = [
+    "mcp>=1.3.0",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.27",
+    "pydantic>=2",
+]
+
+[project.scripts]
+lf-testkit-mcp = "lattice_forge_testkit_mcp.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

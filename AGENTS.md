@@ -82,6 +82,20 @@ curl http://localhost:8845/witness/spec
 
 Port `worlds` via `cmplx.worlds.forge.WorldsForgeProvider`. Witness routes: `/witness/*` (ledger classify vs `/witness/readout/classify` LCR — see `packages/lattice-forge/docs/WITNESS.md`). Decomposition paper: `lattice-forge decomposition verify`. Env: `FORGE_MINT_RECEIPT=1`, `LATTICE_FORGE_PORT=8845`, optional `FORGE_OVERLAY_ROOT`, `FORGE_WITNESS_MAX_DEPTH`.
 
+### Proof Lab (formal validation + testkit MCP, ports 8871–8872)
+
+Active-clone Docker stack for presentation-grade machine proof bundles. **Proven** surface = `pip install -e packages/lattice-forge[all]`. **Non-proven** exploration = MCP `lf-testkit-mcp` on `:8872`.
+
+```powershell
+docker network create cmplx-backend 2>$null; docker compose -f docker-compose.proof-lab.yml up -d --build
+curl http://localhost:8871/health
+curl -X POST http://localhost:8871/api/formal/run
+curl http://localhost:8872/health
+make proof-lab-export
+```
+
+See `proof-lab/REQUIREMENTS.md`, `proof-lab/accounting/proof_surfaces.yaml`, `packages/lattice-forge-testkit-mcp/README.md`.
+
 ## Repo-Kernel Control Layer
 
 Use `repo-kernel` as the canonical control plane for repo unification work.

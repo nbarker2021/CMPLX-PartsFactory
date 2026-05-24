@@ -1,0 +1,17 @@
+# Override for full Niemeier backward enumeration (24 terminals + exceptional spine).
+#
+#   docker compose -f docker-compose.backwalk-builder.yml `
+#     -f docker-compose.backwalk-builder.full24.yml up --build --abort-on-container-exit
+#
+# Resumes pilot checkpoints on volume niemeier-backwalk-data when BACKWALK_RESUME=1.
+
+name: cmplx-backwalk-builder
+
+services:
+  niemeier-backwalk-builder:
+    container_name: niemeier-backwalk-builder-full24
+    environment:
+      BACKWALK_PHASE: full24
+      BACKWALK_RESUME: "1"
+      BACKWALK_INVOLUTION_LIMIT: "50"
+      BACKWALK_EXCEPTIONALS: g2,f4,e6,e7,e8

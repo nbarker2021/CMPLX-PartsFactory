@@ -1,0 +1,51 @@
+# Canonical accounting: what ships as proven lib vs testkit MCP.
+version: "2026-05-23"
+
+proven_library:
+  package: lattice-forge
+  path: packages/lattice-forge
+  install_extra: all
+  honesty_labels:
+    - PROVEN
+    - TRANSPORTED
+    - BOUNDED_EXEC
+    - EXPRESSIBLE
+  proof_scripts:
+    - scripts/run_all_proofs.py
+    - scripts/run_regimes_proofs.py
+    - scripts/run_ring2_bundle.py
+    - scripts/run_transport_tower_proofs.py
+    - scripts/run_open_claims_harness.py
+  falsify_tier: tier_a
+  regression_fixtures:
+    - expected_outputs.json
+    - expected_outputs_regimes.json
+    - expected_outputs_transport.json
+    - expected_outputs_open_claims.json
+    - expected_outputs_umbrella.json
+  ring2:
+    plan: packages/lattice-forge/docs/ring2/RING2_EXECUTION_PLAN.md
+    companions_ready_when_bundle_passes:
+      - WP-REGIMES-01
+      - WP-DECOMP-01
+    companions_deferred:
+      - WP-TOWER-01
+
+testkit_mcp:
+  package: lattice-forge-testkit-mcp
+  path: packages/lattice-forge-testkit-mcp
+  honesty_labels_excluded_from_lib:
+    - CONJ
+  falsify_tier: tier_b
+  pytest_roots:
+    - packages/lattice-forge/tests
+    - tests/worlds
+  companion_deferred:
+    - WP-OLOID-01
+    - WP-MOONSHINE
+    - WP-TOWER-01
+
+artifact_roots:
+  bundle_dir: proof-lab/artifacts/bundles
+  meta_dir: proof-lab/artifacts/meta
+  latest_symlink: proof-lab/artifacts/latest

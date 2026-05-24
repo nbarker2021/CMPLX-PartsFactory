@@ -105,6 +105,76 @@ jobs:
           print("expected_outputs_regimes regression OK")
           PY
 
+      - name: Transport tower proofs --quick
+        working-directory: packages/lattice-forge
+        run: |
+          python scripts/run_transport_tower_proofs.py --quick --output proofs_report_transport.json
+
+      - name: Regression vs expected_outputs_transport.json
+        working-directory: packages/lattice-forge
+        run: |
+          python - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          report = json.loads(Path("proofs_report_transport.json").read_text(encoding="utf-8"))
+          expected = json.loads(Path("expected_outputs_transport.json").read_text(encoding="utf-8"))
+          mismatches = []
+          for key, exp in expected["expected_proofs"].items():
+              act = report["proofs"].get(key)
+              if not act:
+                  mismatches.append(f"{key} missing")
+                  continue
+              if exp.get("status") and act.get("status") != exp["status"]:
+                  mismatches.append(f"{key} status mismatch")
+          if report.get("promotion", {}).get("proven_count") != expected["expected_promotion"]["proven_count"]:
+              mismatches.append("proven_count mismatch")
+          if report.get("overall_status") != expected.get("expected_overall_status"):
+              mismatches.append("transport overall_status mismatch")
+          if mismatches:
+              print("\n".join(mismatches))
+              sys.exit(1)
+          print("expected_outputs_transport regression OK")
+          PY
+
+      - name: Open-claims honesty harness --quick
+        working-directory: packages/lattice-forge
+        run: python scripts/run_open_claims_harness.py --quick --output proofs_report_open_claims.json
+
+      - name: Regression vs expected_outputs_open_claims.json
+        working-directory: packages/lattice-forge
+        run: |
+          python - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          report = json.loads(Path("proofs_report_open_claims.json").read_text(encoding="utf-8"))
+          expected = json.loads(Path("expected_outputs_open_claims.json").read_text(encoding="utf-8"))
+          mismatches = []
+          if report.get("overall_status") != expected.get("expected_overall_status"):
+              mismatches.append("overall_status")
+          if len(report.get("promotions", [])) < expected.get("expected_min_promotions", 0):
+              mismatches.append("promotions count")
+          for key, exp in expected.get("expected_proofs", {}).items():
+              act = report.get("proofs", {}).get(key)
+              if not act:
+                  mismatches.append(f"{key} missing")
+                  continue
+              for field, ev in exp.items():
+                  if act.get(field) != ev:
+                      mismatches.append(f"{key}.{field}")
+          if mismatches:
+              print("\n".join(mismatches))
+              sys.exit(1)
+          print("expected_outputs_open_claims regression OK")
+          PY
+
+      - name: Ring 2 bundle --quick
+        working-directory: packages/lattice-forge
+        run: python scripts/run_ring2_bundle.py --quick --output proofs_report_ring2.json
+
       - name: Umbrella regression vs expected_outputs_umbrella.json
         working-directory: packages/lattice-forge
         run: |

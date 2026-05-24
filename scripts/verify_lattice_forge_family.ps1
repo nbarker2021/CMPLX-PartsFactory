@@ -1,11 +1,12 @@
 # Local CI gate for lattice-forge family (no GitHub Actions)
-# Usage: .\scripts\verify_lattice_forge_family.ps1 [-CheckSync] [-SkipProofs] [-Umbrella] [-Regimes]
+# Usage: .\scripts\verify_lattice_forge_family.ps1 [-CheckSync] [-SkipProofs] [-Umbrella] [-Regimes] [-Ring2]
 
 param(
     [switch]$CheckSync,
     [switch]$SkipProofs,
     [switch]$Umbrella,
-    [switch]$Regimes
+    [switch]$Regimes,
+    [switch]$Ring2
 )
 
 $ErrorActionPreference = "Stop"
@@ -179,6 +180,46 @@ if ($Regimes) {
         throw "expected_outputs_regimes regression failed"
     }
     Write-Host "[regimes-regression] OK" -ForegroundColor Green
+}
+
+if ($Ring2) {
+    Write-Host "[ring2] bundle --quick ..."
+    Push-Location $PkgRoot
+    try {
+        python scripts/run_ring2_bundle.py --quick --output proofs_report_ring2.json
+        if ($LASTEXITCODE -ne 0) { throw "run_ring2_bundle failed" }
+        python scripts/run_transport_tower_proofs.py --quick --output proofs_report_transport.json
+        if ($LASTEXITCODE -ne 0) { throw "run_transport_tower_proofs failed" }
+        python - <<'PY'
+import json
+import sys
+from pathlib import Path
+
+report = json.loads(Path("proofs_report_transport.json").read_text(encoding="utf-8"))
+expected = json.loads(Path("expected_outputs_transport.json").read_text(encoding="utf-8"))
+mismatches = []
+for key, exp in expected["expected_proofs"].items():
+    act = report["proofs"].get(key)
+    if not act:
+        mismatches.append(f"{key} missing")
+        continue
+    if exp.get("status") and act.get("status") != exp["status"]:
+        mismatches.append(f"{key} status {act.get('status')} != {exp['status']}")
+promo = report.get("promotion", {})
+if promo.get("proven_count") != expected["expected_promotion"]["proven_count"]:
+    mismatches.append("proven_count mismatch")
+if report.get("overall_status") != expected.get("expected_overall_status"):
+    mismatches.append("transport overall_status mismatch")
+if mismatches:
+    print("\n".join(mismatches))
+    sys.exit(1)
+print("expected_outputs_transport regression OK")
+PY
+        if ($LASTEXITCODE -ne 0) { throw "transport regression failed" }
+    } finally {
+        Pop-Location
+    }
+    Write-Host "[ring2] OK" -ForegroundColor Green
 }
 
 Write-Host "[catalog] endpoint sanity ..."
