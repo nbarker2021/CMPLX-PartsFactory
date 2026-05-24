@@ -581,6 +581,16 @@ def cmd_decomposition_verify(args: argparse.Namespace) -> int:
     return 0 if ok else 1
 
 
+def cmd_falsify(args: argparse.Namespace) -> int:
+    if not args.tier_a:
+        raise SystemExit("Specify a falsification tier, e.g. --tier-a")
+    from lattice_forge.falsify import run_tier_a
+
+    payload = run_tier_a(max_depth=args.max_depth, quick=args.quick)
+    print_json(payload)
+    return 0 if payload.get("overall_status") == "pass" else 1
+
+
 def cmd_serve(args: argparse.Namespace) -> int:
     try:
         import uvicorn
@@ -996,6 +1006,12 @@ def build_parser() -> argparse.ArgumentParser:
     dv = dec_sub.add_parser("verify", help="Verify vendored decomposition paper claims")
     dv.add_argument("--max-depth", type=int, default=512)
     dv.set_defaults(func=cmd_decomposition_verify)
+
+    fal = sub.add_parser("falsify", help="Machine falsification for prize-core claims")
+    fal.add_argument("--tier-a", action="store_true", help="Run Tier A breaks B-T1..B-decomp")
+    fal.add_argument("--quick", action="store_true", help="Use reduced depth windows (default for CI)")
+    fal.add_argument("--max-depth", type=int, default=256, help="Depth for chart/decomposition checks")
+    fal.set_defaults(func=cmd_falsify)
 
     p = sub.add_parser("serve", help="Start optional FastAPI server")
     p.add_argument("--host", default="127.0.0.1")
