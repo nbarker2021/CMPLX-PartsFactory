@@ -35,6 +35,9 @@ jobs:
           python -m pip install --upgrade pip "setuptools>=75" wheel
           pip install -e "packages/lattice-forge[all]"
 
+      - name: Install CMPLX root (worlds pytest deps)
+        run: pip install -e ".[dev]"
+
       - name: Pytest (package + worlds forge)
         run: |
           python -m pytest packages/lattice-forge/tests tests/worlds/test_forge_provider.py -q --tb=short
