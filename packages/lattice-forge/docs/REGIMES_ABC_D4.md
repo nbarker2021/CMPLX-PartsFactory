@@ -2,6 +2,7 @@
 
 **Date:** 2026-05-23  
 **Tree:** `D:\PartsFactory\work\lattice-forge`  
+**Index:** [`docs/regimes/README.md`](regimes/README.md) — install extra `[regimes]`, proof harness, tests  
 **Obligation:** `rule30.prize.depth_only_shortcut` remains **CONJ** — no log-time prize claim.
 
 ---
@@ -94,7 +95,9 @@ At depth 16,384 (`experiments/probe_d4_recursive.py`):
 
 - `experiments/probe_logtime.py` → `results_probe_logtime.json`
 - `experiments/probe_d4_recursive.py` → `results_probe_d4_recursive.json`
-- `scripts/run_all_proofs.py` → `proofs_report.json`
+- `scripts/run_all_proofs.py` → `proofs_report.json` (Ring 1 umbrella; includes regime keys until split consumers migrate)
+- `scripts/run_regimes_proofs.py` → `proofs_report_regimes.json` (Ring 2 regression; see `docs/regimes/README.md`)
+- `expected_outputs_regimes.json` — CI status gate for regime proofs
 - Tests: `tests/test_block_tower.py`, `test_chart_codec.py`, `test_chart_codec_d4.py`
 
 ---
