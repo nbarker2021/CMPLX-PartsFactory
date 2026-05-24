@@ -1,9 +1,11 @@
 # Local CI gate for lattice-forge family (no GitHub Actions)
-# Usage: .\scripts\verify_lattice_forge_family.ps1 [-CheckSync] [-SkipProofs]
+# Usage: .\scripts\verify_lattice_forge_family.ps1 [-CheckSync] [-SkipProofs] [-Umbrella] [-Regimes]
 
 param(
     [switch]$CheckSync,
-    [switch]$SkipProofs
+    [switch]$SkipProofs,
+    [switch]$Umbrella,
+    [switch]$Regimes
 )
 
 $ErrorActionPreference = "Stop"
@@ -99,6 +101,74 @@ if (-not $SkipProofs) {
     throw "expected_outputs regression failed"
   }
   Write-Host "[regression] OK" -ForegroundColor Green
+
+  if ($Umbrella) {
+    Write-Host "[umbrella] expected_outputs_umbrella.json diff ..."
+    $umbrellaExpectedPath = Join-Path $PkgRoot "expected_outputs_umbrella.json"
+    if (-not (Test-Path $umbrellaExpectedPath)) {
+      throw "expected_outputs_umbrella.json missing from package"
+    }
+    $umbrellaExpected = Get-Content $umbrellaExpectedPath -Raw | ConvertFrom-Json
+    $umbrellaMismatches = @()
+    foreach ($key in $umbrellaExpected.expected_proofs.PSObject.Properties.Name) {
+      $exp = $umbrellaExpected.expected_proofs.$key
+      $act = $report.proofs.$key
+      if (-not $act) {
+        $umbrellaMismatches += "$key missing from proofs_report"
+        continue
+      }
+      if ($exp.status -and ($act.status -ne $exp.status)) {
+        $umbrellaMismatches += "$key status expected $($exp.status) got $($act.status)"
+      }
+    }
+    if ($umbrellaMismatches.Count -gt 0) {
+      $umbrellaMismatches | ForEach-Object { Write-Host $_ -ForegroundColor Red }
+      throw "expected_outputs_umbrella regression failed"
+    }
+    Write-Host "[umbrella] OK" -ForegroundColor Green
+  }
+}
+
+if ($Regimes) {
+    Write-Host "[regimes] run_regimes_proofs --quick ..."
+    $regReportPath = Join-Path $PkgRoot "proofs_report_regimes.json"
+    $regExpectedPath = Join-Path $PkgRoot "expected_outputs_regimes.json"
+    Push-Location $PkgRoot
+    try {
+        python (Join-Path $PkgRoot "scripts\run_regimes_proofs.py") --quick --output $regReportPath
+        if ($LASTEXITCODE -ne 0) { throw "run_regimes_proofs failed with exit $LASTEXITCODE" }
+    } finally {
+        Pop-Location
+    }
+    Write-Host "[regimes] OK" -ForegroundColor Green
+
+    Write-Host "[regimes-regression] expected_outputs_regimes.json diff ..."
+    $regReport = Get-Content $regReportPath -Raw | ConvertFrom-Json
+    $regExpected = Get-Content $regExpectedPath -Raw | ConvertFrom-Json
+    $regMismatches = @()
+    foreach ($key in $regExpected.expected_proofs.PSObject.Properties.Name) {
+        $exp = $regExpected.expected_proofs.$key
+        $act = $regReport.proofs.$key
+        if (-not $act) {
+            $regMismatches += "$key missing from regimes proofs_report"
+            continue
+        }
+        foreach ($field in $exp.PSObject.Properties.Name) {
+            $ev = $exp.$field
+            $av = $act.$field
+            if ($null -ne $ev -and ($av -ne $ev)) {
+                $regMismatches += "$key.$field expected $ev got $av"
+            }
+        }
+    }
+    if ($regReport.overall_status -ne $regExpected.expected_overall_status) {
+        $regMismatches += "regimes overall_status not $($regExpected.expected_overall_status)"
+    }
+    if ($regMismatches.Count -gt 0) {
+        $regMismatches | ForEach-Object { Write-Host $_ -ForegroundColor Red }
+        throw "expected_outputs_regimes regression failed"
+    }
+    Write-Host "[regimes-regression] OK" -ForegroundColor Green
 }
 
 Write-Host "[catalog] endpoint sanity ..."
