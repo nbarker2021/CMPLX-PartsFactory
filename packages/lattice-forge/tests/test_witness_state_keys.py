@@ -44,3 +44,18 @@ def test_regime_encode_records_state_keys_and_lookup():
     stub_key = f"{primary}/witness_stub"
     stub = forge.witnessed_lookup(stub_key)["result"]
     assert stub["witnessed"] is False
+
+
+def test_witness_store_persists_across_forge_instances():
+    root = Path(tempfile.mkdtemp(prefix="lf-witness-persist-"))
+    forge_a = Forge.open(root)
+    engine = WitnessEngine(forge_a)
+    engine.regime_c_encode(max_depth=32)
+    primary = make_regime_encode_key(from_regime="A", to_regime="C", max_depth=32)
+    assert forge_a.witnessed_lookup(primary)["result"]["witnessed"] is True
+    assert forge_a._witness_store.persistent is True
+
+    forge_b = Forge.open(root)
+    looked = forge_b.witnessed_lookup(primary)["result"]
+    assert looked["witnessed"] is True
+    assert looked["answer"] == "WITNESSED"

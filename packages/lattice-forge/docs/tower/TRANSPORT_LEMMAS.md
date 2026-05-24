@@ -27,7 +27,8 @@ Deferred in manifest until backlog closes:
 ```yaml
 deferred_whitepapers:
   - id: WP-TOWER-01
-    trigger: ">=5 transport lemma rows move from TO_ADD to PROVEN"
+    trigger: ">=5 transport lemma rows reach PROVEN (pass_with_open_gaps does not count)"
 ```
 
-Currently **0 TO_ADD** rows; **5 pass_with_open_gaps** (not PROVEN) — WP-TOWER-01 remains deferred until ≥5 rows reach **PROVEN**.
+Currently **0 PROVEN** rows; **5 pass_with_open_gaps** (not PROVEN) — WP-TOWER-01 remains deferred.
+See [`TRANSPORT_TOWER_POLICY.md`](TRANSPORT_TOWER_POLICY.md).

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -277,14 +278,30 @@ def evidence_level(kind: str, result: Any) -> str:
 class Forge:
     """High-level facade for seed queries plus overlay receipts."""
 
-    def __init__(self, seed: SeedStore, overlay: OverlayStore):
+    def __init__(
+        self,
+        seed: SeedStore,
+        overlay: OverlayStore,
+        witness_db: Path | str | None = None,
+    ):
         self.seed = seed
         self.overlay = overlay
-        self._witness_store = WitnessStateStore()
+        self._witness_store = WitnessStateStore(witness_db)
 
     @classmethod
     def open(cls, root: str | Path | None = None) -> "Forge":
-        return cls(seed=SeedStore.packaged(), overlay=OverlayStore.open(root))
+        overlay_root = Path(root) if root is not None else None
+        witness_db: Path | None = None
+        env_db = os.environ.get("FORGE_WITNESS_DB")
+        if env_db:
+            witness_db = Path(env_db)
+        elif overlay_root is not None:
+            witness_db = overlay_root / "witness" / "state.sqlite"
+        return cls(
+            seed=SeedStore.packaged(),
+            overlay=OverlayStore.open(root),
+            witness_db=witness_db,
+        )
 
     def _record(self, kind: str, query: dict[str, Any], result: Any) -> dict[str, Any]:
         level = evidence_level(kind, result)

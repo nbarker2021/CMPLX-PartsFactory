@@ -68,6 +68,8 @@ def run_proofs(max_depth: int = 4096) -> dict:
     )
     from lattice_forge.block_tower import verify_block_tower
     from lattice_forge.rule30_block_extractor import verify_extractor as verify_block_extractor
+    from lattice_forge.quad_oloid import verify_quad_oloid
+    from lattice_forge.voa_lookup import verify_voa_lookup_harness
     from lattice_forge import Forge
 
     report = {
@@ -373,6 +375,33 @@ def run_proofs(max_depth: int = 4096) -> dict:
     if ex_summary["status"] not in {"pass", "pass_with_open_gaps"}:
         failures.append("TRANSPORT_EXIT_TRAJECTORY")
     print(f"   status: {ex_summary['status']}")
+
+    print("[QUAD_OLOID] Four-Oloid D_4 ring structural checks...")
+    qo = verify_quad_oloid()
+    qo_summary = _format(
+        qo,
+        [
+            "status",
+            "distinct_initial_seeds",
+            "four_rolls_bit0_return_each_oloid",
+            "distinct_quad_orient_over_256_inputs",
+        ],
+    )
+    report["proofs"]["QUAD_OLOID"] = qo_summary
+    if qo_summary["status"] != "pass":
+        failures.append("QUAD_OLOID")
+    print(f"   status: {qo_summary['status']} (WP-OLOID-01 still deferred)")
+
+    print("[VOA_LOOKUP] VOA lookup harness (CONJ)...")
+    voa = verify_voa_lookup_harness()
+    voa_summary = _format(
+        voa,
+        ["status", "honesty_label", "open_obligation", "mckay_thompson_implemented"],
+    )
+    report["proofs"]["VOA_LOOKUP"] = voa_summary
+    if voa_summary["status"] not in {"conj", "pass_with_open_gaps"}:
+        failures.append("VOA_LOOKUP")
+    print(f"   status: {voa_summary['status']} honesty={voa_summary.get('honesty_label')}")
 
     # Chart local readout (BONUS)
     print(f"[BONUS] Chart local readout = Rule 30 exactly at depth {max_depth}...")

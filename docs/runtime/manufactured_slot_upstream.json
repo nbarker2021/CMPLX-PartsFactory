@@ -1,0 +1,19 @@
+{
+  "version": "2026-05-24-l0",
+  "source": "bootstrap_manifest + docker-compose",
+  "policy": "Prefer repo-kernel /api/global/* over direct localhost ports except W1c smoke.",
+  "slots": [
+    {"port": "receipt", "part_id": "receipt-chain", "host_health": "http://localhost:8010/health", "global_lane": "/api/global/memory"},
+    {"port": "cache", "part_id": "speedlight-worldline", "host_health": "http://localhost:8843/health", "global_lane": "/api/global/memory"},
+    {"port": "snap", "part_id": "snap-stratification", "host_health": "http://localhost:8823/health", "global_lane": "/api/global/geometry"},
+    {"port": "symbolic", "part_id": "tarpit-symbolic", "host_health": "http://localhost:8844/health", "global_lane": "/api/global/geometry"},
+    {"port": "addressing", "part_id": "mdhg-addressing", "host_health": "http://localhost:8825/health", "global_lane": "/api/global/memory"},
+    {"port": "memory", "part_id": "mmdb-memory", "host_health": "http://localhost:8824/health", "global_lane": "/api/global/memory"},
+    {"port": "worlds", "part_id": "lattice-forge", "host_health": "http://localhost:8845/health", "witness_spec": "http://localhost:8845/witness/spec", "global_lane": "/api/global/simulation"}
+  ],
+  "control_plane": {
+    "repo_kernel_health": "http://localhost:8786/api/health",
+    "global_state": "http://localhost:8786/api/global-state?check_health=1",
+    "global_workbook": "http://localhost:8786/api/global-tool-workbook?check_health=1"
+  }
+}

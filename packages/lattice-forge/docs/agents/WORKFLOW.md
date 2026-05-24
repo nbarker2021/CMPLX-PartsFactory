@@ -1,8 +1,8 @@
 # Lattice Forge + Rule 30 — git workflow
 
-**Canonical integration branch:** `feature/lattice-forge-0.2.0-family-hardening` (PR #1 → `main`).
+**Canonical integration branch:** `main` (Rule 30 program merged via PRs #1–#6).
 
-All Rule 30 work (prize-core, regimes, umbrella, sidecar/meta) is merged **into that branch**, not stacked as parallel PRs off the same base.
+Use short-lived `feature/lf-*` or `feature/w1c-*` branches off `main` for scoped work.
 
 ## Dev vs package
 
@@ -18,7 +18,7 @@ After editing work tree:
 .\scripts\verify_lattice_forge_family.ps1 -CheckSync -Umbrella -Regimes
 ```
 
-Commit on **`feature/lattice-forge-0.2.0-family-hardening`** only until PR #1 merges.
+Commit on **`main`** via focused PRs (one stream per PR when possible).
 
 ## Verify gate
 
@@ -33,3 +33,4 @@ Generated artifacts (`proofs_report*.json`) are gitignored; `expected_outputs*.j
 
 - `rule30.prize.depth_only_shortcut` stays **CONJ**
 - `pass_with_open_gaps` must not become unconditional `pass` in harness, receipts, or papers
+- WP-TOWER-01: only **PROVEN** transport rows count — see `docs/tower/TRANSPORT_TOWER_POLICY.md`
