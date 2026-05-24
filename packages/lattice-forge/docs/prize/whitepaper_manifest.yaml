@@ -1,66 +1,72 @@
 version: 1
 generated_from:
-  proofs_report: proofs_report.json
-  expected_outputs: expected_outputs.json
-  registry: claims/registry.jsonl
+  proofs_report: D:\PartsFactory\CMPLX-PartsFactory\packages\lattice-forge\proofs_report.json
+  expected_outputs: D:\PartsFactory\CMPLX-PartsFactory\packages\lattice-forge\expected_outputs.json
+  registry: D:\PartsFactory\CMPLX-PartsFactory\packages\lattice-forge\claims\registry.jsonl
+  handoffs:
+  - R30-A-to-D.md
+  - R30-B-to-D.md
+  - R30-C-to-D.md
 paired_whitepapers:
-  - id: WP-CORE-01
-    type: core
-    subpackage: prize-core
-    claims:
-      - T1
-      - T2
-      - T3
-      - T4
-      - T5
-      - T6
-      - T7
-      - T8
-      - BONUS
-    honesty: proven
-    falsification: lattice-forge falsify --tier-a
-    count: 9
-  - id: WP-HONEST-03
-    type: companion
-    subpackage: prize-core
-    claims:
-      - rule30.prize.depth_only_shortcut
-      - rule30.prize.nonperiodicity_density
-      - P1
-      - P2
-      - P3
-    honesty: conj_and_open_gaps
-    falsification: docs/prize/FALSIFICATION.md
-    count: 5
-  - id: WP-REGIMES-01
-    type: companion
-    subpackage: regimes
-    claims:
-      - regime.substrate.map
-      - regime.a.block_tower
-      - regime.a.block_extractor
-      - regime.c.chart_codec
-      - regime.cprime.chart_codec_d4
-    honesty: bounded_exec
-    falsification: scripts/run_regimes_proofs.py --quick
-    count: 5
-    not_in_ring1: true
-  - id: WP-DECOMP-01
-    type: companion
-    subpackage: decomposition
-    claims:
-      - DECOMP-PAPER
-    honesty: separate_paper
-    falsification: lattice-forge decomposition verify
-    count: 1
-    not_in_ring1: true
+- id: WP-CORE-01
+  type: core
+  subpackage: prize-core
+  claims:
+  - T1
+  - T2
+  - T3
+  - T4
+  - T5
+  - T6
+  - T7
+  - T8
+  - BONUS
+  honesty: proven
+  falsification: lattice-forge falsify --tier-a
+  count: 9
+- id: WP-HONEST-03
+  type: companion
+  subpackage: prize-core
+  claims:
+  - rule30.prize.depth_only_shortcut
+  - rule30.prize.nonperiodicity_density
+  - P1
+  - P2
+  - P3
+  honesty: conj_and_open_gaps
+  falsification: docs/prize/FALSIFICATION.md
+  count: 5
+  not_in_ring1: false
+- id: WP-REGIMES-01
+  type: companion
+  subpackage: regimes
+  claims:
+  - regime.substrate.map
+  - regime.a.block_tower
+  - regime.a.block_extractor
+  - regime.c.chart_codec
+  - regime.cprime.chart_codec_d4
+  honesty: bounded_exec
+  falsification: scripts/run_regimes_proofs.py --quick
+  count: 5
+  not_in_ring1: true
+- id: WP-DECOMP-01
+  type: companion
+  subpackage: decomposition
+  claims:
+  - DECOMP-PAPER
+  honesty: separate_paper
+  falsification: lattice-forge decomposition verify
+  count: 1
+  not_in_ring1: true
 deferred_whitepapers:
-  - id: WP-OLOID-01
-    trigger: quad_oloid + full kinematic roll proof key in run_all_proofs
-  - id: WP-MOONSHINE
-    trigger: voa_lookup.py harness key + CONJ closure
-  - id: WP-TOWER-01
-    trigger: ">=5 transport lemma rows move from TO_ADD to PROVEN"
+- id: WP-OLOID-01
+  trigger: quad_oloid + full kinematic roll proof key in run_all_proofs
+- id: WP-MOONSHINE
+  trigger: voa_lookup.py harness key + CONJ closure
+- id: WP-TOWER-01
+  trigger: ≥5 transport lemma rows move from TO_ADD to PROVEN
 sidecar_decision:
   total_companions_beyond_core: 3
-  cap: "1 core + ≤4 companions"
+  cap: 1 core + ≤4 companions
+  proofs_overall_status: pass
