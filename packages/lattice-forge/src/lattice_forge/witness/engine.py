@@ -14,6 +14,7 @@ from ..forge import Forge
 from ..rule30_block_extractor import Rule30BlockExtractor
 from ..tools import MORSRTool, TarpitTool, TransportTool
 from .formal import WitnessHonesty, WitnessKind
+from .state_keys import record_encode_keys
 
 
 def _witness_max_depth(requested: int) -> int:
@@ -161,17 +162,18 @@ class WitnessEngine:
         max_depth = _witness_max_depth(max_depth)
         traj = rule30_chart_trajectory(max_depth)
         encoded = encode_shell2(shell2_subtrajectory(traj))
+        state_keys = record_encode_keys(from_regime="A", to_regime="C", max_depth=max_depth)
         TransportTool().invoke(
             step="regime_encode",
             from_regime="A",
             to_regime="C",
-            payload={"max_depth": max_depth},
+            payload={"max_depth": max_depth, "state_keys": state_keys},
         )
         return {
             "kind": WitnessKind.REGIME_C.value,
             "status": "pass",
             "honesty": WitnessHonesty.ENGINEERING.value,
-            "result": encoded,
+            "result": {**encoded, "state_keys": state_keys},
             "provenance": {"module": "lattice_forge.witness", "space": "lf-solver", "max_depth": max_depth},
         }
 
@@ -179,17 +181,18 @@ class WitnessEngine:
         max_depth = _witness_max_depth(max_depth)
         traj = rule30_chart_trajectory(max_depth)
         encoded = encode_d4(traj)
+        state_keys = record_encode_keys(from_regime="A", to_regime="Cprime", max_depth=max_depth)
         TransportTool().invoke(
             step="regime_encode",
             from_regime="A",
             to_regime="Cprime",
-            payload={"max_depth": max_depth},
+            payload={"max_depth": max_depth, "state_keys": state_keys},
         )
         return {
             "kind": WitnessKind.REGIME_CPRIME.value,
             "status": "pass",
             "honesty": WitnessHonesty.ENGINEERING.value,
-            "result": encoded,
+            "result": {**encoded, "state_keys": state_keys},
             "provenance": {"module": "lattice_forge.witness", "space": "lf-solver", "max_depth": max_depth},
         }
 

@@ -1213,6 +1213,19 @@ class Forge:
             result,
         )
 
+    def witnessed_lookup(self, state_key: str) -> dict[str, Any]:
+        """Stub: W(E8) witnessed-state table not populated; honest NOT_WITNESSED."""
+        from lattice_forge.witness.state_keys import parse_state_key
+
+        parsed = parse_state_key(state_key)
+        result = {
+            "state_key": state_key,
+            "answer": "NOT_WITNESSED",
+            "witnessed": False,
+            "grammar": parsed,
+        }
+        return self._record("witnessed_lookup", {"state_key": state_key}, result)
+
     def obstructions(
         self,
         source_id: str | None = None,

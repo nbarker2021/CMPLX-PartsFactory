@@ -181,6 +181,7 @@ Thumbs.db
 
 # Regenerated each verify_lattice_forge_family.ps1 run
 packages/lattice-forge/proofs_report.json
+packages/lattice-forge/proofs_report_*.json
 
 # ============================================================
 # Kimi / Claude / agent runtime artifacts
