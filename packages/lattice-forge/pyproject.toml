@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lattice-forge"
-version = "0.1.0"
+version = "0.2.0-family"
 description = "Installable morphism-saturated lattice admissibility engine with bundled seed state."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,7 +14,16 @@ keywords = ["lattice", "morphism", "admissibility", "root-systems", "niemeier", 
 dependencies = []
 
 [project.optional-dependencies]
-server = ["fastapi>=0.110", "uvicorn>=0.27"]
+algebra = []
+solver = []
+theory = []
+proofs = ["pytest>=8"]
+server = ["fastapi>=0.110", "uvicorn>=0.27", "httpx>=0.27"]
+witness = ["pydantic>=2"]
+decomposition = []
+all = [
+    "lattice-forge[algebra,solver,theory,proofs,server,witness,decomposition]",
+]
 test = ["pytest>=8", "httpx>=0.27"]
 
 [project.scripts]

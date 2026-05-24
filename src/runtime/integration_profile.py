@@ -76,6 +76,16 @@ def apply_integration_env(*, force: bool = False) -> dict[str, str]:
     return applied
 
 
+def clear_integration_env(keys: Optional[tuple[str, ...]] = None) -> None:
+    """Remove integration env vars set by ``apply_integration_env()``.
+
+    Used in test teardown to prevent cross-test leakage when monkeypatch
+    does not catch direct ``os.environ`` mutations.
+    """
+    for key in (keys or _RECEIPT_BRIDGE_DEFAULTS):
+        os.environ.pop(key, None)
+
+
 def _health_ok(base_url: str, timeout: float = 2.0) -> bool:
     url = base_url.rstrip("/") + "/health"
     try:

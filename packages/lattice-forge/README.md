@@ -315,9 +315,35 @@ continue the same lower scalar/ribbon/block math.
 `T_rule30_relative_sheet`, a finite operator that maps reduced scalar state keys
 to emitted center bits. This is the code object behind the page-power picture.
 
+`verify-rule30-field-address`, `verify-rule30-exit-trajectory`,
+`verify-rule30-sheet-lift`, and `verify-rule30-julia-resolution` implement the
+corrected field view: the Rule 30 CA already defines the Mandelbrot field for
+`N`; the two Julia sheets are primitive resolution sheets; arbitrary `N` lands
+on lifted sheet `k` with continuation `k+1`; and the grid-square record must
+resolve to the canonical center bit without an extra field search.
+
+`verify-rule30-torsor-functor` adds the torsor term needed to calculate from
+the two primitive sheets without choosing a fake origin. The CA base action is
+the left action, the scalar/sheet functor is the right action, and the witness
+checks that both land on the same lifted sheet. It also records the induced
+spin/chirality state and a finite 2-functor/monad coherence witness.
+
+`verify-rule30-oloid-winding` and `verify-rule30-oloid-antipode` expose the
+spinor/Oloid kinematic bridge. The first checks a one-sided +N rolling chart;
+the second carries the hidden `-N` counter-sheet beside it and reports whether
+the adaptive +N/-N selector removes the residual center-bar defect. A zero
+adaptive defect is recorded as a bounded witness, while a static depth-only
+selector remains a separate proof obligation.
+
+`verify-rule30-winding-number` records the bounded winding trace as a witness,
+not as a finished arbitrary-N proof. It deliberately labels the result
+`BOUNDED_TRACE_WITNESS` until a depth-only modular or continuous kinematic
+extractor is derived.
+
 `verify-rule30-nth-bit` emits the nth-bit expression in the reduced scalar
-language: page/block/phase coordinates, local state, scalar `c_n`, Julia exit,
-and the sheet lookup all have to agree with the canonical center bit.
+language: page/block/phase coordinates, local state, scalar `c_n`, CA-field
+Julia resolution, and the sheet lookup all have to agree with the canonical
+center bit.
 
 `verify-rule30-proof-obligations` names the submission-facing ledger: bounded
 execution evidence, formulaic expression evidence, and the theorem obligations

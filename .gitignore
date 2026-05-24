@@ -174,6 +174,14 @@ Thumbs.db
 *.orig
 *.tmp
 
+# Local pytest / gate logs (repo root; do not commit)
+/pytest-*.txt
+/l0-gate.txt
+/CON
+
+# Regenerated each verify_lattice_forge_family.ps1 run
+packages/lattice-forge/proofs_report.json
+
 # ============================================================
 # Kimi / Claude / agent runtime artifacts
 # ============================================================

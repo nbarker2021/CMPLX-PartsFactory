@@ -108,8 +108,58 @@ def test_fastapi_server_endpoints(tmp_path):
     assert sheet["result"]["operator_summary"]["stable_across_pages"] is True
     verify_sheet = client.get("/rule30/sheet-operator/verify?page_count=2&page_size=128").json()
     assert verify_sheet["result"]["schema_status"] == "pass"
+    field = client.get("/rule30/field-address/257?page_size=128").json()
+    assert field["result"]["coordinates"]["page_index"] == 2
+    assert field["result"]["address"]["prediction_defect"] == 0
+    verify_field = client.get("/rule30/field-address/257/verify?page_size=128").json()
+    assert verify_field["result"]["schema_status"] == "pass"
+    trajectory = client.get("/rule30/exit-trajectory/257?page_size=128").json()
+    assert trajectory["result"]["trajectory_definition"]["extra_field_search"] == 0
+    assert trajectory["result"]["exit"]["defect"] == 0
+    verify_trajectory = client.get("/rule30/exit-trajectory/257/verify?page_size=128").json()
+    assert verify_trajectory["result"]["schema_status"] == "pass"
+    lift = client.get("/rule30/sheet-lift/257?page_size=128").json()
+    assert lift["result"]["sheet"]["sheet_index_k"] == 257
+    assert lift["result"]["sheet"]["next_sheet_index"] == 258
+    verify_lift = client.get("/rule30/sheet-lift/257/verify?page_size=128").json()
+    assert verify_lift["result"]["schema_status"] == "pass"
+    resolution = client.get("/rule30/julia-resolution/257?page_size=128").json()
+    assert resolution["result"]["resolved_bit"] == resolution["result"]["center_bit"]
+    assert resolution["result"]["sheet_lift"]["sheet_index_k"] == 257
+    verify_resolution = client.get("/rule30/julia-resolution/257/verify?page_size=128").json()
+    assert verify_resolution["result"]["schema_status"] == "pass"
+    torsor = client.get("/rule30/torsor-functor/257?page_size=128").json()
+    assert torsor["result"]["torsor"]["lifted_sheet_id"] == resolution["result"]["sheet_lift"]["lifted_sheet_id"]
+    assert torsor["result"]["bitorsor_actions"]["compatibility_defect"] == 0
+    assert torsor["result"]["functor_stack"]["two_functor"]["preserves_2_cells"] is True
+    verify_torsor = client.get("/rule30/torsor-functor/257/verify?page_size=128").json()
+    assert verify_torsor["result"]["schema_status"] == "pass"
+    spinor = client.get("/rule30/spinor-oloid?max_depth=64").json()
+    assert spinor["result"]["model_id"] == "rule30_spinor_oloid_model_v0_1"
+    verify_spinor = client.get("/rule30/spinor-oloid/verify?max_depth=64").json()
+    assert verify_spinor["result"]["status"].startswith("pass")
+    oloid_query = (
+        "parameterization=phi&pattern=alternating_xyz&axis_angle=0.5235987755982988"
+        "&shell_axis=y&side_axis=z&shell_offset=-0.125"
+    )
+    winding = client.get(f"/rule30/oloid-winding/17?{oloid_query}").json()
+    assert winding["result"]["model_id"] == "rule30_oloid_winding_from_n_v0_1"
+    antipode = client.get(f"/rule30/oloid-antipode/17?{oloid_query}").json()
+    assert antipode["result"]["model_id"] == "rule30_oloid_antipodal_winding_v0_1"
+    scan = client.get("/rule30/oloid-scan?max_depth=32").json()
+    assert scan["result"]["model_id"] == "rule30_oloid_parameterization_scan_v0_1"
+    verify_winding = client.get(f"/rule30/oloid-winding/verify?max_depth=32&{oloid_query}").json()
+    assert verify_winding["result"]["model_id"] == "rule30_oloid_winding_verifier_v0_1"
+    verify_antipode = client.get(f"/rule30/oloid-antipode/verify?max_depth=32&{oloid_query}").json()
+    assert verify_antipode["result"]["status"].startswith("pass")
+    winding_number = client.get("/rule30/winding-number?max_depth=64").json()
+    assert winding_number["result"]["complexity_proof"]["claim_status"] == "BOUNDED_TRACE_WITNESS"
+    verify_winding_number = client.get("/rule30/winding-number/verify?max_depth=64").json()
+    assert verify_winding_number["result"]["status"] == "pass_with_open_gaps"
     nth = client.get("/rule30/nth-bit/129?page_size=128").json()
     assert nth["result"]["computed_witness"]["defect"] == 0
+    assert nth["result"]["julia_resolution"]["defect"] == 0
+    assert nth["result"]["torsor_functor"]["compatibility_defect"] == 0
     verify_nth = client.get("/rule30/nth-bit/129/verify?page_size=128").json()
     assert verify_nth["result"]["schema_status"] == "pass"
     proof = client.get("/rule30/proof-obligations?max_depth=128&page_count=2&page_size=128").json()

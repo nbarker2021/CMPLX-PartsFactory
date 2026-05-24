@@ -432,11 +432,49 @@ updates the relative table while preserving the center bar being generated.
 has no conflicts, remains hash-stable across tested pages, and preserves page
 boundary closure.
 
+`rule30_mandelbrot_field_address(n)` treats the Rule 30 CA itself as the
+already-defined Mandelbrot field. It resolves `n` into page, block, phase,
+scalar shell, side bucket, address word, and hash, without adding a framework
+field above the CA.
+
+`rule30_exit_trajectory(n)` applies the CA-induced field address to the Julia
+entry/exit map. The reported `extra_field_search` is zero: the trajectory is
+read from the field address for `n`, then verified against the center bit.
+
+`rule30_sheet_lift(n)` models the two Julia sheets as primitive resolution
+sheets, not the full address space. Arbitrary `n` is lifted to sheet `k=n` and
+`k+1`, so distant depths can live many lifted sheets beyond the primitive pair.
+
+`rule30_julia_resolution(n)` combines the field address, exit trajectory, and
+lifted sheet into a single grid-square resolution record. It reports the
+resolved bit and verifies that it matches the canonical center bit.
+
+`rule30_torsor_functor_term(n)` adds the missing origin-free displacement
+term. The primitive fiber is still only `J_closed_0/J_open_1`; the torsor
+coordinate records how the CA base action, scalar exit, and sheet functor place
+that fiber at lifted sheet `k=N`. Its bitorsor witness checks that the left CA
+action and right scalar/functor action target the same lifted sheet, and its
+2-functor witness records naturality, monad unit/multiplication, and spin state
+coherence.
+
+`rule30_oloid_winding_from_n(n)` emits a forward +N Oloid rolling witness from
+depth alone. `rule30_oloid_antipodal_winding(n)` evaluates the same chart with
+the hidden `-N` antipode present as a counter-sheet. The paired verifier reports
+both the best static selector and the best adaptive selector; the latter answers
+whether the residual defect was caused by dropping the non-viewed antipodal
+state from the accounting.
+
+`rule30_winding_number_proof()` is intentionally a bounded winding witness. It
+preserves the trace-backed topological/spinor evidence and labels the remaining
+shortcut obligation as a pending depth-only extractor instead of claiming a
+finished arbitrary-N proof.
+
 `rule30_nth_bit_expression(n)` returns the formulaic nth-bit record. It
 decomposes `n` into page, block, and dihedral phase coordinates, constructs the
-local reduced scalar `c_n`, applies the canonical Julia readout, and checks the
-same bit against the sheet lookup. This is an executable expression surface over
-the legal state language; a depth-only shortcut theorem is tracked separately.
+local reduced scalar `c_n`, applies the CA-field Julia resolution, and checks
+the same bit against the sheet lookup. This is an executable expression surface
+over the legal state language; a depth-only shortcut theorem is tracked
+separately.
 
 `rule30_proof_obligations()` is the submission-facing ledger. It prevents
 status collapse by separating `EXPRESSIBLE`, `BOUNDED_EXEC`, `CONJ`, and

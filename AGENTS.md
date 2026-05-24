@@ -69,16 +69,18 @@ Env: `SNAP_MINT_RECEIPT=1` (POST/GATE/PROCESS on receipt port), `SNAP_PORT=8823`
 
 ### Lattice Forge / worlds (slot-19, port 8845)
 
-Dev canonical: `D:\PartsFactory\work\lattice-forge`. Git package: `packages/lattice-forge` (sync via `scripts/sync_lattice_forge_package.ps1`).
+Dev canonical: `D:\PartsFactory\work\lattice-forge`. Git package: `packages/lattice-forge` (sync via `scripts/sync_lattice_forge_package.ps1`). Family manifest: `catalog/families/lattice-forge.json`.
 
 ```powershell
-pip install -e .\packages\lattice-forge
+.\scripts\dev_lattice_forge_env.ps1   # PYTHONPATH when pip install -e fails (TLS)
+.\scripts\verify_lattice_forge_family.ps1 [-CheckSync]
+pip install -e .\packages\lattice-forge[all]   # or PYTHONPATH=packages/lattice-forge/src
 docker compose -f docker-compose.lattice-forge.yml up -d
 curl http://localhost:8845/health
-curl http://localhost:8845/rule30/proof-obligations/verify?max_depth=128&page_size=128
+curl http://localhost:8845/witness/spec
 ```
 
-Port `worlds` via `cmplx.worlds.forge.WorldsForgeProvider`. Env: `FORGE_MINT_RECEIPT=1`, `LATTICE_FORGE_PORT=8845`, optional `FORGE_OVERLAY_ROOT`.
+Port `worlds` via `cmplx.worlds.forge.WorldsForgeProvider`. Witness routes: `/witness/*` (ledger classify vs `/witness/readout/classify` LCR — see `packages/lattice-forge/docs/WITNESS.md`). Decomposition paper: `lattice-forge decomposition verify`. Env: `FORGE_MINT_RECEIPT=1`, `LATTICE_FORGE_PORT=8845`, optional `FORGE_OVERLAY_ROOT`, `FORGE_WITNESS_MAX_DEPTH`.
 
 ## Repo-Kernel Control Layer
 

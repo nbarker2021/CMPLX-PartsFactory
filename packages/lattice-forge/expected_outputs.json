@@ -1,0 +1,77 @@
+{
+  "submission": "lattice-forge Rule 30 Prize submission",
+  "expected_proofs": {
+    "T1_octonion_axioms": {
+      "status": "pass",
+      "errors": []
+    },
+    "T2_j3o_axioms": {
+      "status": "pass",
+      "errors": []
+    },
+    "T3_chart_j3o_isomorphism": {
+      "status": "pass",
+      "total_depths_checked": 4096,
+      "bijection_failures": 0,
+      "trace_mismatches": 0,
+      "weyl_mismatches": 0,
+      "readout_mismatches": 0,
+      "trace_2_stratum_count": 1568,
+      "trace_2_idempotent_count": 1568,
+      "trace_2_all_idempotent": true
+    },
+    "T4_n3_su3_closure_exact": {
+      "status": "pass",
+      "n_steps": 3,
+      "coefficient_sum_exact": "1",
+      "residual_squared_exact": "0",
+      "is_exact_group_ring_element": true,
+      "s3_coefficients_exact_strings": {
+        "e": "0",
+        "(1 2)": "1/3",
+        "(1 3)": "1/3",
+        "(2 3)": "1/3",
+        "(1 2 3)": "0",
+        "(1 3 2)": "0"
+      }
+    },
+    "T5_closure_scale_search": {
+      "best_scale": 3,
+      "closed_at_a_scale": true,
+      "residuals_per_n": [
+        {"n_steps": 1, "is_s3_element": false},
+        {"n_steps": 2, "is_s3_element": false},
+        {"n_steps": 3, "is_s3_element": true}
+      ]
+    },
+    "T6_block_decomposition": {
+      "both_trace_blocks_close": true,
+      "trace1_is_exact_s3_element": true,
+      "trace2_is_exact_s3_element": true,
+      "trace1_residual_squared": "0",
+      "trace2_residual_squared": "0"
+    },
+    "T7_closed_form_8x8": {
+      "n_states": 8,
+      "all_row_sums_unity": true,
+      "matrix_entries_in_quartiles": true
+    },
+    "T8_commutability_tree": {
+      "paths_count": 8,
+      "expected_paths_count": 8,
+      "all_paths_found": true
+    },
+    "BONUS_chart_local_readout": {
+      "status": "pass",
+      "max_depth": 4096,
+      "forward_defect_count": 0,
+      "forward_accuracy": 1.0
+    }
+  },
+  "expected_overall_status": "pass",
+  "notes": {
+    "verification_tolerance": "exact over Q for T4, T5, T6, T7; bit-exact for T3 and BONUS; structural for T8",
+    "expected_runtime_seconds": "60-300 on consumer hardware",
+    "quick_mode": "--quick reduces max_depth to 256 for ~5s runtime; verification still passes but stress-test is reduced"
+  }
+}

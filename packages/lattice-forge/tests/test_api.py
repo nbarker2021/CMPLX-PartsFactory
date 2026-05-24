@@ -564,6 +564,139 @@ def test_rule30_sheet_operator_and_nth_bit_expression_are_formulaic_surfaces(tmp
     assert nth_verify["result"]["status"] == "pass_with_open_gaps"
 
 
+def test_rule30_julia_resolution_uses_field_address_and_lifted_sheets(tmp_path: Path):
+    forge = Forge.open(tmp_path)
+    n = 257
+
+    address = forge.rule30_mandelbrot_field_address(n, page_size=128, block_size=8, max_order=4)["result"]
+    assert address["model_id"] == "rule30_mandelbrot_field_address_v0_1"
+    assert address["address"]["prediction_defect"] == 0
+    assert address["coordinates"]["page_index"] == 2
+
+    trajectory = forge.rule30_exit_trajectory(n, page_size=128, block_size=8, max_order=4)["result"]
+    assert trajectory["model_id"] == "rule30_exit_trajectory_v0_1"
+    assert trajectory["exit"]["defect"] == 0
+    assert trajectory["trajectory_definition"]["extra_field_search"] == 0
+
+    lift = forge.rule30_sheet_lift(n, page_size=128, block_size=8, max_order=4)["result"]
+    assert lift["model_id"] == "rule30_sheet_lift_v0_1"
+    assert lift["sheet"]["sheet_index_k"] == n
+    assert lift["sheet"]["next_sheet_index"] == n + 1
+    assert lift["sheet"]["primitive_sheet"] in {"J_closed_0", "J_open_1"}
+    assert lift["sheet"]["defect"] == 0
+
+    resolution = forge.rule30_julia_resolution(n, page_size=128, block_size=8, max_order=4)["result"]
+    assert resolution["model_id"] == "rule30_julia_resolution_v0_1"
+    assert resolution["defect"] == 0
+    assert resolution["resolved_bit"] == resolution["center_bit"]
+    assert resolution["sheet_lift"]["sheet_index_k"] == n
+    assert resolution["grid_resolution"]["grid_square_id"].startswith(f"sheet={n}|")
+
+    verify = forge.verify_rule30_julia_resolution(n, page_size=128, block_size=8, max_order=4)
+    assert verify["result"]["schema_status"] == "pass"
+    assert verify["result"]["status"] == "pass_with_open_gaps"
+
+    torsor = forge.rule30_torsor_functor_term(n, page_size=128, block_size=8, max_order=4)["result"]
+    assert torsor["model_id"] == "rule30_torsor_functor_term_v0_1"
+    assert torsor["torsor"]["base_fiber"] == ["J_closed_0", "J_open_1"]
+    assert torsor["torsor"]["lifted_sheet_id"] == resolution["sheet_lift"]["lifted_sheet_id"]
+    assert torsor["bitorsor_actions"]["compatibility_defect"] == 0
+    assert torsor["functor_stack"]["naturality_defect"] == 0
+    assert torsor["functor_stack"]["two_functor"]["preserves_2_cells"] is True
+    assert torsor["spin_state"]["spin_bit"] in {0, 1}
+
+    torsor_verify = forge.verify_rule30_torsor_functor_term(n, page_size=128, block_size=8, max_order=4)
+    assert torsor_verify["result"]["schema_status"] == "pass"
+    assert torsor_verify["result"]["status"] == "pass_with_open_gaps"
+
+    nth = forge.rule30_nth_bit_expression(n, page_size=128, block_size=8, max_order=4)["result"]
+    assert nth["julia_resolution"]["lifted_sheet_id"] == resolution["sheet_lift"]["lifted_sheet_id"]
+    assert nth["julia_resolution"]["grid_square_id"] == resolution["grid_resolution"]["grid_square_id"]
+    assert nth["torsor_functor"]["torsor_hash"] == torsor["torsor"]["torsor_hash"]
+    assert nth["torsor_functor"]["compatibility_defect"] == 0
+
+
+def test_rule30_oloid_scan_result_can_be_verified_as_config():
+    from lattice_forge.rule30 import (
+        rule30_oloid_antipodal_winding,
+        rule30_oloid_parameterization_scan,
+        verify_rule30_oloid_antipodal_winding,
+        verify_rule30_oloid_winding_from_n,
+    )
+
+    scan = rule30_oloid_parameterization_scan(max_depth=32)
+    assert scan["model_id"] == "rule30_oloid_parameterization_scan_v0_1"
+    assert scan["best_defect_rate"] < 1.0
+
+    verify = verify_rule30_oloid_winding_from_n(max_depth=32, config=scan["best_config"])
+    assert verify["model_id"] == "rule30_oloid_winding_verifier_v0_1"
+    assert verify["total"] == 32
+    assert verify["defect_count"] == scan["best_config"]["defects"]
+
+    config = {
+        key: value
+        for key, value in scan["best_config"].items()
+        if key
+        in {
+            "axis_angle",
+            "pattern",
+            "shell_axis",
+            "side_axis",
+            "shell_offset",
+            "side_threshold",
+            "parameterization",
+        }
+    }
+    antipode = rule30_oloid_antipodal_winding(17, **config)
+    assert antipode["model_id"] == "rule30_oloid_antipodal_winding_v0_1"
+    assert antipode["antipodal_definition"]["counter_sheet"] == "-N"
+    assert antipode["best_mode"] in antipode["selection_modes"]
+
+    antipode_verify = verify_rule30_oloid_antipodal_winding(max_depth=32, config=scan["best_config"])
+    assert antipode_verify["model_id"] == "rule30_oloid_antipodal_winding_verifier_v0_1"
+    assert antipode_verify["total"] == 32
+    assert antipode_verify["status"].startswith("pass")
+    assert antipode_verify["adaptive_selector_defects"] == 0
+
+
+def test_rule30_oloid_surfaces_are_public_forge_queries(tmp_path: Path):
+    forge = Forge.open(tmp_path)
+    cfg = {
+        "axis_angle": 0.5235987755982988,
+        "pattern": "alternating_xyz",
+        "shell_axis": "y",
+        "side_axis": "z",
+        "shell_offset": -0.125,
+        "parameterization": "phi",
+    }
+
+    spinor = forge.rule30_spinor_oloid_model(max_depth=64, max_order=4)["result"]
+    assert spinor["model_id"] == "rule30_spinor_oloid_model_v0_1"
+    spinor_verify = forge.verify_rule30_spinor_oloid_model(max_depth=64, max_order=4)["result"]
+    assert spinor_verify["status"].startswith("pass")
+
+    winding = forge.rule30_oloid_winding_from_n(17, **cfg)["result"]
+    assert winding["model_id"] == "rule30_oloid_winding_from_n_v0_1"
+    assert winding["status"] == "candidate_witness"
+    assert "emitted_bit" in winding
+
+    antipode = forge.rule30_oloid_antipodal_winding(17, **cfg)["result"]
+    assert antipode["model_id"] == "rule30_oloid_antipodal_winding_v0_1"
+    assert antipode["antipodal_definition"]["antipode_operation"] == "(x,y,z)->(-x,-y,-z)"
+
+    winding_verify = forge.verify_rule30_oloid_winding_from_n(max_depth=32, config=cfg)["result"]
+    assert winding_verify["model_id"] == "rule30_oloid_winding_verifier_v0_1"
+    antipode_verify = forge.verify_rule30_oloid_antipodal_winding(max_depth=32, config=cfg)["result"]
+    assert antipode_verify["model_id"] == "rule30_oloid_antipodal_winding_verifier_v0_1"
+    assert antipode_verify["status"].startswith("pass")
+    assert antipode_verify["adaptive_selector_accuracy"] == 1.0
+
+    bounded = forge.rule30_winding_number_proof(max_depth=64, max_order=4)["result"]
+    assert bounded["complexity_proof"]["claim_status"] == "BOUNDED_TRACE_WITNESS"
+    bounded_verify = forge.verify_rule30_winding_number_proof(max_depth=64, max_order=4)["result"]
+    assert bounded_verify["status"] == "pass_with_open_gaps"
+
+
 def test_rule30_proof_obligations_name_submission_blockers_without_overclaim(tmp_path: Path):
     forge = Forge.open(tmp_path)
     payload = forge.rule30_proof_obligations(
@@ -641,6 +774,25 @@ def test_seed_db_is_not_mutated_by_overlay_queries(tmp_path: Path):
     forge.verify_rule30_hypervisor_extension_tape(page_count=2, page_size=32, block_size=8, max_order=4)
     forge.rule30_sheet_operator(page_count=2, page_size=32, block_size=8, max_order=4)
     forge.verify_rule30_sheet_operator(page_count=2, page_size=32, block_size=8, max_order=4)
+    forge.rule30_mandelbrot_field_address(33, page_size=32, block_size=8, max_order=4)
+    forge.verify_rule30_mandelbrot_field_address(33, page_size=32, block_size=8, max_order=4)
+    forge.rule30_exit_trajectory(33, page_size=32, block_size=8, max_order=4)
+    forge.verify_rule30_exit_trajectory(33, page_size=32, block_size=8, max_order=4)
+    forge.rule30_sheet_lift(33, page_size=32, block_size=8, max_order=4)
+    forge.verify_rule30_sheet_lift(33, page_size=32, block_size=8, max_order=4)
+    forge.rule30_julia_resolution(33, page_size=32, block_size=8, max_order=4)
+    forge.verify_rule30_julia_resolution(33, page_size=32, block_size=8, max_order=4)
+    forge.rule30_torsor_functor_term(33, page_size=32, block_size=8, max_order=4)
+    forge.verify_rule30_torsor_functor_term(33, page_size=32, block_size=8, max_order=4)
+    forge.rule30_spinor_oloid_model(max_depth=32, max_order=4)
+    forge.verify_rule30_spinor_oloid_model(max_depth=32, max_order=4)
+    forge.rule30_oloid_winding_from_n(17)
+    forge.rule30_oloid_antipodal_winding(17)
+    forge.rule30_oloid_parameterization_scan(max_depth=16)
+    forge.verify_rule30_oloid_winding_from_n(max_depth=16)
+    forge.verify_rule30_oloid_antipodal_winding(max_depth=16)
+    forge.rule30_winding_number_proof(max_depth=32, max_order=4)
+    forge.verify_rule30_winding_number_proof(max_depth=32, max_order=4)
     forge.rule30_nth_bit_expression(33, page_size=32, block_size=8, max_order=4)
     forge.verify_rule30_nth_bit_expression(33, page_size=32, block_size=8, max_order=4)
     forge.rule30_proof_obligations(max_depth=32, page_count=2, page_size=32, block_size=8, max_order=4)
@@ -650,4 +802,4 @@ def test_seed_db_is_not_mutated_by_overlay_queries(tmp_path: Path):
     assert before == after
     with sqlite3.connect(tmp_path / ".lattice_forge" / "overlay.sqlite") as conn:
         event_count = conn.execute("SELECT COUNT(*) FROM events").fetchone()[0]
-    assert event_count >= 44
+    assert event_count >= 63
