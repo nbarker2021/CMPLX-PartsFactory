@@ -122,6 +122,32 @@ def correction_via_voa(t: int, x_offset_from_center: int) -> int:
     )
 
 
+def verify_voa_lookup_harness() -> dict[str, Any]:
+    """Umbrella harness entry — honest CONJ; O1' primitive not implemented."""
+    summary = architecture_summary()
+    return {
+        "status": "conj",
+        "honesty_label": "CONJ",
+        "open_obligation": summary["open_obligation"],
+        "mckay_thompson_implemented": False,
+        "correction_via_voa_implemented": False,
+        "not_in_ring1": True,
+    }
+
+
+def verify_voa_lookup_harness() -> dict[str, Any]:
+    """Umbrella harness entry — honest CONJ; O1' primitive not implemented."""
+    summary = architecture_summary()
+    return {
+        "status": "conj",
+        "honesty_label": "CONJ",
+        "open_obligation": summary["open_obligation"],
+        "mckay_thompson_implemented": False,
+        "correction_via_voa_implemented": False,
+        "not_in_ring1": True,
+    }
+
+
 def architecture_summary() -> dict[str, Any]:
     """Return a structured summary of the VOA-lookup architecture
     for documentation and verification of the API contract."""

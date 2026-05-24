@@ -30,11 +30,21 @@
       "status": "pass",
       "e4_squared_is_minus_one": true,
       "four_rolls_bit0_return_to_initial": true
+    },
+    "QUAD_OLOID": {
+      "status": "pass",
+      "distinct_initial_seeds": true,
+      "four_rolls_bit0_return_each_oloid": true
+    },
+    "VOA_LOOKUP": {
+      "status": "conj",
+      "honesty_label": "CONJ",
+      "mckay_thompson_implemented": false
     }
   },
   "expected_overall_status": "pass",
   "notes": {
-    "honesty": "Umbrella proofs are Ring 3 companions; CONJ obligations (rule30.prize.depth_only_shortcut, WP-OLOID, WP-MOONSHINE) are not promoted to PROVEN.",
+    "honesty": "Umbrella proofs are Ring 3 companions; CONJ obligations (rule30.prize.depth_only_shortcut, WP-OLOID, WP-MOONSHINE) are not promoted to PROVEN. VOA_LOOKUP status conj is honest; QUAD_OLOID pass does not pair WP-OLOID-01 without full kinematic roll key.",
     "OLOID_DUAL_PATH": "tape_readout_match_rate ~0.528 is structural-only; per-dyad roll rule remains open.",
     "verification_mode": "Checked via run_all_proofs --quick alongside base expected_outputs.json."
   }

@@ -117,7 +117,7 @@ def build_manifest(root: pathlib.Path) -> dict[str, Any]:
             },
             {
                 "id": "WP-TOWER-01",
-                "trigger": "≥5 transport lemma rows move from TO_ADD to PROVEN",
+                "trigger": "≥5 transport lemma rows reach PROVEN (pass_with_open_gaps does not count)",
             },
         ],
         "sidecar_decision": {

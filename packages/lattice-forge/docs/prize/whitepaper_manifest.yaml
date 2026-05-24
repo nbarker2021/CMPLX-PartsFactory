@@ -65,7 +65,7 @@ deferred_whitepapers:
 - id: WP-MOONSHINE
   trigger: voa_lookup.py harness key + CONJ closure
 - id: WP-TOWER-01
-  trigger: ≥5 transport lemma rows move from TO_ADD to PROVEN
+  trigger: "≥5 transport lemma rows reach PROVEN (pass_with_open_gaps does not count)"
 sidecar_decision:
   total_companions_beyond_core: 3
   cap: 1 core + ≤4 companions

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://partsfactory.local/schemas/unification_manifest.v1.json",
+  "title": "unification_manifest",
+  "description": "Thin links-only manifest for Phase C unification (no statement copy).",
+  "type": "object",
+  "required": ["version", "rows"],
+  "properties": {
+    "version": { "type": "integer", "const": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "source": { "type": "string" },
+    "rows": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/row" }
+    }
+  },
+  "$defs": {
+    "row": {
+      "type": "object",
+      "required": ["family", "canonical_name", "promote"],
+      "properties": {
+        "family": { "type": "string" },
+        "canonical_name": { "type": "string" },
+        "canonical_target": { "type": "string" },
+        "replica_count": { "type": "integer", "minimum": 0 },
+        "witness_paths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "atomic_file_id": { "type": ["string", "null"] },
+        "gitnexus_repo": { "type": ["string", "null"] },
+        "replica_count_evidence": { "type": ["integer", "null"] },
+        "promote": {
+          "type": "string",
+          "enum": ["hardened", "defer", "conflict", "pending_review"]
+        },
+        "role": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
