@@ -1,0 +1,316 @@
+{
+  "run_id": "15c63b2a-5188-4d48-b92c-4339f8d4103b",
+  "phase": "full24",
+  "work_db": "/data/backwalk_work.db",
+  "work_db_bytes": 860160,
+  "wall_seconds": 0.9720207760110497,
+  "seed_verify_before": {
+    "status": "pass",
+    "errors": [],
+    "summary": {
+      "object_registry": 61,
+      "exact_vectors": 12578,
+      "gram_forms": 52,
+      "morphism_registry": 66,
+      "involution_registry": 33,
+      "convolution_registry": 4,
+      "admissibility_edges": 66,
+      "terminal_24d_forms": 24,
+      "glue_requirements": 29,
+      "residue_registry": 4,
+      "rag_cards": 34,
+      "object_invariants": 118,
+      "component_decompositions": 32,
+      "external_resource_registry": 4,
+      "verification_runs": 0,
+      "path_registry": 53,
+      "discriminant_registry": 24,
+      "reflection_action_registry": 326,
+      "terminal_admissibility_profiles": 53,
+      "construction_status_registry": 113,
+      "prime_factor_registry": 7,
+      "path_metrics": 53,
+      "root_neighborhood_profiles": 5,
+      "root_adjacency_registry": 970,
+      "morphism_witness_registry": 3,
+      "nsl_boundary_registry": 53,
+      "build_manifest_registry": 1,
+      "dynkin_registry": 29,
+      "terminal_component_embeddings": 107,
+      "morphism_verification_registry": 35,
+      "closure_obstruction_registry": 53
+    }
+  },
+  "seed_verify_after": {
+    "status": "pass",
+    "errors": [],
+    "summary": {
+      "object_registry": 61,
+      "exact_vectors": 12578,
+      "gram_forms": 52,
+      "morphism_registry": 66,
+      "involution_registry": 33,
+      "convolution_registry": 4,
+      "admissibility_edges": 66,
+      "terminal_24d_forms": 24,
+      "glue_requirements": 29,
+      "residue_registry": 4,
+      "rag_cards": 34,
+      "object_invariants": 118,
+      "component_decompositions": 32,
+      "external_resource_registry": 4,
+      "verification_runs": 0,
+      "path_registry": 53,
+      "discriminant_registry": 24,
+      "reflection_action_registry": 326,
+      "terminal_admissibility_profiles": 53,
+      "construction_status_registry": 113,
+      "prime_factor_registry": 7,
+      "path_metrics": 53,
+      "root_neighborhood_profiles": 5,
+      "root_adjacency_registry": 970,
+      "morphism_witness_registry": 3,
+      "nsl_boundary_registry": 53,
+      "build_manifest_registry": 1,
+      "dynkin_registry": 29,
+      "terminal_component_embeddings": 107,
+      "morphism_verification_registry": 35,
+      "closure_obstruction_registry": 53
+    }
+  },
+  "terminals": [
+    {
+      "terminal_id": "Niemeier:A1^24",
+      "state_count": 25,
+      "peel_morphism_count": 24,
+      "involution_morphism_count": 24,
+      "max_rank": 24,
+      "slice_sha256": "ed565ad95de5733a77b9879dd368848a9188486878d65a425cbfc1672724d0e1",
+      "wall_seconds": 0.0
+    },
+    {
+      "terminal_id": "Niemeier:A2^12",
+      "state_count": 13,
+      "peel_morphism_count": 12,
+      "involution_morphism_count": 36,
+      "max_rank": 24,
+      "slice_sha256": "eeaef60ad5f95037169e0590a90e4063adeaf96f360f09a28343f5c032033ee8",
+      "wall_seconds": 0.0
+    },
+    {
+      "terminal_id": "Niemeier:A3^8",
+      "state_count": 9,
+      "peel_morphism_count": 8,
+      "involution_morphism_count": 144,
+      "max_rank": 24,
+      "slice_sha256": "b4a5671eeffc7fba2e82b340ebcdf45a4f38764295c3a7f2109131c189bd25f4",
+      "wall_seconds": 0.0414265690051252
+    },
+    {
+      "terminal_id": "Niemeier:A4^6",
+      "state_count": 7,
+      "peel_morphism_count": 6,
+      "involution_morphism_count": 105,
+      "max_rank": 24,
+      "slice_sha256": "527c0d66745671190d09577c542fc7ff724637731b5ba0fce270a2d5494bec2c",
+      "wall_seconds": 0.02537516300799325
+    },
+    {
+      "terminal_id": "Niemeier:A5^4_D4",
+      "state_count": 6,
+      "peel_morphism_count": 5,
+      "involution_morphism_count": 91,
+      "max_rank": 24,
+      "slice_sha256": "49362a68bd9ad67d6a0b9e89b0e90b07ab39c91c4254895961aa498ae3cf42f7",
+      "wall_seconds": 0.023209090999444015
+    },
+    {
+      "terminal_id": "Niemeier:A6^4",
+      "state_count": 5,
+      "peel_morphism_count": 4,
+      "involution_morphism_count": 70,
+      "max_rank": 24,
+      "slice_sha256": "67d079dced5df09abd41a87cdfd4abf9199e60ea3806932aeacbfb58ffc6e063",
+      "wall_seconds": 0.022939072994631715
+    },
+    {
+      "terminal_id": "Niemeier:A7^2_D5^2",
+      "state_count": 5,
+      "peel_morphism_count": 4,
+      "involution_morphism_count": 74,
+      "max_rank": 24,
+      "slice_sha256": "af18555c63dd6007e0932867caa86604d741b7646e4b0f3c597d2f71abbb2dd8",
+      "wall_seconds": 0.016264563993900083
+    },
+    {
+      "terminal_id": "Niemeier:A8^3",
+      "state_count": 4,
+      "peel_morphism_count": 3,
+      "involution_morphism_count": 54,
+      "max_rank": 24,
+      "slice_sha256": "72aa944d10a8b61cd22898a53a6f586c6116fb99a55d11c45275c31ce3b687c3",
+      "wall_seconds": 0.014463642000919208
+    },
+    {
+      "terminal_id": "Niemeier:A9^2_D6",
+      "state_count": 4,
+      "peel_morphism_count": 3,
+      "involution_morphism_count": 57,
+      "max_rank": 24,
+      "slice_sha256": "55fba25e661955e5c76102808c2b15e02fd489b09aae2e72feb0e981a16f28e7",
+      "wall_seconds": 0.01815797301242128
+    },
+    {
+      "terminal_id": "Niemeier:A11_D7_E6",
+      "state_count": 4,
+      "peel_morphism_count": 3,
+      "involution_morphism_count": 59,
+      "max_rank": 24,
+      "slice_sha256": "ea49a73d9df928714a1026515b6d709f80f1f93b6d49a71d234adfa7510b50f4",
+      "wall_seconds": 0.015182866001850925
+    },
+    {
+      "terminal_id": "Niemeier:A12^2",
+      "state_count": 3,
+      "peel_morphism_count": 2,
+      "involution_morphism_count": 39,
+      "max_rank": 24,
+      "slice_sha256": "735aae39e19ef1cb5874de70a514481d48f4f04f214527cac5ecafa5fa4af1f2",
+      "wall_seconds": 0.012967237998964265
+    },
+    {
+      "terminal_id": "Niemeier:A15_D9",
+      "state_count": 3,
+      "peel_morphism_count": 2,
+      "involution_morphism_count": 42,
+      "max_rank": 24,
+      "slice_sha256": "d7ddafdac31d7ab8ab180a3d80a32b051d290175e59fb457a66099bd044f80ff",
+      "wall_seconds": 0.01391672900354024
+    },
+    {
+      "terminal_id": "Niemeier:A17_E7",
+      "state_count": 3,
+      "peel_morphism_count": 2,
+      "involution_morphism_count": 43,
+      "max_rank": 24,
+      "slice_sha256": "73f97ff42e7883a818727aab3d2c1cca7c1d1e572a914db13b3bf6ef21126ab4",
+      "wall_seconds": 0.014674428995931521
+    },
+    {
+      "terminal_id": "Niemeier:A24",
+      "state_count": 2,
+      "peel_morphism_count": 1,
+      "involution_morphism_count": 25,
+      "max_rank": 24,
+      "slice_sha256": "a791573da767ff09dc0cffef2e206ef0e8214898fabfce248c3413334b21fe13",
+      "wall_seconds": 0.010899126005824655
+    },
+    {
+      "terminal_id": "Niemeier:D4^6",
+      "state_count": 7,
+      "peel_morphism_count": 6,
+      "involution_morphism_count": 42,
+      "max_rank": 24,
+      "slice_sha256": "fe7057fee8190101ad5ecf1807a67f91b1c0ccb7363c3a1dfb3940c3279040b7",
+      "wall_seconds": 0.0
+    },
+    {
+      "terminal_id": "Niemeier:D6^4",
+      "state_count": 5,
+      "peel_morphism_count": 4,
+      "involution_morphism_count": 70,
+      "max_rank": 24,
+      "slice_sha256": "51c614ead1391431cb180545423c83f5e71f696e826b9cb8aa07dd6f770b16b6",
+      "wall_seconds": 0.015019194994238205
+    },
+    {
+      "terminal_id": "Niemeier:D8^3",
+      "state_count": 4,
+      "peel_morphism_count": 3,
+      "involution_morphism_count": 54,
+      "max_rank": 24,
+      "slice_sha256": "d3dbe4069cd5ae3162425bca4f60a867f8efed6d63d772ebf10cfdb2b570e5a9",
+      "wall_seconds": 0.014093003992456943
+    },
+    {
+      "terminal_id": "Niemeier:D10_E7^2",
+      "state_count": 4,
+      "peel_morphism_count": 3,
+      "involution_morphism_count": 54,
+      "max_rank": 24,
+      "slice_sha256": "836de2f98fd4b378f0c6fcf3ed47511dba2d1a9bc8eae6b58aacfdb1b018e0a3",
+      "wall_seconds": 0.015763748000608757
+    },
+    {
+      "terminal_id": "Niemeier:D12^2",
+      "state_count": 3,
+      "peel_morphism_count": 2,
+      "involution_morphism_count": 39,
+      "max_rank": 24,
+      "slice_sha256": "cef3c8f5e3576b0327874538fb6702332e8afc85fdff9b75e0ac3242995876ee",
+      "wall_seconds": 0.013901494996389374
+    },
+    {
+      "terminal_id": "Niemeier:D16_E8",
+      "state_count": 3,
+      "peel_morphism_count": 2,
+      "involution_morphism_count": 42,
+      "max_rank": 24,
+      "slice_sha256": "09b74ea21ef8dfacc83a64876a43859fa535055f5182aea2b7a91fea9e2a2fbb",
+      "wall_seconds": 0.014932636011508293
+    },
+    {
+      "terminal_id": "Niemeier:D24",
+      "state_count": 2,
+      "peel_morphism_count": 1,
+      "involution_morphism_count": 25,
+      "max_rank": 24,
+      "slice_sha256": "b9fc4cfe4bd221b5c99f585836f69f22e54ed59ff5c721e0870a24e34166e303",
+      "wall_seconds": 0.01199054199969396
+    },
+    {
+      "terminal_id": "Niemeier:E6^4",
+      "state_count": 5,
+      "peel_morphism_count": 4,
+      "involution_morphism_count": 70,
+      "max_rank": 24,
+      "slice_sha256": "882de4d80be2f01740316dc8f7c8700fccd8f6679a6d903f7886ced7ee76d547",
+      "wall_seconds": 0.015877445999649353
+    },
+    {
+      "terminal_id": "Niemeier:E8^3",
+      "state_count": 4,
+      "peel_morphism_count": 3,
+      "involution_morphism_count": 48,
+      "max_rank": 24,
+      "slice_sha256": "ba67005e820a12b620e3cfc7d22a865c1246a582718f488d9b45bee4fa86f04d",
+      "wall_seconds": 0.01496827400114853
+    },
+    {
+      "terminal_id": "Niemeier:Leech",
+      "state_count": 1,
+      "peel_morphism_count": 0,
+      "involution_morphism_count": 0,
+      "max_rank": 0,
+      "slice_sha256": "200ca104ad229382fc917009f148d565ccd60d4d6e0994a00333e149bfed3c20",
+      "wall_seconds": 0.0
+    }
+  ],
+  "exceptional": {
+    "nodes": [
+      "G2",
+      "F4",
+      "E6",
+      "E7",
+      "E8"
+    ],
+    "morphisms": [
+      "G2->F4",
+      "E6->E7",
+      "E7->E8"
+    ],
+    "g2_f4_path": true
+  },
+  "errors": [],
+  "status": "pass"
+}

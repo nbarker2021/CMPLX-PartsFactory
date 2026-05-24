@@ -1,0 +1,34 @@
+{
+  "generated_from": "D:\\PartsFactory\\CMPLX-PartsFactory\\packages\\lattice-forge\\claims\\registry.jsonl",
+  "package": "lattice-forge",
+  "focus": "needs_first_enumeration",
+  "summary": {
+    "total": 71,
+    "by_priority": {
+      "P2": 64,
+      "P0": 4,
+      "P1": 3
+    },
+    "by_harness_status": {
+      "proven": 10,
+      "bounded": 50,
+      "conj": 3,
+      "none": 6,
+      "deferred": 2
+    },
+    "by_honesty_current": {
+      "PROVEN": 10,
+      "TRANSPORTED": 4,
+      "BOUNDED_EXEC": 45,
+      "EXPRESSIBLE": 1,
+      "CONJ": 6,
+      "missing": 1,
+      "pass_with_open_gaps": 1,
+      "deferred": 2,
+      "stub": 1
+    },
+    "blocking": 2,
+    "missing_impl": 6,
+    "no_harness": 9
+  }
+}

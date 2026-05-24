@@ -1,0 +1,29 @@
+{
+  "submission": "lattice-forge transport-tower ring-2 regression",
+  "expected_proofs": {
+    "TRANSPORT_SHEET_LIFT": {
+      "status": "pass_with_open_gaps"
+    },
+    "TRANSPORT_TORSOR_FUNCTOR": {
+      "status": "pass_with_open_gaps"
+    },
+    "TRANSPORT_JULIA_RESOLUTION": {
+      "status": "pass_with_open_gaps"
+    },
+    "TRANSPORT_FIELD_ADDRESS": {
+      "status": "pass_with_open_gaps"
+    },
+    "TRANSPORT_EXIT_TRAJECTORY": {
+      "status": "pass_with_open_gaps"
+    }
+  },
+  "expected_promotion": {
+    "proven_count": 0,
+    "pass_with_open_gaps_count": 5
+  },
+  "expected_overall_status": "pass",
+  "expected_wp_tower_01_deferred": true,
+  "notes": {
+    "honesty": "pass_with_open_gaps is not PROVEN; WP-TOWER-01 stays deferred until proven_count >= 5"
+  }
+}

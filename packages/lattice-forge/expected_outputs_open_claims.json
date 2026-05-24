@@ -1,0 +1,35 @@
+{
+  "submission": "open-claims honesty harness regression",
+  "expected_overall_status": "pass",
+  "expected_min_promotions": 3,
+  "expected_proofs": {
+    "SHEET_POWER_LAW_BOUNDED": {
+      "status": "pass",
+      "honesty_label": "BOUNDED_EXEC"
+    },
+    "NONPERIODICITY_DENSITY_BOUNDED": {
+      "status": "pass",
+      "honesty_label": "BOUNDED_EXEC"
+    },
+    "P3_WEYL_ENGINEERING": {
+      "status": "pass",
+      "honesty_label": "BOUNDED_EXEC"
+    },
+    "VOA_HARNESS": {
+      "status": "pass"
+    },
+    "MONSTER_D4_LIFT": {
+      "status": "pass"
+    },
+    "DEPTH_EXTRACTION_ACCOUNTING": {
+      "status": "pass",
+      "surrogate_ok": true
+    }
+  },
+  "expected_still_conj": [
+    "rule30.prize.depth_only_shortcut"
+  ],
+  "notes": {
+    "depth_only_shortcut": "Remains CONJ for sublinear theorem; block_addressed surrogate is separate BOUNDED_EXEC obligation in ledger"
+  }
+}

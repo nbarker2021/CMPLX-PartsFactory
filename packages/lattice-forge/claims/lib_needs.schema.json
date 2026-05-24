@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "lattice-forge library need row",
+  "type": "object",
+  "required": [
+    "need_id",
+    "layer",
+    "ring",
+    "need_statement",
+    "honesty_current",
+    "impl_status",
+    "harness_status",
+    "priority"
+  ],
+  "properties": {
+    "need_id": { "type": "string" },
+    "claim_id": { "type": ["string", "null"] },
+    "proof_key": { "type": ["string", "null"] },
+    "layer": {
+      "enum": [
+        "theorem",
+        "prize",
+        "obligation",
+        "regime",
+        "transport",
+        "umbrella",
+        "engineering",
+        "infra",
+        "companion"
+      ]
+    },
+    "ring": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "subpackage": { "type": ["string", "null"] },
+    "need_statement": { "type": "string" },
+    "honesty_current": { "type": "string" },
+    "honesty_target": { "type": "string" },
+    "impl_module": { "type": ["string", "null"] },
+    "impl_status": { "enum": ["present", "partial", "missing", "stub"] },
+    "harness_id": { "type": ["string", "null"] },
+    "harness_status": { "enum": ["proven", "bounded", "gaps", "conj", "none", "deferred"] },
+    "test_status": { "enum": ["covered", "partial", "none"] },
+    "artifact_expected": { "type": ["string", "null"] },
+    "artifact_present": { "type": "boolean" },
+    "blocks_release": { "type": "boolean" },
+    "priority": { "enum": ["P0", "P1", "P2", "P3"] },
+    "depends_on": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

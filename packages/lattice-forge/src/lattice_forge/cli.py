@@ -581,6 +581,88 @@ def cmd_decomposition_verify(args: argparse.Namespace) -> int:
     return 0 if ok else 1
 
 
+def cmd_ring2_run(args: argparse.Namespace) -> int:
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    script = Path(__file__).resolve().parents[2] / "scripts" / "run_ring2_bundle.py"
+    cmd = [sys.executable, str(script)]
+    if args.quick:
+        cmd.append("--quick")
+    if args.include_monster:
+        cmd.append("--include-monster")
+    if getattr(args, "max_depth", 0) and args.max_depth > 0:
+        cmd.extend(["--max-depth", str(args.max_depth)])
+    if args.output:
+        cmd.extend(["--output", args.output])
+    proc = subprocess.run(cmd, check=False)
+    return proc.returncode
+
+
+def cmd_ring1_ring2_pipeline(args: argparse.Namespace) -> int:
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    script = Path(__file__).resolve().parents[2] / "scripts" / "run_ring1_ring2_pipeline.py"
+    cmd = [sys.executable, str(script)]
+    if args.quick:
+        cmd.append("--quick")
+    if args.skip_ring2:
+        cmd.append("--skip-ring2")
+    if args.include_monster:
+        cmd.append("--include-monster")
+    if args.output:
+        cmd.extend(["--output", args.output])
+    return subprocess.run(cmd, check=False).returncode
+
+
+def cmd_ring2_status(_args: argparse.Namespace) -> int:
+    from pathlib import Path
+
+    pkg = Path(__file__).resolve().parents[2]
+    paths = {
+        "ring2_bundle": pkg / "proofs_report_ring2.json",
+        "regimes": pkg / "proofs_report_regimes.json",
+        "transport": pkg / "proofs_report_transport.json",
+    }
+    payload = {"reports": {}}
+    for key, path in paths.items():
+        if path.is_file():
+            import json
+
+            payload["reports"][key] = json.loads(path.read_text(encoding="utf-8"))
+        else:
+            payload["reports"][key] = {"missing": str(path)}
+    print_json(payload)
+    return 0
+
+
+def cmd_empirical_materialize(_args: argparse.Namespace) -> int:
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    script = Path(__file__).resolve().parents[2] / "scripts" / "materialize_empirical_platforms.py"
+    proc = subprocess.run([sys.executable, str(script)], check=False)
+    return proc.returncode
+
+
+def cmd_empirical_run(args: argparse.Namespace) -> int:
+    from lattice_forge.empirical.runner import run_claim_platform, run_empirical_matrix
+
+    mode = "quick" if args.quick else ("exhaustive" if args.exhaustive else "standard")
+    if args.claim:
+        row = run_claim_platform(args.claim, exhaustion_mode=mode)
+        print_json(row)
+        return 0 if row.get("status") != "fail" else 1
+    out = Path(args.output) if args.output else None
+    report = run_empirical_matrix(exhaustion_mode=mode, output=out)
+    print_json(report)
+    return 0 if report.get("overall_status") == "pass" else 1
+
+
 def cmd_falsify(args: argparse.Namespace) -> int:
     if args.tier_a:
         from lattice_forge.falsify import run_tier_a
@@ -1016,6 +1098,37 @@ def build_parser() -> argparse.ArgumentParser:
     dv = dec_sub.add_parser("verify", help="Verify vendored decomposition paper claims")
     dv.add_argument("--max-depth", type=int, default=512)
     dv.set_defaults(func=cmd_decomposition_verify)
+
+    r2 = sub.add_parser("ring2", help="Ring 2 bundle (regimes + decomposition + transport)")
+    r2_sub = r2.add_subparsers(required=True, dest="ring2_command")
+    r2_run = r2_sub.add_parser("run", help="Run full Ring 2 proof bundle")
+    r2_run.add_argument("--quick", action="store_true")
+    r2_run.add_argument("--include-monster", action="store_true")
+    r2_run.add_argument("--max-depth", type=int, default=0, help="0 = script default 4096")
+    r2_run.add_argument("--output", help="Bundle JSON path")
+    r2_run.set_defaults(func=cmd_ring2_run)
+    r2_st = r2_sub.add_parser("status", help="Print latest Ring 2 report files if present")
+    r2_st.set_defaults(func=cmd_ring2_status)
+
+    r12 = sub.add_parser("pipeline", help="Ring 1 then Ring 2 (prize-core gate first)")
+    r12_sub = r12.add_subparsers(required=True, dest="pipeline_command")
+    r12_run = r12_sub.add_parser("ring1-ring2", help="Run run_all_proofs, audit, falsify tier-A, ring2 bundle")
+    r12_run.add_argument("--quick", action="store_true")
+    r12_run.add_argument("--skip-ring2", action="store_true")
+    r12_run.add_argument("--include-monster", action="store_true")
+    r12_run.add_argument("--output", default="proofs_report_ring1_ring2.json")
+    r12_run.set_defaults(func=cmd_ring1_ring2_pipeline)
+
+    emp = sub.add_parser("empirical", help="Per-claim empirical testing platforms")
+    emp_sub = emp.add_subparsers(required=True, dest="empirical_command")
+    em_m = emp_sub.add_parser("materialize", help="Rebuild platforms.manifest.jsonl from claims registry")
+    em_m.set_defaults(func=cmd_empirical_materialize)
+    em_r = emp_sub.add_parser("run", help="Run empirical matrix or single claim")
+    em_r.add_argument("--claim", help="Single claim_id")
+    em_r.add_argument("--quick", action="store_true")
+    em_r.add_argument("--exhaustive", action="store_true")
+    em_r.add_argument("--output", help="JSON report path (default empirical_matrix_report.json)")
+    em_r.set_defaults(func=cmd_empirical_run)
 
     fal = sub.add_parser("falsify", help="Machine falsification for prize-core claims")
     fal.add_argument("--tier-a", action="store_true", help="Run Tier A breaks B-T1..B-decomp + B-WITNESS")

@@ -23,6 +23,10 @@ cd packages/lattice-forge
 python scripts/run_regimes_proofs.py --quick
 ```
 
+Full Ring 2 gate (regimes + decomposition + transport tower): see
+[`../ring2/RING2_EXECUTION_PLAN.md`](../ring2/RING2_EXECUTION_PLAN.md) and
+`python scripts/run_ring2_bundle.py --quick`.
+
 Family verify (optional gate):
 
 ```powershell

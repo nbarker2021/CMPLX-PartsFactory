@@ -5273,6 +5273,30 @@ def rule30_proof_obligation_ledger(
             "blocks_release": True,
         },
     ]
+    from .honesty_harness import ledger_status_overrides, verify_depth_extraction_accounting
+
+    overrides = ledger_status_overrides(max_depth, page_count, page_size)
+    present_ids = {row["obligation_id"] for row in obligations}
+    for row in obligations:
+        patch = overrides.get(row["obligation_id"])
+        if patch:
+            row.update(patch)
+    depth_h = verify_depth_extraction_accounting(min(max_depth, 4096))
+    if depth_h.get("surrogate_ok") and "rule30.extraction.block_addressed" not in present_ids:
+        obligations.append(
+            {
+                "obligation_id": "rule30.extraction.block_addressed",
+                "claim": "center column recoverable via block-addressed checkpoint I/O at tested depth",
+                "status": "BOUNDED_EXEC",
+                "evidence_status": "exact_computation",
+                "evidence": {
+                    "block_tower": depth_h.get("block_tower"),
+                    "block_extractor": depth_h.get("block_extractor"),
+                },
+                "next_required_work": "does not imply depth-only shortcut; see rule30.prize.depth_only_shortcut",
+                "blocks_release": False,
+            }
+        )
     statuses = {row["status"] for row in obligations}
     token_set = {_chiral_token(pair, chirality) for pair in PAIR_GENERATORS for chirality in CHIRALITIES}
     return {
@@ -5295,8 +5319,9 @@ def rule30_proof_obligation_ledger(
         "release_summary": {
             "obligation_count": len(obligations),
             "status_counts": {status: sum(1 for row in obligations if row["status"] == status) for status in sorted(statuses)},
-            "blocking_obligations": [row["obligation_id"] for row in obligations if row["blocks_release"]],
+            "blocking_obligations": [row["obligation_id"] for row in obligations if row.get("blocks_release")],
             "bounded_exec_obligations": [row["obligation_id"] for row in obligations if row["status"] == "BOUNDED_EXEC"],
+            "honesty_harness_applied": True,
         },
         "no_new_token_invariant": {
             "status": "pass",
