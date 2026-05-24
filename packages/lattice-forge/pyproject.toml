@@ -21,8 +21,12 @@ proofs = ["pytest>=8"]
 server = ["fastapi>=0.110", "uvicorn>=0.27", "httpx>=0.27"]
 witness = ["pydantic>=2"]
 decomposition = []
+prize-core = []
+regimes = []
+umbrella = []
+transport-tower = []
 all = [
-    "lattice-forge[algebra,solver,theory,proofs,server,witness,decomposition]",
+    "lattice-forge[algebra,solver,theory,proofs,server,witness,decomposition,prize-core,regimes,umbrella,transport-tower]",
 ]
 test = ["pytest>=8", "httpx>=0.27"]
 
