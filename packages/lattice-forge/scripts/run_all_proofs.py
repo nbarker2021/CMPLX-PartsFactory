@@ -39,8 +39,12 @@ def run_proofs(max_depth: int = 4096) -> dict:
     from lattice_forge.octonion import verify_octonion_axioms
     from lattice_forge.jordan_j3 import verify_j3o_axioms
     from lattice_forge.rule30 import (
+        rule30_exit_trajectory,
+        rule30_mandelbrot_field_address,
         verify_chart_j3o_isomorphism,
         verify_rule30_chart_local_readout,
+        verify_rule30_exit_trajectory,
+        verify_rule30_mandelbrot_field_address,
     )
     from lattice_forge.f4_action import (
         verify_n3_su3_closure_exact,
@@ -344,6 +348,31 @@ def run_proofs(max_depth: int = 4096) -> dict:
         failures.append("BLOCK_EXTRACTOR")
     print(f"   individual_mismatches={be_summary['individual_mismatch_count']}, "
           f"range_match_rate={be_summary['range_match_rate']}")
+
+    # Transport tower: field address + exit trajectory (honest pass_with_open_gaps)
+    transport_n = 257
+    transport_page = 128
+    print(f"[TRANSPORT_FIELD_ADDRESS] Mandelbrot field address at n={transport_n}...")
+    fa_model = rule30_mandelbrot_field_address(
+        transport_n, page_size=transport_page, block_size=8, max_order=4
+    )
+    fa = verify_rule30_mandelbrot_field_address(fa_model)
+    fa_summary = _format(fa, ["status", "schema_status", "n", "open_gap_count"])
+    report["proofs"]["TRANSPORT_FIELD_ADDRESS"] = fa_summary
+    if fa_summary["status"] not in {"pass", "pass_with_open_gaps"}:
+        failures.append("TRANSPORT_FIELD_ADDRESS")
+    print(f"   status: {fa_summary['status']}")
+
+    print(f"[TRANSPORT_EXIT_TRAJECTORY] Julia exit trajectory at n={transport_n}...")
+    ex_model = rule30_exit_trajectory(
+        transport_n, page_size=transport_page, block_size=8, max_order=4
+    )
+    ex = verify_rule30_exit_trajectory(ex_model)
+    ex_summary = _format(ex, ["status", "schema_status", "n", "open_gap_count"])
+    report["proofs"]["TRANSPORT_EXIT_TRAJECTORY"] = ex_summary
+    if ex_summary["status"] not in {"pass", "pass_with_open_gaps"}:
+        failures.append("TRANSPORT_EXIT_TRAJECTORY")
+    print(f"   status: {ex_summary['status']}")
 
     # Chart local readout (BONUS)
     print(f"[BONUS] Chart local readout = Rule 30 exactly at depth {max_depth}...")

@@ -62,6 +62,7 @@ from .rule30 import (
     verify_rule30_winding_number_proof,
 )
 from .seed import SeedStore
+from .witness_state_store import WitnessStateStore
 
 
 def extract_answer(kind: str, result: Any) -> str | None:
@@ -279,6 +280,7 @@ class Forge:
     def __init__(self, seed: SeedStore, overlay: OverlayStore):
         self.seed = seed
         self.overlay = overlay
+        self._witness_store = WitnessStateStore()
 
     @classmethod
     def open(cls, root: str | Path | None = None) -> "Forge":
@@ -1213,17 +1215,48 @@ class Forge:
             result,
         )
 
+    def record_witnessed_encode(
+        self,
+        state_keys: list[str],
+        *,
+        encoded: dict[str, Any],
+        from_regime: str,
+        to_regime: str,
+        max_depth: int,
+    ) -> None:
+        """Store regime-encode payload under canonical keys (primary + stub suffix)."""
+        base = {
+            "from_regime": from_regime,
+            "to_regime": to_regime,
+            "max_depth": max_depth,
+            "encoded": encoded,
+        }
+        for key in state_keys:
+            if key.endswith("/witness_stub"):
+                continue
+            self._witness_store.put(key, {**base, "state_key": key})
+
     def witnessed_lookup(self, state_key: str) -> dict[str, Any]:
-        """Stub: W(E8) witnessed-state table not populated; honest NOT_WITNESSED."""
+        """Return witnessed encode payload when present; else honest NOT_WITNESSED."""
         from lattice_forge.witness.state_keys import parse_state_key
 
         parsed = parse_state_key(state_key)
-        result = {
-            "state_key": state_key,
-            "answer": "NOT_WITNESSED",
-            "witnessed": False,
-            "grammar": parsed,
-        }
+        stored = self._witness_store.get(state_key)
+        if stored is not None and parsed.get("valid"):
+            result = {
+                "state_key": state_key,
+                "answer": "WITNESSED",
+                "witnessed": True,
+                "grammar": parsed,
+                "payload": stored,
+            }
+        else:
+            result = {
+                "state_key": state_key,
+                "answer": "NOT_WITNESSED",
+                "witnessed": False,
+                "grammar": parsed,
+            }
         return self._record("witnessed_lookup", {"state_key": state_key}, result)
 
     def obstructions(

@@ -66,6 +66,12 @@
       "max_depth": 4096,
       "forward_defect_count": 0,
       "forward_accuracy": 1.0
+    },
+    "TRANSPORT_FIELD_ADDRESS": {
+      "status": "pass_with_open_gaps"
+    },
+    "TRANSPORT_EXIT_TRAJECTORY": {
+      "status": "pass_with_open_gaps"
     }
   },
   "expected_overall_status": "pass",

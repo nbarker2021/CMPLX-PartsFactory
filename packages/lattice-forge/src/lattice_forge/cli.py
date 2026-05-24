@@ -582,13 +582,23 @@ def cmd_decomposition_verify(args: argparse.Namespace) -> int:
 
 
 def cmd_falsify(args: argparse.Namespace) -> int:
-    if not args.tier_a:
-        raise SystemExit("Specify a falsification tier, e.g. --tier-a")
-    from lattice_forge.falsify import run_tier_a
+    if args.tier_a:
+        from lattice_forge.falsify import run_tier_a
 
-    payload = run_tier_a(max_depth=args.max_depth, quick=args.quick)
-    print_json(payload)
-    return 0 if payload.get("overall_status") == "pass" else 1
+        payload = run_tier_a(max_depth=args.max_depth, quick=args.quick)
+        print_json(payload)
+        return 0 if payload.get("overall_status") == "pass" else 1
+    if args.tier_b:
+        from lattice_forge.falsify import run_tier_b
+
+        payload = run_tier_b(
+            max_period=args.max_period,
+            sample_depth=args.sample_depth,
+            density_max_depth=args.density_max_depth,
+        )
+        print_json(payload)
+        return 0
+    raise SystemExit("Specify a falsification tier: --tier-a or --tier-b")
 
 
 def cmd_serve(args: argparse.Namespace) -> int:
@@ -1008,9 +1018,13 @@ def build_parser() -> argparse.ArgumentParser:
     dv.set_defaults(func=cmd_decomposition_verify)
 
     fal = sub.add_parser("falsify", help="Machine falsification for prize-core claims")
-    fal.add_argument("--tier-a", action="store_true", help="Run Tier A breaks B-T1..B-decomp")
+    fal.add_argument("--tier-a", action="store_true", help="Run Tier A breaks B-T1..B-decomp + B-WITNESS")
+    fal.add_argument("--tier-b", action="store_true", help="Optional Tier B JSON report (non-blocking)")
     fal.add_argument("--quick", action="store_true", help="Use reduced depth windows (default for CI)")
     fal.add_argument("--max-depth", type=int, default=256, help="Depth for chart/decomposition checks")
+    fal.add_argument("--max-period", type=int, default=128, help="Tier B period search cap")
+    fal.add_argument("--sample-depth", type=int, default=512, help="Tier B period sample depth")
+    fal.add_argument("--density-max-depth", type=int, default=256, help="Tier B density window depth")
     fal.set_defaults(func=cmd_falsify)
 
     p = sub.add_parser("serve", help="Start optional FastAPI server")

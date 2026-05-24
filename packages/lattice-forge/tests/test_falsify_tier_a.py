@@ -21,6 +21,7 @@ def test_tier_a_break_specs_cover_theorems():
         "B-T7",
         "B-T8",
         "B-BONUS",
+        "B-WITNESS",
         "B-decomp",
     }
 

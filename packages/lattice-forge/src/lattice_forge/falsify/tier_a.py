@@ -15,6 +15,8 @@ from lattice_forge.f4_action import (
 )
 from lattice_forge.forge import Forge
 from lattice_forge.jordan_j3 import verify_j3o_axioms
+from lattice_forge.witness.engine import WitnessEngine
+from lattice_forge.witness.state_keys import make_regime_encode_key
 from lattice_forge.octonion import verify_octonion_axioms
 from lattice_forge.decomposition import verify_all_theorems, verify_checkpoint_store
 from lattice_forge.rule30 import (
@@ -48,6 +50,11 @@ def tier_a_break_specs() -> list[dict[str, str]]:
             "break_id": "B-BONUS",
             "claim_id": "BONUS",
             "verifier_id": "verify_rule30_chart_local_readout",
+        },
+        {
+            "break_id": "B-WITNESS",
+            "claim_id": "WITNESS-INDEX",
+            "verifier_id": "Forge.witnessed_lookup+regime_encode",
         },
     ]
 
@@ -170,6 +177,29 @@ def tier_a_breaks(max_depth: int = 256) -> dict[str, Any]:
             lambda d: verify_rule30_chart_local_readout(max_depth=d),
             max_depth=max_depth,
         )
+    )
+
+    witness_depth = min(max_depth, 128)
+    forge_w = Forge.open(pathlib.Path(tempfile.mkdtemp(prefix="lf-falsify-witness-")))
+    engine = WitnessEngine(forge_w)
+    engine.regime_c_encode(max_depth=witness_depth)
+    primary_key = make_regime_encode_key(
+        from_regime="A", to_regime="C", max_depth=witness_depth
+    )
+    lookup = forge_w.witnessed_lookup(primary_key).get("result", {})
+    witness_ok = lookup.get("witnessed") is True and lookup.get("answer") == "WITNESSED"
+    checks.append(
+        {
+            "break_id": "B-WITNESS",
+            "status": "pass" if witness_ok else "fail",
+            "passed": witness_ok,
+            "result": {
+                "state_key": primary_key,
+                "lookup_answer": lookup.get("answer"),
+                "witnessed": lookup.get("witnessed"),
+            },
+            "not_in_ring1": True,
+        }
     )
 
     theorem_depths = range(1, 33) if max_depth <= 256 else range(1, 129)

@@ -18,7 +18,7 @@ services:
       [
         "sh",
         "-c",
-        "pip install -q -e ./packages/lattice-forge fastapi uvicorn pydantic 2>/dev/null; "
+        "pip install -q -e ./packages/lattice-forge fastapi uvicorn pydantic; true; "
         "python -m uvicorn cmplx.worlds.forge._adapters.http_service:app --host 0.0.0.0 --port 8845",
       ]
     environment:

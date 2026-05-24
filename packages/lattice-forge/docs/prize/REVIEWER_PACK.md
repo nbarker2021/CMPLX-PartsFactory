@@ -35,6 +35,8 @@ git rev-parse HEAD
 ## Tier B (optional, non-blocking)
 
 ```powershell
+lattice-forge falsify --tier-b
+# or individual scripts:
 python scripts/tier_b_period_search.py --max-period 128
 python scripts/tier_b_density_estimate.py --max-depth 4096
 ```

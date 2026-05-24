@@ -21,7 +21,7 @@ def test_state_key_grammar_invalid():
     assert parsed["valid"] is False
 
 
-def test_witnessed_lookup_not_witnessed():
+def test_witnessed_lookup_not_witnessed_before_encode():
     forge = Forge.open(Path(tempfile.mkdtemp(prefix="lf-witness-")))
     key = make_regime_encode_key(from_regime="A", to_regime="C", max_depth=128)
     out = forge.witnessed_lookup(key)
@@ -30,10 +30,17 @@ def test_witnessed_lookup_not_witnessed():
     assert result["witnessed"] is False
 
 
-def test_regime_encode_records_state_keys():
+def test_regime_encode_records_state_keys_and_lookup():
     forge = Forge.open(Path(tempfile.mkdtemp(prefix="lf-witness-")))
     engine = WitnessEngine(forge)
     payload = engine.regime_c_encode(max_depth=64)
     keys = payload["result"]["state_keys"]
     assert keys
     assert all(parse_state_key(k)["valid"] for k in keys)
+    primary = make_regime_encode_key(from_regime="A", to_regime="C", max_depth=64)
+    looked = forge.witnessed_lookup(primary)["result"]
+    assert looked["witnessed"] is True
+    assert looked["answer"] == "WITNESSED"
+    stub_key = f"{primary}/witness_stub"
+    stub = forge.witnessed_lookup(stub_key)["result"]
+    assert stub["witnessed"] is False

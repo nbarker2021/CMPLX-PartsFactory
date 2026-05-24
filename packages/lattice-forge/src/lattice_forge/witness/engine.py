@@ -169,6 +169,13 @@ class WitnessEngine:
             to_regime="C",
             payload={"max_depth": max_depth, "state_keys": state_keys},
         )
+        self._forge.record_witnessed_encode(
+            state_keys,
+            encoded=encoded,
+            from_regime="A",
+            to_regime="C",
+            max_depth=max_depth,
+        )
         return {
             "kind": WitnessKind.REGIME_C.value,
             "status": "pass",
@@ -187,6 +194,13 @@ class WitnessEngine:
             from_regime="A",
             to_regime="Cprime",
             payload={"max_depth": max_depth, "state_keys": state_keys},
+        )
+        self._forge.record_witnessed_encode(
+            state_keys,
+            encoded=encoded,
+            from_regime="A",
+            to_regime="Cprime",
+            max_depth=max_depth,
         )
         return {
             "kind": WitnessKind.REGIME_CPRIME.value,

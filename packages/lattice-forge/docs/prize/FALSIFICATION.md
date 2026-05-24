@@ -35,11 +35,17 @@ Documented scripts for period search and density estimate — **not** gate merge
 - `scripts/tier_b_period_search.py` — finite period scan (CONJ obligations unchanged)
 - `scripts/tier_b_density_estimate.py` — empirical density window
 
+```powershell
+lattice-forge falsify --tier-b
+```
+
+Emits JSON with both script reports; **does not** upgrade CONJ or gate CI.
+
 ## Witness (Ring 2, Agent B)
 
 | Break | Scope |
 |-------|-------|
-| B-WITNESS | `Forge.witnessed_lookup` returns `NOT_WITNESSED`; state keys recorded on regime encode |
+| B-WITNESS | After regime C encode, primary state key resolves `WITNESSED` via in-memory store (stub suffix stays `NOT_WITNESSED`) |
 
 ## Regime coordination
 

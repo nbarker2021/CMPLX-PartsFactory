@@ -42,9 +42,19 @@ if ($CheckSync) {
     $paths = @(
         "src\lattice_forge\witness\engine.py",
         "src\lattice_forge\witness\api.py",
+        "src\lattice_forge\witness_state_store.py",
+        "src\lattice_forge\witness\state_keys.py",
+        "src\lattice_forge\falsify\tier_a.py",
+        "src\lattice_forge\falsify\tier_b.py",
         "src\lattice_forge\tools\speedlight.py",
         "src\lattice_forge\rule30_block_extractor.py",
-        "src\lattice_forge\forge.py"
+        "src\lattice_forge\forge.py",
+        "claims\registry.jsonl",
+        "scripts\run_all_proofs.py",
+        "scripts\run_regimes_proofs.py",
+        "expected_outputs.json",
+        "expected_outputs_regimes.json",
+        "expected_outputs_umbrella.json"
     )
     $drift = Compare-SyncPaths $paths
     if ($drift.Count -gt 0) {
