@@ -95,10 +95,50 @@ def run_smoke() -> int:
     if not verify_sheet["result"]["status"].startswith("pass"):
         print("SMOKE_FAIL rule30 sheet operator verification")
         return 20
+    verify_field = forge.verify_rule30_mandelbrot_field_address(257, page_size=128, block_size=8, max_order=4)
+    if not verify_field["result"]["status"].startswith("pass"):
+        print("SMOKE_FAIL rule30 CA Mandelbrot field address verification")
+        return 21
+    verify_trajectory = forge.verify_rule30_exit_trajectory(257, page_size=128, block_size=8, max_order=4)
+    if not verify_trajectory["result"]["status"].startswith("pass"):
+        print("SMOKE_FAIL rule30 exit trajectory verification")
+        return 22
+    verify_lift = forge.verify_rule30_sheet_lift(257, page_size=128, block_size=8, max_order=4)
+    if not verify_lift["result"]["status"].startswith("pass"):
+        print("SMOKE_FAIL rule30 sheet lift verification")
+        return 23
+    verify_resolution = forge.verify_rule30_julia_resolution(257, page_size=128, block_size=8, max_order=4)
+    if not verify_resolution["result"]["status"].startswith("pass"):
+        print("SMOKE_FAIL rule30 Julia resolution verification")
+        return 24
+    verify_torsor = forge.verify_rule30_torsor_functor_term(257, page_size=128, block_size=8, max_order=4)
+    if not verify_torsor["result"]["status"].startswith("pass"):
+        print("SMOKE_FAIL rule30 torsor/functor verification")
+        return 25
+    oloid_config = {
+        "axis_angle": 0.5235987755982988,
+        "pattern": "alternating_xyz",
+        "shell_axis": "y",
+        "side_axis": "z",
+        "shell_offset": -0.125,
+        "parameterization": "phi",
+    }
+    verify_oloid = forge.verify_rule30_oloid_winding_from_n(max_depth=32, config=oloid_config)
+    if not verify_oloid["result"]["status"].startswith("pass"):
+        print("SMOKE_FAIL rule30 Oloid winding verification")
+        return 26
+    verify_antipode = forge.verify_rule30_oloid_antipodal_winding(max_depth=32, config=oloid_config)
+    if not verify_antipode["result"]["status"].startswith("pass"):
+        print("SMOKE_FAIL rule30 Oloid antipodal verification")
+        return 27
+    verify_winding_number = forge.verify_rule30_winding_number_proof(max_depth=64, max_order=4)
+    if not verify_winding_number["result"]["status"].startswith("pass"):
+        print("SMOKE_FAIL rule30 winding-number witness verification")
+        return 28
     verify_nth = forge.verify_rule30_nth_bit_expression(129, page_size=128, block_size=8, max_order=4)
     if not verify_nth["result"]["status"].startswith("pass"):
         print("SMOKE_FAIL rule30 nth-bit expression verification")
-        return 21
+        return 29
     verify_proof = forge.verify_rule30_proof_obligations(
         max_depth=128,
         page_count=2,
@@ -108,10 +148,10 @@ def run_smoke() -> int:
     )
     if not verify_proof["result"]["status"].startswith("pass"):
         print("SMOKE_FAIL rule30 proof-obligation ledger verification")
-        return 22
+        return 30
     if not forge.latest_receipts(1):
         print("SMOKE_FAIL receipts")
-        return 23
+        return 31
     print("SMOKE_OK")
     return 0
 

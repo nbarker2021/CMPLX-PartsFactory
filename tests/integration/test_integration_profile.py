@@ -9,6 +9,7 @@ from cmplx.morphon import MorphonController
 from cmplx.transform.bridge import reset_bootstrap_state
 from runtime.integration_profile import (
     apply_integration_env,
+    clear_integration_env,
     detect_host_stack,
     integration_profile_enabled,
     register_integration_profile,
@@ -23,6 +24,7 @@ def _reset():
     yield
     MorphonController.reset_for_tests()
     reset_bootstrap_state()
+    clear_integration_env()
 
 
 def test_apply_integration_env_enables_receipt_bridges(monkeypatch):

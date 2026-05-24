@@ -51,24 +51,26 @@ class MorphonicFFN:
     def forward(self, state: HiddenState) -> tuple[HiddenState, FFNOutput]:
         provider = get_symbolic_provider()
         # Honour configured TarPit dimensions / program length when the
-        # provider supports them.
+        # provider supports them. Skip mutation for mesh proxies (they have
+        # __slots__ and remote services own their own config).
         original_dim = getattr(provider, "default_dimension", None)
         original_steps = getattr(provider, "default_max_steps", None)
         original_prog = getattr(provider, "program_length", None)
+        _has_dict = getattr(provider, "__dict__", None) is not None
         try:
-            if original_dim is not None:
+            if original_dim is not None and _has_dict:
                 provider.default_dimension = self.config.dimension
-            if original_steps is not None:
+            if original_steps is not None and _has_dict:
                 provider.default_max_steps = self.config.max_steps
-            if original_prog is not None:
+            if original_prog is not None and _has_dict:
                 provider.program_length = self.config.program_length
             report = provider.derive(state.morphon)
         finally:
-            if original_dim is not None:
+            if original_dim is not None and _has_dict:
                 provider.default_dimension = original_dim
-            if original_steps is not None:
+            if original_steps is not None and _has_dict:
                 provider.default_max_steps = original_steps
-            if original_prog is not None:
+            if original_prog is not None and _has_dict:
                 provider.program_length = original_prog
 
         ledger = report.trace if hasattr(report, "trace") else []

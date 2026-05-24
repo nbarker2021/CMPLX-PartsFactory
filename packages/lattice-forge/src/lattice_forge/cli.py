@@ -294,6 +294,188 @@ def cmd_verify_rule30_sheet_operator(args: argparse.Namespace) -> int:
     return 0 if str(payload["result"].get("status", "")).startswith("pass") else 1
 
 
+def cmd_rule30_mandelbrot_field_address(args: argparse.Namespace) -> int:
+    print_json(
+        forge_from_args(args).rule30_mandelbrot_field_address(
+            args.n,
+            args.page_size,
+            args.block_size,
+            args.max_order,
+        )
+    )
+    return 0
+
+
+def cmd_verify_rule30_mandelbrot_field_address(args: argparse.Namespace) -> int:
+    payload = forge_from_args(args).verify_rule30_mandelbrot_field_address(
+        args.n,
+        args.page_size,
+        args.block_size,
+        args.max_order,
+    )
+    print_json(payload)
+    return 0 if str(payload["result"].get("status", "")).startswith("pass") else 1
+
+
+def cmd_rule30_exit_trajectory(args: argparse.Namespace) -> int:
+    print_json(
+        forge_from_args(args).rule30_exit_trajectory(
+            args.n,
+            args.page_size,
+            args.block_size,
+            args.max_order,
+        )
+    )
+    return 0
+
+
+def cmd_verify_rule30_exit_trajectory(args: argparse.Namespace) -> int:
+    payload = forge_from_args(args).verify_rule30_exit_trajectory(
+        args.n,
+        args.page_size,
+        args.block_size,
+        args.max_order,
+    )
+    print_json(payload)
+    return 0 if str(payload["result"].get("status", "")).startswith("pass") else 1
+
+
+def cmd_rule30_sheet_lift(args: argparse.Namespace) -> int:
+    print_json(
+        forge_from_args(args).rule30_sheet_lift(
+            args.n,
+            args.page_size,
+            args.block_size,
+            args.max_order,
+        )
+    )
+    return 0
+
+
+def cmd_verify_rule30_sheet_lift(args: argparse.Namespace) -> int:
+    payload = forge_from_args(args).verify_rule30_sheet_lift(
+        args.n,
+        args.page_size,
+        args.block_size,
+        args.max_order,
+    )
+    print_json(payload)
+    return 0 if str(payload["result"].get("status", "")).startswith("pass") else 1
+
+
+def cmd_rule30_julia_resolution(args: argparse.Namespace) -> int:
+    print_json(
+        forge_from_args(args).rule30_julia_resolution(
+            args.n,
+            args.page_size,
+            args.block_size,
+            args.max_order,
+        )
+    )
+    return 0
+
+
+def cmd_verify_rule30_julia_resolution(args: argparse.Namespace) -> int:
+    payload = forge_from_args(args).verify_rule30_julia_resolution(
+        args.n,
+        args.page_size,
+        args.block_size,
+        args.max_order,
+    )
+    print_json(payload)
+    return 0 if str(payload["result"].get("status", "")).startswith("pass") else 1
+
+
+def cmd_rule30_torsor_functor_term(args: argparse.Namespace) -> int:
+    print_json(
+        forge_from_args(args).rule30_torsor_functor_term(
+            args.n,
+            args.page_size,
+            args.block_size,
+            args.max_order,
+        )
+    )
+    return 0
+
+
+def cmd_verify_rule30_torsor_functor_term(args: argparse.Namespace) -> int:
+    payload = forge_from_args(args).verify_rule30_torsor_functor_term(
+        args.n,
+        args.page_size,
+        args.block_size,
+        args.max_order,
+    )
+    print_json(payload)
+    return 0 if str(payload["result"].get("status", "")).startswith("pass") else 1
+
+
+def _oloid_config_from_args(args: argparse.Namespace) -> dict[str, object]:
+    return {
+        "axis_angle": args.axis_angle,
+        "pattern": args.pattern,
+        "shell_axis": args.shell_axis,
+        "side_axis": args.side_axis,
+        "shell_offset": args.shell_offset,
+        "side_threshold": args.side_threshold,
+        "parameterization": args.parameterization,
+    }
+
+
+def cmd_rule30_spinor_oloid(args: argparse.Namespace) -> int:
+    print_json(forge_from_args(args).rule30_spinor_oloid_model(args.max_depth, args.max_order))
+    return 0
+
+
+def cmd_verify_rule30_spinor_oloid(args: argparse.Namespace) -> int:
+    payload = forge_from_args(args).verify_rule30_spinor_oloid_model(args.max_depth, args.max_order)
+    print_json(payload)
+    return 0 if str(payload["result"].get("status", "")).startswith("pass") else 1
+
+
+def cmd_rule30_oloid_winding(args: argparse.Namespace) -> int:
+    print_json(forge_from_args(args).rule30_oloid_winding_from_n(args.n, **_oloid_config_from_args(args)))
+    return 0
+
+
+def cmd_rule30_oloid_antipode(args: argparse.Namespace) -> int:
+    print_json(forge_from_args(args).rule30_oloid_antipodal_winding(args.n, **_oloid_config_from_args(args)))
+    return 0
+
+
+def cmd_rule30_oloid_scan(args: argparse.Namespace) -> int:
+    print_json(forge_from_args(args).rule30_oloid_parameterization_scan(args.max_depth))
+    return 0
+
+
+def cmd_verify_rule30_oloid_winding(args: argparse.Namespace) -> int:
+    payload = forge_from_args(args).verify_rule30_oloid_winding_from_n(
+        args.max_depth,
+        config=_oloid_config_from_args(args),
+    )
+    print_json(payload)
+    return 0 if str(payload["result"].get("status", "")).startswith("pass") else 1
+
+
+def cmd_verify_rule30_oloid_antipode(args: argparse.Namespace) -> int:
+    payload = forge_from_args(args).verify_rule30_oloid_antipodal_winding(
+        args.max_depth,
+        config=_oloid_config_from_args(args),
+    )
+    print_json(payload)
+    return 0 if str(payload["result"].get("status", "")).startswith("pass") else 1
+
+
+def cmd_rule30_winding_number(args: argparse.Namespace) -> int:
+    print_json(forge_from_args(args).rule30_winding_number_proof(args.max_depth, args.max_order))
+    return 0
+
+
+def cmd_verify_rule30_winding_number(args: argparse.Namespace) -> int:
+    payload = forge_from_args(args).verify_rule30_winding_number_proof(args.max_depth, args.max_order)
+    print_json(payload)
+    return 0 if str(payload["result"].get("status", "")).startswith("pass") else 1
+
+
 def cmd_rule30_nth_bit_expression(args: argparse.Namespace) -> int:
     print_json(
         forge_from_args(args).rule30_nth_bit_expression(
@@ -388,6 +570,27 @@ def cmd_snapshot(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_decomposition_verify(args: argparse.Namespace) -> int:
+    from lattice_forge.decomposition import verify_all_theorems, verify_checkpoint_store
+
+    theorems = verify_all_theorems(decomposition_depths=range(1, 129))
+    checkpoints = verify_checkpoint_store(max_depth=args.max_depth)
+    payload = {"theorems": theorems, "checkpoints": checkpoints}
+    print_json(payload)
+    ok = theorems.get("status") == "pass" and checkpoints.get("status") == "pass"
+    return 0 if ok else 1
+
+
+def cmd_falsify(args: argparse.Namespace) -> int:
+    if not args.tier_a:
+        raise SystemExit("Specify a falsification tier, e.g. --tier-a")
+    from lattice_forge.falsify import run_tier_a
+
+    payload = run_tier_a(max_depth=args.max_depth, quick=args.quick)
+    print_json(payload)
+    return 0 if payload.get("overall_status") == "pass" else 1
+
+
 def cmd_serve(args: argparse.Namespace) -> int:
     try:
         import uvicorn
@@ -396,6 +599,16 @@ def cmd_serve(args: argparse.Namespace) -> int:
         raise SystemExit("Install server dependencies with: pip install lattice-forge[server]") from exc
     uvicorn.run(create_app(args.root), host=args.host, port=args.port)
     return 0
+
+
+def add_oloid_config_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--axis-angle", type=float, default=1.5707963267948966)
+    parser.add_argument("--pattern", default="alternating_xy")
+    parser.add_argument("--shell-axis", default="z")
+    parser.add_argument("--side-axis", default="x")
+    parser.add_argument("--shell-offset", type=float, default=0.0)
+    parser.add_argument("--side-threshold", type=float, default=0.05)
+    parser.add_argument("--parameterization", default="identity")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -614,6 +827,120 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--max-order", type=int, default=4)
     p.set_defaults(func=cmd_verify_rule30_sheet_operator)
 
+    p = sub.add_parser("rule30-field-address", help="Resolve N into the CA-induced Mandelbrot field address")
+    p.add_argument("n", type=int)
+    p.add_argument("--page-size", type=int, default=4096)
+    p.add_argument("--block-size", type=int, default=8)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_rule30_mandelbrot_field_address)
+
+    p = sub.add_parser("verify-rule30-field-address", help="Verify the CA-induced Mandelbrot field address")
+    p.add_argument("n", type=int)
+    p.add_argument("--page-size", type=int, default=4096)
+    p.add_argument("--block-size", type=int, default=8)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_verify_rule30_mandelbrot_field_address)
+
+    p = sub.add_parser("rule30-exit-trajectory", help="Resolve N to its Julia exit trajectory")
+    p.add_argument("n", type=int)
+    p.add_argument("--page-size", type=int, default=4096)
+    p.add_argument("--block-size", type=int, default=8)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_rule30_exit_trajectory)
+
+    p = sub.add_parser("verify-rule30-exit-trajectory", help="Verify the Julia exit trajectory")
+    p.add_argument("n", type=int)
+    p.add_argument("--page-size", type=int, default=4096)
+    p.add_argument("--block-size", type=int, default=8)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_verify_rule30_exit_trajectory)
+
+    p = sub.add_parser("rule30-sheet-lift", help="Lift N onto its k-th sheet in the Julia sheet tower")
+    p.add_argument("n", type=int)
+    p.add_argument("--page-size", type=int, default=4096)
+    p.add_argument("--block-size", type=int, default=8)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_rule30_sheet_lift)
+
+    p = sub.add_parser("verify-rule30-sheet-lift", help="Verify N's k->k+1 sheet lift")
+    p.add_argument("n", type=int)
+    p.add_argument("--page-size", type=int, default=4096)
+    p.add_argument("--block-size", type=int, default=8)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_verify_rule30_sheet_lift)
+
+    p = sub.add_parser("rule30-julia-resolution", help="Resolve N through field address, exit trajectory, and sheet lift")
+    p.add_argument("n", type=int)
+    p.add_argument("--page-size", type=int, default=4096)
+    p.add_argument("--block-size", type=int, default=8)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_rule30_julia_resolution)
+
+    p = sub.add_parser("verify-rule30-julia-resolution", help="Verify N's Julia sheet resolution")
+    p.add_argument("n", type=int)
+    p.add_argument("--page-size", type=int, default=4096)
+    p.add_argument("--block-size", type=int, default=8)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_verify_rule30_julia_resolution)
+
+    p = sub.add_parser("rule30-torsor-functor", help="Resolve N with the Rule 30 torsor/functor term")
+    p.add_argument("n", type=int)
+    p.add_argument("--page-size", type=int, default=4096)
+    p.add_argument("--block-size", type=int, default=8)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_rule30_torsor_functor_term)
+
+    p = sub.add_parser("verify-rule30-torsor-functor", help="Verify N's torsor/functor coherence")
+    p.add_argument("n", type=int)
+    p.add_argument("--page-size", type=int, default=4096)
+    p.add_argument("--block-size", type=int, default=8)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_verify_rule30_torsor_functor_term)
+
+    p = sub.add_parser("rule30-spinor-oloid", help="Run the Rule 30 spinor/Oloid bridge ledger")
+    p.add_argument("--max-depth", type=int, default=4096)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_rule30_spinor_oloid)
+
+    p = sub.add_parser("verify-rule30-spinor-oloid", help="Verify the Rule 30 spinor/Oloid bridge ledger")
+    p.add_argument("--max-depth", type=int, default=4096)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_verify_rule30_spinor_oloid)
+
+    p = sub.add_parser("rule30-oloid-winding", help="Emit one Rule 30 Oloid winding witness for N")
+    p.add_argument("n", type=int)
+    add_oloid_config_args(p)
+    p.set_defaults(func=cmd_rule30_oloid_winding)
+
+    p = sub.add_parser("rule30-oloid-antipode", help="Emit one Rule 30 +N/-N counter-sheet Oloid witness")
+    p.add_argument("n", type=int)
+    add_oloid_config_args(p)
+    p.set_defaults(func=cmd_rule30_oloid_antipode)
+
+    p = sub.add_parser("rule30-oloid-scan", help="Scan compact Oloid parameterizations against the center bar")
+    p.add_argument("--max-depth", type=int, default=256)
+    p.set_defaults(func=cmd_rule30_oloid_scan)
+
+    p = sub.add_parser("verify-rule30-oloid-winding", help="Verify an Oloid winding parameterization")
+    p.add_argument("--max-depth", type=int, default=256)
+    add_oloid_config_args(p)
+    p.set_defaults(func=cmd_verify_rule30_oloid_winding)
+
+    p = sub.add_parser("verify-rule30-oloid-antipode", help="Verify the +N/-N counter-sheet Oloid selector")
+    p.add_argument("--max-depth", type=int, default=256)
+    add_oloid_config_args(p)
+    p.set_defaults(func=cmd_verify_rule30_oloid_antipode)
+
+    p = sub.add_parser("rule30-winding-number", help="Build the bounded Rule 30 winding-number witness")
+    p.add_argument("--max-depth", type=int, default=4096)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_rule30_winding_number)
+
+    p = sub.add_parser("verify-rule30-winding-number", help="Verify the bounded Rule 30 winding-number witness")
+    p.add_argument("--max-depth", type=int, default=4096)
+    p.add_argument("--max-order", type=int, default=4)
+    p.set_defaults(func=cmd_verify_rule30_winding_number)
+
     p = sub.add_parser("rule30-nth-bit", help="Emit the Rule 30 nth-bit reduced scalar expression")
     p.add_argument("n", type=int)
     p.add_argument("--page-size", type=int, default=4096)
@@ -673,6 +1000,18 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--limit", type=int, default=100)
     p.add_argument("--out")
     p.set_defaults(func=cmd_snapshot)
+
+    dec = sub.add_parser("decomposition", help="Rule 30 decomposition paper commands")
+    dec_sub = dec.add_subparsers(required=True, dest="decomposition_command")
+    dv = dec_sub.add_parser("verify", help="Verify vendored decomposition paper claims")
+    dv.add_argument("--max-depth", type=int, default=512)
+    dv.set_defaults(func=cmd_decomposition_verify)
+
+    fal = sub.add_parser("falsify", help="Machine falsification for prize-core claims")
+    fal.add_argument("--tier-a", action="store_true", help="Run Tier A breaks B-T1..B-decomp")
+    fal.add_argument("--quick", action="store_true", help="Use reduced depth windows (default for CI)")
+    fal.add_argument("--max-depth", type=int, default=256, help="Depth for chart/decomposition checks")
+    fal.set_defaults(func=cmd_falsify)
 
     p = sub.add_parser("serve", help="Start optional FastAPI server")
     p.add_argument("--host", default="127.0.0.1")

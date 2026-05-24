@@ -266,6 +266,213 @@ def create_app(root: str | Path | None = None):
             max_order=max_order,
         )
 
+    @app.get("/rule30/field-address/{n}")
+    def rule30_mandelbrot_field_address(n: int, page_size: int = 4096, block_size: int = 8, max_order: int = 4):
+        return forge.rule30_mandelbrot_field_address(
+            n=n,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+        )
+
+    @app.get("/rule30/field-address/{n}/verify")
+    def verify_rule30_mandelbrot_field_address(
+        n: int,
+        page_size: int = 4096,
+        block_size: int = 8,
+        max_order: int = 4,
+    ):
+        return forge.verify_rule30_mandelbrot_field_address(
+            n=n,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+        )
+
+    @app.get("/rule30/exit-trajectory/{n}")
+    def rule30_exit_trajectory(n: int, page_size: int = 4096, block_size: int = 8, max_order: int = 4):
+        return forge.rule30_exit_trajectory(
+            n=n,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+        )
+
+    @app.get("/rule30/exit-trajectory/{n}/verify")
+    def verify_rule30_exit_trajectory(n: int, page_size: int = 4096, block_size: int = 8, max_order: int = 4):
+        return forge.verify_rule30_exit_trajectory(
+            n=n,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+        )
+
+    @app.get("/rule30/sheet-lift/{n}")
+    def rule30_sheet_lift(n: int, page_size: int = 4096, block_size: int = 8, max_order: int = 4):
+        return forge.rule30_sheet_lift(
+            n=n,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+        )
+
+    @app.get("/rule30/sheet-lift/{n}/verify")
+    def verify_rule30_sheet_lift(n: int, page_size: int = 4096, block_size: int = 8, max_order: int = 4):
+        return forge.verify_rule30_sheet_lift(
+            n=n,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+        )
+
+    @app.get("/rule30/julia-resolution/{n}")
+    def rule30_julia_resolution(n: int, page_size: int = 4096, block_size: int = 8, max_order: int = 4):
+        return forge.rule30_julia_resolution(
+            n=n,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+        )
+
+    @app.get("/rule30/julia-resolution/{n}/verify")
+    def verify_rule30_julia_resolution(n: int, page_size: int = 4096, block_size: int = 8, max_order: int = 4):
+        return forge.verify_rule30_julia_resolution(
+            n=n,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+        )
+
+    @app.get("/rule30/torsor-functor/{n}")
+    def rule30_torsor_functor_term(n: int, page_size: int = 4096, block_size: int = 8, max_order: int = 4):
+        return forge.rule30_torsor_functor_term(
+            n=n,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+        )
+
+    @app.get("/rule30/torsor-functor/{n}/verify")
+    def verify_rule30_torsor_functor_term(n: int, page_size: int = 4096, block_size: int = 8, max_order: int = 4):
+        return forge.verify_rule30_torsor_functor_term(
+            n=n,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+        )
+
+    @app.get("/rule30/spinor-oloid")
+    def rule30_spinor_oloid_model(max_depth: int = 4096, max_order: int = 4):
+        return forge.rule30_spinor_oloid_model(max_depth=max_depth, max_order=max_order)
+
+    @app.get("/rule30/spinor-oloid/verify")
+    def verify_rule30_spinor_oloid_model(max_depth: int = 4096, max_order: int = 4):
+        return forge.verify_rule30_spinor_oloid_model(max_depth=max_depth, max_order=max_order)
+
+    @app.get("/rule30/oloid-winding/verify")
+    def verify_rule30_oloid_winding_from_n(
+        max_depth: int = 256,
+        axis_angle: float = 1.5707963267948966,
+        pattern: str = "alternating_xy",
+        shell_axis: str = "z",
+        side_axis: str = "x",
+        shell_offset: float = 0.0,
+        side_threshold: float = 0.05,
+        parameterization: str = "identity",
+    ):
+        return forge.verify_rule30_oloid_winding_from_n(
+            max_depth=max_depth,
+            config={
+                "axis_angle": axis_angle,
+                "pattern": pattern,
+                "shell_axis": shell_axis,
+                "side_axis": side_axis,
+                "shell_offset": shell_offset,
+                "side_threshold": side_threshold,
+                "parameterization": parameterization,
+            },
+        )
+
+    @app.get("/rule30/oloid-antipode/verify")
+    def verify_rule30_oloid_antipodal_winding(
+        max_depth: int = 256,
+        axis_angle: float = 1.5707963267948966,
+        pattern: str = "alternating_xy",
+        shell_axis: str = "z",
+        side_axis: str = "x",
+        shell_offset: float = 0.0,
+        side_threshold: float = 0.05,
+        parameterization: str = "identity",
+    ):
+        return forge.verify_rule30_oloid_antipodal_winding(
+            max_depth=max_depth,
+            config={
+                "axis_angle": axis_angle,
+                "pattern": pattern,
+                "shell_axis": shell_axis,
+                "side_axis": side_axis,
+                "shell_offset": shell_offset,
+                "side_threshold": side_threshold,
+                "parameterization": parameterization,
+            },
+        )
+
+    @app.get("/rule30/oloid-winding/{n}")
+    def rule30_oloid_winding_from_n(
+        n: int,
+        axis_angle: float = 1.5707963267948966,
+        pattern: str = "alternating_xy",
+        shell_axis: str = "z",
+        side_axis: str = "x",
+        shell_offset: float = 0.0,
+        side_threshold: float = 0.05,
+        parameterization: str = "identity",
+    ):
+        return forge.rule30_oloid_winding_from_n(
+            n=n,
+            axis_angle=axis_angle,
+            pattern=pattern,
+            shell_axis=shell_axis,
+            side_axis=side_axis,
+            shell_offset=shell_offset,
+            side_threshold=side_threshold,
+            parameterization=parameterization,
+        )
+
+    @app.get("/rule30/oloid-antipode/{n}")
+    def rule30_oloid_antipodal_winding(
+        n: int,
+        axis_angle: float = 1.5707963267948966,
+        pattern: str = "alternating_xy",
+        shell_axis: str = "z",
+        side_axis: str = "x",
+        shell_offset: float = 0.0,
+        side_threshold: float = 0.05,
+        parameterization: str = "identity",
+    ):
+        return forge.rule30_oloid_antipodal_winding(
+            n=n,
+            axis_angle=axis_angle,
+            pattern=pattern,
+            shell_axis=shell_axis,
+            side_axis=side_axis,
+            shell_offset=shell_offset,
+            side_threshold=side_threshold,
+            parameterization=parameterization,
+        )
+
+    @app.get("/rule30/oloid-scan")
+    def rule30_oloid_parameterization_scan(max_depth: int = 256):
+        return forge.rule30_oloid_parameterization_scan(max_depth=max_depth)
+
+    @app.get("/rule30/winding-number")
+    def rule30_winding_number_proof(max_depth: int = 4096, max_order: int = 4):
+        return forge.rule30_winding_number_proof(max_depth=max_depth, max_order=max_order)
+
+    @app.get("/rule30/winding-number/verify")
+    def verify_rule30_winding_number_proof(max_depth: int = 4096, max_order: int = 4):
+        return forge.verify_rule30_winding_number_proof(max_depth=max_depth, max_order=max_order)
+
     @app.get("/rule30/nth-bit/{n}")
     def rule30_nth_bit_expression(n: int, page_size: int = 4096, block_size: int = 8, max_order: int = 4):
         return forge.rule30_nth_bit_expression(
@@ -339,5 +546,12 @@ def create_app(root: str | Path | None = None):
     @app.get("/snapshot")
     def snapshot(limit: int = Query(100, ge=1, le=1000)):
         return forge.snapshot(limit=limit)
+
+    try:
+        from lattice_forge.witness.api import create_witness_router
+
+        app.include_router(create_witness_router(forge, provider=None, mint_fn=None))
+    except ImportError:
+        pass
 
     return app

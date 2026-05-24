@@ -263,3 +263,147 @@ def test_cli_verify_seed(tmp_path: Path):
     assert verify_extension.returncode == 0, verify_extension.stderr
     verify_extension_payload = json.loads(verify_extension.stdout)
     assert verify_extension_payload["result"]["schema_status"] == "pass"
+
+    sheet = run_cli(tmp_path, "rule30-sheet-operator", "--page-count", "2", "--page-size", "128")
+    assert sheet.returncode == 0, sheet.stderr
+    sheet_payload = json.loads(sheet.stdout)
+    assert sheet_payload["result"]["operator_summary"]["stable_across_pages"] is True
+
+    verify_sheet = run_cli(
+        tmp_path,
+        "verify-rule30-sheet-operator",
+        "--page-count",
+        "2",
+        "--page-size",
+        "128",
+    )
+    assert verify_sheet.returncode == 0, verify_sheet.stderr
+    verify_sheet_payload = json.loads(verify_sheet.stdout)
+    assert verify_sheet_payload["result"]["schema_status"] == "pass"
+
+    field = run_cli(tmp_path, "rule30-field-address", "257", "--page-size", "128")
+    assert field.returncode == 0, field.stderr
+    field_payload = json.loads(field.stdout)
+    assert field_payload["result"]["coordinates"]["page_index"] == 2
+    assert field_payload["result"]["address"]["prediction_defect"] == 0
+
+    verify_field = run_cli(tmp_path, "verify-rule30-field-address", "257", "--page-size", "128")
+    assert verify_field.returncode == 0, verify_field.stderr
+    verify_field_payload = json.loads(verify_field.stdout)
+    assert verify_field_payload["result"]["schema_status"] == "pass"
+
+    trajectory = run_cli(tmp_path, "rule30-exit-trajectory", "257", "--page-size", "128")
+    assert trajectory.returncode == 0, trajectory.stderr
+    trajectory_payload = json.loads(trajectory.stdout)
+    assert trajectory_payload["result"]["trajectory_definition"]["extra_field_search"] == 0
+    assert trajectory_payload["result"]["exit"]["defect"] == 0
+
+    verify_trajectory = run_cli(tmp_path, "verify-rule30-exit-trajectory", "257", "--page-size", "128")
+    assert verify_trajectory.returncode == 0, verify_trajectory.stderr
+    verify_trajectory_payload = json.loads(verify_trajectory.stdout)
+    assert verify_trajectory_payload["result"]["schema_status"] == "pass"
+
+    lift = run_cli(tmp_path, "rule30-sheet-lift", "257", "--page-size", "128")
+    assert lift.returncode == 0, lift.stderr
+    lift_payload = json.loads(lift.stdout)
+    assert lift_payload["result"]["sheet"]["sheet_index_k"] == 257
+    assert lift_payload["result"]["sheet"]["next_sheet_index"] == 258
+
+    verify_lift = run_cli(tmp_path, "verify-rule30-sheet-lift", "257", "--page-size", "128")
+    assert verify_lift.returncode == 0, verify_lift.stderr
+    verify_lift_payload = json.loads(verify_lift.stdout)
+    assert verify_lift_payload["result"]["schema_status"] == "pass"
+
+    resolution = run_cli(tmp_path, "rule30-julia-resolution", "257", "--page-size", "128")
+    assert resolution.returncode == 0, resolution.stderr
+    resolution_payload = json.loads(resolution.stdout)
+    assert resolution_payload["result"]["resolved_bit"] == resolution_payload["result"]["center_bit"]
+    assert resolution_payload["result"]["sheet_lift"]["sheet_index_k"] == 257
+
+    verify_resolution = run_cli(tmp_path, "verify-rule30-julia-resolution", "257", "--page-size", "128")
+    assert verify_resolution.returncode == 0, verify_resolution.stderr
+    verify_resolution_payload = json.loads(verify_resolution.stdout)
+    assert verify_resolution_payload["result"]["schema_status"] == "pass"
+
+    torsor = run_cli(tmp_path, "rule30-torsor-functor", "257", "--page-size", "128")
+    assert torsor.returncode == 0, torsor.stderr
+    torsor_payload = json.loads(torsor.stdout)
+    assert torsor_payload["result"]["torsor"]["lifted_sheet_id"] == resolution_payload["result"]["sheet_lift"]["lifted_sheet_id"]
+    assert torsor_payload["result"]["bitorsor_actions"]["compatibility_defect"] == 0
+    assert torsor_payload["result"]["functor_stack"]["two_functor"]["preserves_2_cells"] is True
+
+    verify_torsor = run_cli(tmp_path, "verify-rule30-torsor-functor", "257", "--page-size", "128")
+    assert verify_torsor.returncode == 0, verify_torsor.stderr
+    verify_torsor_payload = json.loads(verify_torsor.stdout)
+    assert verify_torsor_payload["result"]["schema_status"] == "pass"
+
+    spinor = run_cli(tmp_path, "rule30-spinor-oloid", "--max-depth", "64")
+    assert spinor.returncode == 0, spinor.stderr
+    spinor_payload = json.loads(spinor.stdout)
+    assert spinor_payload["result"]["model_id"] == "rule30_spinor_oloid_model_v0_1"
+
+    verify_spinor = run_cli(tmp_path, "verify-rule30-spinor-oloid", "--max-depth", "64")
+    assert verify_spinor.returncode == 0, verify_spinor.stderr
+    verify_spinor_payload = json.loads(verify_spinor.stdout)
+    assert verify_spinor_payload["result"]["status"].startswith("pass")
+
+    oloid_args = (
+        "--parameterization",
+        "phi",
+        "--pattern",
+        "alternating_xyz",
+        "--axis-angle",
+        "0.5235987755982988",
+        "--shell-axis",
+        "y",
+        "--side-axis",
+        "z",
+        "--shell-offset",
+        "-0.125",
+    )
+    winding = run_cli(tmp_path, "rule30-oloid-winding", "17", *oloid_args)
+    assert winding.returncode == 0, winding.stderr
+    winding_payload = json.loads(winding.stdout)
+    assert winding_payload["result"]["model_id"] == "rule30_oloid_winding_from_n_v0_1"
+
+    antipode = run_cli(tmp_path, "rule30-oloid-antipode", "17", *oloid_args)
+    assert antipode.returncode == 0, antipode.stderr
+    antipode_payload = json.loads(antipode.stdout)
+    assert antipode_payload["result"]["model_id"] == "rule30_oloid_antipodal_winding_v0_1"
+
+    scan = run_cli(tmp_path, "rule30-oloid-scan", "--max-depth", "32")
+    assert scan.returncode == 0, scan.stderr
+    scan_payload = json.loads(scan.stdout)
+    assert scan_payload["result"]["model_id"] == "rule30_oloid_parameterization_scan_v0_1"
+
+    verify_winding = run_cli(tmp_path, "verify-rule30-oloid-winding", "--max-depth", "32", *oloid_args)
+    assert verify_winding.returncode == 0, verify_winding.stderr
+    verify_winding_payload = json.loads(verify_winding.stdout)
+    assert verify_winding_payload["result"]["model_id"] == "rule30_oloid_winding_verifier_v0_1"
+
+    verify_antipode = run_cli(tmp_path, "verify-rule30-oloid-antipode", "--max-depth", "32", *oloid_args)
+    assert verify_antipode.returncode == 0, verify_antipode.stderr
+    verify_antipode_payload = json.loads(verify_antipode.stdout)
+    assert verify_antipode_payload["result"]["status"].startswith("pass")
+
+    winding_number = run_cli(tmp_path, "rule30-winding-number", "--max-depth", "64")
+    assert winding_number.returncode == 0, winding_number.stderr
+    winding_number_payload = json.loads(winding_number.stdout)
+    assert winding_number_payload["result"]["complexity_proof"]["claim_status"] == "BOUNDED_TRACE_WITNESS"
+
+    verify_winding_number = run_cli(tmp_path, "verify-rule30-winding-number", "--max-depth", "64")
+    assert verify_winding_number.returncode == 0, verify_winding_number.stderr
+    verify_winding_number_payload = json.loads(verify_winding_number.stdout)
+    assert verify_winding_number_payload["result"]["status"] == "pass_with_open_gaps"
+
+    nth = run_cli(tmp_path, "rule30-nth-bit", "129", "--page-size", "128")
+    assert nth.returncode == 0, nth.stderr
+    nth_payload = json.loads(nth.stdout)
+    assert nth_payload["result"]["computed_witness"]["defect"] == 0
+    assert nth_payload["result"]["julia_resolution"]["defect"] == 0
+    assert nth_payload["result"]["torsor_functor"]["compatibility_defect"] == 0
+
+    verify_nth = run_cli(tmp_path, "verify-rule30-nth-bit", "129", "--page-size", "128")
+    assert verify_nth.returncode == 0, verify_nth.stderr
+    verify_nth_payload = json.loads(verify_nth.stdout)
+    assert verify_nth_payload["result"]["schema_status"] == "pass"

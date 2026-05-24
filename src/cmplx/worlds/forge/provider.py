@@ -107,3 +107,159 @@ class WorldsForgeProvider:
             atom_id="morphonics_model",
         )
         return envelope
+
+    def witness_classify(
+        self,
+        *,
+        source_id: str | None = None,
+        target_id: str | None = None,
+        morphism_id: str | None = None,
+        mint_receipt: bool = True,
+    ) -> dict[str, Any]:
+        from lattice_forge.witness import WitnessEngine
+
+        envelope = WitnessEngine(self._forge).classify(
+            source_id=source_id,
+            target_id=target_id,
+            morphism_id=morphism_id,
+        )
+        if mint_receipt:
+            mint_forge_operation(
+                "witness_classify",
+                {"status": envelope.get("status"), "honesty": envelope.get("honesty")},
+                atom_id="lf_witness",
+            )
+        return envelope
+
+    def witness_regime_a_query(
+        self,
+        *,
+        n: int,
+        max_depth: int = 4096,
+        base_page: int = 64,
+        mint_receipt: bool = True,
+    ) -> dict[str, Any]:
+        from lattice_forge.witness import WitnessEngine
+
+        envelope = WitnessEngine(self._forge).regime_a_query(
+            n=n,
+            max_depth=max_depth,
+            base_page=base_page,
+        )
+        if mint_receipt:
+            mint_forge_operation(
+                "witness_regime_a_query",
+                {"status": envelope.get("status"), "n": n, "honesty": envelope.get("honesty")},
+                atom_id="lf_regime_a",
+            )
+        return envelope
+
+    def witness_proof_bundle(
+        self,
+        max_depth: int = 128,
+        page_count: int = 2,
+        page_size: int = 128,
+        block_size: int = 8,
+        max_order: int = 4,
+        *,
+        verify: bool = True,
+        mint_receipt: bool = True,
+    ) -> dict[str, Any]:
+        from lattice_forge.witness import WitnessEngine
+
+        envelope = WitnessEngine(self._forge).proof_bundle(
+            max_depth=max_depth,
+            page_count=page_count,
+            page_size=page_size,
+            block_size=block_size,
+            max_order=max_order,
+            verify=verify,
+        )
+        if mint_receipt:
+            status = envelope.get("status", "")
+            mint_forge_operation(
+                "witness_proof_bundle",
+                {
+                    "status": status,
+                    "honesty": envelope.get("honesty"),
+                    "open_gap_count": (envelope.get("result", {}).get("result") or {}).get(
+                        "open_gap_count"
+                    ),
+                },
+                atom_id="rule30_proof_obligation_ledger",
+            )
+        return envelope
+
+    def witness_regime_c_encode(
+        self,
+        *,
+        max_depth: int = 512,
+        mint_receipt: bool = False,
+    ) -> dict[str, Any]:
+        from lattice_forge.witness import WitnessEngine
+
+        envelope = WitnessEngine(self._forge).regime_c_encode(max_depth=max_depth)
+        if mint_receipt:
+            mint_forge_operation(
+                "witness_regime_c_encode",
+                {"status": envelope.get("status"), "max_depth": max_depth},
+                atom_id="lf_regime_c",
+            )
+        return envelope
+
+    def witness_regime_cprime_encode(
+        self,
+        *,
+        max_depth: int = 512,
+        mint_receipt: bool = False,
+    ) -> dict[str, Any]:
+        from lattice_forge.witness import WitnessEngine
+
+        envelope = WitnessEngine(self._forge).regime_cprime_encode(max_depth=max_depth)
+        if mint_receipt:
+            mint_forge_operation(
+                "witness_regime_cprime_encode",
+                {"status": envelope.get("status"), "max_depth": max_depth},
+                atom_id="lf_regime_cprime",
+            )
+        return envelope
+
+    def witness_syndrome(
+        self,
+        *,
+        syndrome_keys: list[str] | None = None,
+        mint_receipt: bool = False,
+    ) -> dict[str, Any]:
+        from lattice_forge.witness import WitnessEngine
+
+        envelope = WitnessEngine(self._forge).syndrome_report(syndrome_keys=syndrome_keys)
+        if mint_receipt:
+            mint_forge_operation(
+                "witness_syndrome",
+                {"status": envelope.get("status")},
+                atom_id="lf_witness",
+            )
+        return envelope
+
+    def witness_proof_bundle_full(
+        self,
+        *,
+        quick: bool = False,
+        max_depth: int | None = None,
+        mint_receipt: bool = True,
+    ) -> dict[str, Any]:
+        from lattice_forge.witness import WitnessEngine
+
+        envelope = WitnessEngine(self._forge).proof_bundle_full(
+            quick=quick, max_depth=max_depth
+        )
+        if mint_receipt:
+            mint_forge_operation(
+                "witness_proof_bundle_full",
+                {
+                    "status": envelope.get("status"),
+                    "honesty": envelope.get("honesty"),
+                },
+                atom_id="rule30_proof_obligation_ledger",
+            )
+        return envelope

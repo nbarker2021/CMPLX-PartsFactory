@@ -1,0 +1,31 @@
+{
+  "submission": "lattice-forge regimes ring-2 regression",
+  "expected_proofs": {
+    "SUBSTRATE_MAP": {
+      "status": "pass"
+    },
+    "CHART_CODEC": {
+      "status": "pass",
+      "round_trip_mismatches": 0
+    },
+    "CHART_CODEC_D4": {
+      "status": "pass",
+      "round_trip_mismatches": 0
+    },
+    "BLOCK_TOWER": {
+      "status": "pass",
+      "mismatch_count": 0
+    },
+    "BLOCK_EXTRACTOR": {
+      "status": "pass",
+      "individual_mismatch_count": 0,
+      "range_match_rate": 1.0
+    }
+  },
+  "expected_overall_status": "pass",
+  "notes": {
+    "honesty": "Regime proofs verify bounded I/O and codec round-trips only; rule30.prize.depth_only_shortcut stays CONJ",
+    "not_in_ring1": true,
+    "quick_mode": "--quick reduces max_depth to 256; status and zero-mismatch invariants still hold"
+  }
+}

@@ -15,6 +15,7 @@ import os
 from typing import Any, Optional
 
 from cmplx.morphon import MorphonController
+from runtime.integration_profile import integration_profile_enabled
 
 logger = logging.getLogger(__name__)
 
